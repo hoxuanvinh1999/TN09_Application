@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1006764537866",
+    "project_id": "tn09-demo",
+    "storage_bucket": "tn09-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006764537866:android:d377ad58143562318a47f3",
+        "android_client_info": {
+          "package_name": "org.lesdetritivores.tn09appdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006764537866-38dr6kibhhsohekk2cb1u7r9fq31rc8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgjjk30hIFpbNEk5_8Z1UNIfhToFlrOoU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006764537866-38dr6kibhhsohekk2cb1u7r9fq31rc8a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
