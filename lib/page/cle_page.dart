@@ -8,7 +8,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 class ClePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const pageTitle = 'Cle';
+    const pageTitle = 'Clé';
 
     return MaterialApp(
       title: pageTitle,
@@ -32,8 +32,7 @@ class _CreateCleState extends State<CreateCle> {
   TextEditingController _numberCle = TextEditingController();
   String _typeSelected = '';
 
-  DatabaseReference _ref =
-      FirebaseDatabase.instance.reference().child('Contacts');
+  DatabaseReference _ref = FirebaseDatabase.instance.reference().child('Clé');
   @override
   Widget _buildCleType(String title) {
     return InkWell(
@@ -64,9 +63,6 @@ class _CreateCleState extends State<CreateCle> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Créer Cle'),
-      ),
       body: Container(
         margin: EdgeInsets.all(15),
         child: Column(
@@ -148,13 +144,13 @@ class _CreateCleState extends State<CreateCle> {
     String nameSite = _nameSite.text;
     String numberSite = _numberCle.text;
 
-    Map<String, String> contact = {
+    Map<String, String> cle = {
       'nomSite': nameSite,
       'numeroSite': numberSite,
       'type': _typeSelected,
     };
 
-    _ref.push().set(contact).then((value) {
+    _ref.push().set(cle).then((value) {
       Navigator.pop(context);
     });
   }

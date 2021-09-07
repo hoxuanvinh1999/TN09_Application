@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1006764537866",
+    "firebase_url": "https://tn09-demo-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "tn09-demo",
     "storage_bucket": "tn09-demo.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "1006764537866-38dr6kibhhsohekk2cb1u7r9fq31rc8a.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1006764537866-5l0lio8frvmv5g68e01hi1jif91f000l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.lesdetritivores.tn09appdemo"
+              }
             }
           ]
         }
