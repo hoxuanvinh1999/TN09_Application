@@ -5,35 +5,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
-class LocationPage extends StatelessWidget {
+class CreateCle extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    const pageTitle = 'Location';
-
-    return MaterialApp(
-      title: pageTitle,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(pageTitle),
-        ),
-        body: CreateLocation(),
-      ),
-    );
-  }
+  _CreateCleState createState() => _CreateCleState();
 }
 
-class CreateLocation extends StatefulWidget {
-  @override
-  _CreateLocationState createState() => _CreateLocationState();
-}
-
-class _CreateLocationState extends State<CreateLocation> {
-  TextEditingController _nameLocation = TextEditingController();
-  TextEditingController _addressLocation = TextEditingController();
+class _CreateCleState extends State<CreateCle> {
+  TextEditingController _nameSite = TextEditingController();
+  TextEditingController _numberCle = TextEditingController();
   String _typeSelected = '';
 
-  DatabaseReference _ref =
-      FirebaseDatabase.instance.reference().child('Location');
+  DatabaseReference _ref = FirebaseDatabase.instance.reference().child('Clé');
   @override
   Widget _buildCleType(String title) {
     return InkWell(
@@ -64,15 +46,18 @@ class _CreateLocationState extends State<CreateLocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Créer Clé'),
+      ),
       body: Container(
         margin: EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              controller: _nameLocation,
+              controller: _nameSite,
               decoration: InputDecoration(
-                hintText: 'Nom de la Location',
+                hintText: 'Nom du Site',
                 prefixIcon: Icon(
                   Icons.account_circle,
                   size: 30,
@@ -84,11 +69,11 @@ class _CreateLocationState extends State<CreateLocation> {
             ),
             SizedBox(height: 15),
             TextFormField(
-              controller: _addressLocation,
+              controller: _numberCle,
               decoration: InputDecoration(
-                hintText: 'Address de le Location',
+                hintText: 'Numero du Clé',
                 prefixIcon: Icon(
-                  Icons.maps_home_work_rounded,
+                  Icons.add,
                   size: 30,
                 ),
                 fillColor: Colors.white,
@@ -104,11 +89,11 @@ class _CreateLocationState extends State<CreateLocation> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildCleType('Resto'),
+                  _buildCleType('Clé'),
                   SizedBox(width: 10),
-                  _buildCleType('Crous'),
+                  _buildCleType('Badge'),
                   SizedBox(width: 10),
-                  _buildCleType('Cantine'),
+                  _buildCleType('Carte'),
                   SizedBox(width: 10),
                   _buildCleType('Autre'),
                 ],
@@ -122,7 +107,7 @@ class _CreateLocationState extends State<CreateLocation> {
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: RaisedButton(
                 child: Text(
-                  'Créer Location',
+                  'Créer Clé',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.white,
@@ -142,16 +127,16 @@ class _CreateLocationState extends State<CreateLocation> {
   }
 
   void SaveCle() {
-    String nameLocation = _nameLocation.text;
-    String addressLocation = _addressLocation.text;
+    String nameSite = _nameSite.text;
+    String numberSite = _numberCle.text;
 
-    Map<String, String> location = {
-      'nomLocation': nameLocation,
-      'addressLocation': addressLocation,
+    Map<String, String> cle = {
+      'nomSite': nameSite,
+      'numeroSite': numberSite,
       'type': _typeSelected,
     };
 
-    _ref.push().set(location).then((value) {
+    _ref.push().set(cle).then((value) {
       Navigator.pop(context);
     });
   }

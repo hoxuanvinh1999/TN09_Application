@@ -5,36 +5,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
-class ClePage extends StatelessWidget {
+class CreateLocation extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    const pageTitle = 'Clé';
-
-    return MaterialApp(
-      title: pageTitle,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(pageTitle),
-        ),
-        body: CreateCle(),
-      ),
-    );
-  }
+  _CreateLocationState createState() => _CreateLocationState();
 }
 
-class CreateCle extends StatefulWidget {
-  @override
-  _CreateCleState createState() => _CreateCleState();
-}
-
-class _CreateCleState extends State<CreateCle> {
-  TextEditingController _nameSite = TextEditingController();
-  TextEditingController _numberCle = TextEditingController();
+class _CreateLocationState extends State<CreateLocation> {
+  TextEditingController _nameLocation = TextEditingController();
+  TextEditingController _addressLocation = TextEditingController();
   String _typeSelected = '';
 
-  DatabaseReference _ref = FirebaseDatabase.instance.reference().child('Clé');
-  @override
-  Widget _buildCleType(String title) {
+  DatabaseReference _ref =
+      FirebaseDatabase.instance.reference().child('Location');
+
+  Widget _buildLocationType(String title) {
     return InkWell(
       child: Container(
         height: 40,
@@ -63,15 +47,18 @@ class _CreateCleState extends State<CreateCle> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Créer Location'),
+      ),
       body: Container(
         margin: EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              controller: _nameSite,
+              controller: _nameLocation,
               decoration: InputDecoration(
-                hintText: 'Nom du Site',
+                hintText: 'Nom de la Location',
                 prefixIcon: Icon(
                   Icons.account_circle,
                   size: 30,
@@ -83,9 +70,9 @@ class _CreateCleState extends State<CreateCle> {
             ),
             SizedBox(height: 15),
             TextFormField(
-              controller: _numberCle,
+              controller: _addressLocation,
               decoration: InputDecoration(
-                hintText: 'Numero du Clé',
+                hintText: 'Address de la Location',
                 prefixIcon: Icon(
                   Icons.add,
                   size: 30,
@@ -103,13 +90,13 @@ class _CreateCleState extends State<CreateCle> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildCleType('Clé'),
+                  _buildLocationType('Resto'),
                   SizedBox(width: 10),
-                  _buildCleType('Badge'),
+                  _buildLocationType('Crous'),
                   SizedBox(width: 10),
-                  _buildCleType('Carte'),
+                  _buildLocationType('Cantine'),
                   SizedBox(width: 10),
-                  _buildCleType('Autre'),
+                  _buildLocationType('Autre'),
                 ],
               ),
             ),
@@ -121,7 +108,7 @@ class _CreateCleState extends State<CreateCle> {
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: RaisedButton(
                 child: Text(
-                  'Créer Clé',
+                  'Créer Location',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.white,
@@ -129,7 +116,7 @@ class _CreateCleState extends State<CreateCle> {
                   ),
                 ),
                 onPressed: () {
-                  SaveCle();
+                  SaveLocation();
                 },
                 color: Theme.of(context).primaryColor,
               ),
@@ -140,17 +127,17 @@ class _CreateCleState extends State<CreateCle> {
     );
   }
 
-  void SaveCle() {
-    String nameSite = _nameSite.text;
-    String numberSite = _numberCle.text;
+  void SaveLocation() {
+    String nameSite = _nameLocation.text;
+    String numberSite = _addressLocation.text;
 
-    Map<String, String> cle = {
-      'nomSite': nameSite,
-      'numeroSite': numberSite,
+    Map<String, String> location = {
+      'nomLocation': nameSite,
+      'addressLocation': numberSite,
       'type': _typeSelected,
     };
 
-    _ref.push().set(cle).then((value) {
+    _ref.push().set(location).then((value) {
       Navigator.pop(context);
     });
   }

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../page/contact_page.dart';
 import '../page/collecteur_page.dart';
 import '../page/planning_page.dart';
-import '../page/location_page.dart';
-import '../page/cle_page.dart';
+import '../page/location_page/location_page.dart';
+import '../page/cle_page/cle_page.dart';
 import '../page/vehicule_page.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
