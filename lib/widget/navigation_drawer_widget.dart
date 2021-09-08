@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tn09_app_demo/page/testing_page.dart';
 //import 'package:http/http.dart' as http;
 import '../page/contact_page.dart';
 import '../page/collecteur_page.dart';
@@ -6,6 +7,7 @@ import '../page/planning_page.dart';
 import '../page/location_page/location_page.dart';
 import '../page/cle_page/cle_page.dart';
 import '../page/vehicule_page.dart';
+import '../page/testing_page.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   final padding = EdgeInsets.symmetric(horizontal: 20);
@@ -62,6 +64,13 @@ class NavigationDrawerWidget extends StatelessWidget {
                     text: 'Cle',
                     //icon: Icons.update,
                     onClicked: () => selectedItem(context, 5),
+                  ),
+                  const SizedBox(height: 16),
+                  //Divider(color: Colors.white70),
+                  buildMenuItem(
+                    text: 'Testing',
+                    //icon: Icons.update,
+                    onClicked: () => selectedItem(context, 6),
                   ),
                   const SizedBox(height: 16),
                   //Divider(color: Colors.white70),
@@ -122,6 +131,11 @@ class NavigationDrawerWidget extends StatelessWidget {
       case 5:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ClePage(),
+        ));
+        break;
+      case 6:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => TestingPage(),
         ));
         break;
     }

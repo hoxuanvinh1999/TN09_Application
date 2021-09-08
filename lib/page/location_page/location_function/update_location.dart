@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:tn09_app_demo/page/location_page/location_page.dart';
 
 class UpdateLocation extends StatefulWidget {
   String locationKey;
@@ -14,9 +17,15 @@ class UpdateLocation extends StatefulWidget {
 }
 
 class _UpdateLocationState extends State<UpdateLocation> {
-  TextEditingController _nameLocation = TextEditingController();
-  TextEditingController _addressLocation = TextEditingController();
-  String _typeSelected = '';
+  final _updateLocationKey = GlobalKey<FormState>();
+  TextEditingController _nameLocationController = TextEditingController();
+  TextEditingController _addressLocationController = TextEditingController();
+  String newnameLocation = '';
+  String newaddressLocation = '';
+  String typeSelected = '';
+
+  String oldnameLocation = '';
+  String oldaddressLocation = '';
 
   DatabaseReference _ref =
       FirebaseDatabase.instance.reference().child('location');
@@ -27,7 +36,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
         height: 40,
         width: 90,
         decoration: BoxDecoration(
-          color: _typeSelected == title
+          color: typeSelected == title
               ? Colors.green
               : Theme.of(context).accentColor,
           borderRadius: BorderRadius.circular(15),
@@ -41,7 +50,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
       ),
       onTap: () {
         setState(() {
-          _typeSelected = title;
+          typeSelected = title;
         });
       },
     );
@@ -53,135 +62,204 @@ class _UpdateLocationState extends State<UpdateLocation> {
       appBar: AppBar(
         title: Text('Update Location'),
       ),
-      body: Container(
-        margin: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: RaisedButton(
-                child: Text(
-                  'Get Information de la Location',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+      body: Form(
+        key: _updateLocationKey,
+        child: Container(
+          margin: EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _nameLocationController,
+                decoration: InputDecoration(
+                  hintText: 'Enter nom de la location',
+                  prefixIcon: Icon(
+                    Icons.home,
+                    size: 30,
                   ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  contentPadding: EdgeInsets.all(15),
                 ),
-                onPressed: () {
-                  getLocationDetail();
-                },
-                color: Theme.of(context).primaryColor,
+                /*validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some information';
+                  } else {
+                    newnameLocation = value;
+                  }
+                  print('$newaddressLocation');
+                },*/
               ),
-            ),
-            TextFormField(
-              controller: _nameLocation,
-              decoration: InputDecoration(
-                hintText: 'Enter nom de la location',
-                prefixIcon: Icon(
-                  Icons.home,
-                  size: 30,
-                ),
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding: EdgeInsets.all(15),
-              ),
-            ),
-            SizedBox(height: 15),
-            TextFormField(
-              controller: _addressLocation,
-              decoration: InputDecoration(
-                hintText: 'Enter address de la location',
-                prefixIcon: Icon(
-                  Icons.location_on,
-                  size: 30,
-                ),
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding: EdgeInsets.all(15),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildLocationType('Resto'),
-                  SizedBox(width: 10),
-                  _buildLocationType('Crous'),
-                  SizedBox(width: 10),
-                  _buildLocationType('Cantine'),
-                  SizedBox(width: 10),
-                  _buildLocationType('Autre'),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: RaisedButton(
-                child: Text(
-                  'Update Location',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+              SizedBox(height: 15),
+              TextFormField(
+                controller: _addressLocationController,
+                decoration: InputDecoration(
+                  hintText: 'Enter address de la location',
+                  prefixIcon: Icon(
+                    Icons.location_on,
+                    size: 30,
                   ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  contentPadding: EdgeInsets.all(15),
                 ),
-                onPressed: () {
-                  saveLocation();
-                },
-                color: Theme.of(context).primaryColor,
+                /*validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some information';
+                  } else {
+                    newaddressLocation = value;
+                  }
+                },*/
               ),
-            )
-          ],
+              SizedBox(
+                height: 15,
+              ),
+              Container(
+                height: 40,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    _buildLocationType('Resto'),
+                    SizedBox(width: 10),
+                    _buildLocationType('Crous'),
+                    SizedBox(width: 10),
+                    _buildLocationType('Cantine'),
+                    SizedBox(width: 10),
+                    _buildLocationType('Autre'),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: RaisedButton(
+                  child: Text(
+                    'Update Location',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onPressed: () {
+                    saveLocation();
+                  },
+                  color: Theme.of(context).primaryColor,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
+/*
   getLocationDetail() async {
-    DataSnapshot snapshot = await _ref.child(widget.locationKey).once();
-
-    Map location = snapshot.value;
-
-    _nameLocation.text = location['nomLocation'];
-
-    print('Delete ${location['nomLocation']}');
-    print('$_addressLocation');
-
-    _addressLocation.text = location['addressLocation'];
-
-    print('Delete ${location['address']}');
-    print('$_addressLocation');
-
-    setState(() {
-      _typeSelected = location['type'];
-      print('${location['type']}');
-      print('$_typeSelected');
+    print('widget locationKey: ${widget.locationKey}');
+    DatabaseReference keyRef = FirebaseDatabase.instance.reference();
+    await keyRef
+        .child('Location')
+        .orderByChild('key')
+        .equalTo(widget.locationKey)
+        .once()
+        .then((DataSnapshot dataSnapshot) {
+      Map oldlocation = dataSnapshot.value;
+      //oldnameLocation = dataSnapshot.value['nomLocation'];
+      //oldaddressLocation = dataSnapshot.value['addressLocation'];
+      oldnameLocation = oldlocation['nomLocation'];
+      oldaddressLocation = oldlocation['addressLocation'];
     });
+
+    /*String received_key = widget.locationKey;
+    Query toGetInformation =
+        FirebaseDatabase.instance.reference().child("Location");
+    toGetInformation
+        .orderByChild("key")
+        .equalTo(received_key)
+        .once()
+        .then((DataSnapshot snapshot) {
+      Map<String, dynamic> location = snapshot.value;
+      oldnameLocation = location['nomLocation'];
+      oldaddressLocation = location['addressLocation'];
+      print('key ${location['key']}');
+      print('old $oldnameLocation');
+    });*/
   }
+*/
+  void saveLocation() async {
+    //getLocationDetail();
 
-  void saveLocation() {
-    String nameLocation = _nameLocation.text;
-    String addressLocation = _addressLocation.text;
+    print('widget locationKey: ${widget.locationKey}');
+    //print('$_addressLocationController.text');
+    //String received_key = widget.locationKey;
 
-    Map<String, String> newlocation = {
-      'nomLocation': nameLocation,
-      'addressLocation': addressLocation,
-      'type': _typeSelected,
-    };
+    /*
+    DataSnapshot snapshot = await _ref.child(widget.locationKey).once();
+    Map oldlocation = snapshot.value;
+    oldnameLocation = oldlocation['nomLocation'];
+    oldaddressLocation = oldlocation['addressLocation'];
+    print('old $oldnameLocation');
+    */
 
-    _ref.child(widget.locationKey).update(newlocation).then((value) {
-      Navigator.pop(context);
+    /*
+    DatabaseReference keyRef = FirebaseDatabase.instance.reference();
+    await keyRef
+        .child('Location')
+        .orderByChild('key')
+        .equalTo(widget.locationKey)
+        .once()
+        .then((DataSnapshot dataSnapshot) {
+      //Map oldlocation = dataSnapshot.value;
+      //oldnameLocation = dataSnapshot.value['nomLocation'];
+      //oldaddressLocation = dataSnapshot.value['addressLocation'];
+      //oldnameLocation = dataSnapshot.value['nomLocation'];
+      //oldaddressLocation = dataSnapshot.value['addressLocation'];
+      print(dataSnapshot.value['key']);
     });
+    */
+
+    /*String received_key = widget.locationKey;
+    Query toGetInformation =
+        FirebaseDatabase.instance.reference().child("Location");
+    toGetInformation
+        .orderByChild("key")
+        .equalTo(received_key)
+        .once()
+        .then((DataSnapshot snapshot) {
+      Map<String, dynamic> location = snapshot.value;
+      oldnameLocation = location['nomLocation'];
+      oldaddressLocation = location['addressLocation'];
+      print('key ${location['key']}');
+      print('old $oldnameLocation');
+    });*/
+
+    newnameLocation = _nameLocationController.text;
+    newaddressLocation = _addressLocationController.text;
+
+    print('new $newaddressLocation');
+
+    if (newaddressLocation == oldaddressLocation &&
+        newnameLocation == oldnameLocation) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Notthing changed')),
+      );
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => LocationPage(),
+      ));
+    } else {
+      Map<String, String> newlocation = {
+        'nomLocation': newnameLocation,
+        'addressLocation': newaddressLocation,
+        'type': typeSelected,
+      };
+
+      _ref.child(widget.locationKey).update(newlocation).then((value) {
+        Navigator.pop(context);
+      });
+    }
   }
 }

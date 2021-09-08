@@ -93,12 +93,12 @@ class _ShowLocationState extends State<ShowLocation> {
             children: [
               GestureDetector(
                 onTap: () {
+                  print('key before send ${location['key']}');
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => UpdateLocation(
-                                locationKey: location['key'],
-                              )));
+                          builder: (_) =>
+                              UpdateLocation(locationKey: location['key'])));
                 },
                 child: Row(
                   children: [
