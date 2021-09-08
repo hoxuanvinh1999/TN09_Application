@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'create_location.dart';
+import 'update_location.dart';
 
 class ShowLocation extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class _ShowLocationState extends State<ShowLocation> {
           Row(
             children: [
               Icon(
-                Icons.person,
+                Icons.home,
                 color: Theme.of(context).primaryColor,
                 size: 20,
               ),
@@ -52,7 +53,7 @@ class _ShowLocationState extends State<ShowLocation> {
           Row(
             children: [
               Icon(
-                Icons.phone_iphone,
+                Icons.location_on,
                 color: Theme.of(context).accentColor,
                 size: 20,
               ),
@@ -87,9 +88,93 @@ class _ShowLocationState extends State<ShowLocation> {
           SizedBox(
             height: 15,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => UpdateLocation(
+                                locationKey: location['key'],
+                              )));
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.edit,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text('Edit',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              GestureDetector(
+                onTap: () {
+                  _showDeleteDialog(location: location);
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.delete,
+                      color: Colors.red[700],
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text('Delete',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.red[700],
+                            fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+            ],
+          )
         ],
       ),
     );
+  }
+
+  _showDeleteDialog({required Map location}) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Delete ${location['nomLocation']}'),
+            content: Text('Are you sure you want to delete?'),
+            actions: [
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancel')),
+              FlatButton(
+                  onPressed: () {
+                    reference
+                        .child(location['key'])
+                        .remove()
+                        .whenComplete(() => Navigator.pop(context));
+                  },
+                  child: Text('Delete'))
+            ],
+          );
+        });
   }
 
   @override
@@ -126,7 +211,6 @@ class _ShowLocationState extends State<ShowLocation> {
 
   Color getTypeColor(String type) {
     Color color = Theme.of(context).accentColor;
-
     switch (type) {
       case 'Resto':
         color = Colors.brown;

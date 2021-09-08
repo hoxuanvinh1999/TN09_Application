@@ -7,7 +7,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 import './location_function/show_location.dart';
 import './location_function/create_location.dart';
-//import './location_function/update_location.dart';
+import './location_function/update_location.dart';
 
 class LocationPage extends StatelessWidget {
   @override
