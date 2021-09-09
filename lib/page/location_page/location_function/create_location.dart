@@ -135,6 +135,7 @@ class _CreateLocationState extends State<CreateLocation> {
       'nomLocation': nameSite,
       'addressLocation': numberSite,
       'type': _typeSelected,
+      'nombredecle': '0',
     };
 
     _ref.push().set(location).then((value) {

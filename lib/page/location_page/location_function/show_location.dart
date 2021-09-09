@@ -69,6 +69,21 @@ class _ShowLocationState extends State<ShowLocation> {
               ),
               SizedBox(width: 15),
               Icon(
+                Icons.vpn_key,
+                color: typeColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 6,
+              ),
+              Text(
+                location['nombredecle'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: typeColor,
+                    fontWeight: FontWeight.w600),
+              ),
+              Icon(
                 Icons.group_work,
                 color: typeColor,
                 size: 20,

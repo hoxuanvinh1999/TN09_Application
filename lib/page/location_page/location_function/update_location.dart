@@ -28,7 +28,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
   String oldaddressLocation = '';
 
   DatabaseReference _ref =
-      FirebaseDatabase.instance.reference().child('location');
+      FirebaseDatabase.instance.reference().child('Location');
 
   Widget _buildLocationType(String title) {
     return InkWell(
@@ -157,6 +157,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
     );
   }
 
+//Tried to create separate function, but it doesn't work
 /*
   getLocationDetail() async {
     print('widget locationKey: ${widget.locationKey}');
@@ -197,14 +198,13 @@ class _UpdateLocationState extends State<UpdateLocation> {
     //print('$_addressLocationController.text');
     //String received_key = widget.locationKey;
 
-    /*
     DataSnapshot snapshot = await _ref.child(widget.locationKey).once();
     Map oldlocation = snapshot.value;
     oldnameLocation = oldlocation['nomLocation'];
     oldaddressLocation = oldlocation['addressLocation'];
     print('old $oldnameLocation');
-    */
 
+    //didnot work here
     /*
     DatabaseReference keyRef = FirebaseDatabase.instance.reference();
     await keyRef
@@ -216,8 +216,8 @@ class _UpdateLocationState extends State<UpdateLocation> {
       //Map oldlocation = dataSnapshot.value;
       //oldnameLocation = dataSnapshot.value['nomLocation'];
       //oldaddressLocation = dataSnapshot.value['addressLocation'];
-      //oldnameLocation = dataSnapshot.value['nomLocation'];
-      //oldaddressLocation = dataSnapshot.value['addressLocation'];
+      oldnameLocation = dataSnapshot.value['nomLocation'];
+      oldaddressLocation = dataSnapshot.value['addressLocation'];
       print(dataSnapshot.value['key']);
     });
     */
