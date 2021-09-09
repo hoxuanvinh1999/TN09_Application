@@ -15,7 +15,7 @@ class _CreateLocationState extends State<CreateLocation> {
   TextEditingController _addressLocation = TextEditingController();
   String _typeSelected = '';
 
-  DatabaseReference _ref =
+  DatabaseReference _refLocation =
       FirebaseDatabase.instance.reference().child('Location');
 
   Widget _buildLocationType(String title) {
@@ -138,7 +138,7 @@ class _CreateLocationState extends State<CreateLocation> {
       'nombredecle': '0',
     };
 
-    _ref.push().set(location).then((value) {
+    _refLocation.push().set(location).then((value) {
       Navigator.pop(context);
     });
   }

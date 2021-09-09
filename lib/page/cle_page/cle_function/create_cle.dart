@@ -6,16 +6,23 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 class CreateCle extends StatefulWidget {
+  String locationKey;
+
+  CreateCle({required this.locationKey});
+
   @override
   _CreateCleState createState() => _CreateCleState();
 }
 
 class _CreateCleState extends State<CreateCle> {
-  TextEditingController _nameSite = TextEditingController();
-  TextEditingController _numberCle = TextEditingController();
+  TextEditingController _noteCle = TextEditingController();
   String _typeSelected = '';
+  String locationKeyValue = '';
 
-  DatabaseReference _ref = FirebaseDatabase.instance.reference().child('Clé');
+  DatabaseReference _refCle =
+      FirebaseDatabase.instance.reference().child('Cle');
+  DatabaseReference _refLocation =
+      FirebaseDatabase.instance.reference().child('Location');
   @override
   Widget _buildCleType(String title) {
     return InkWell(
@@ -55,25 +62,11 @@ class _CreateCleState extends State<CreateCle> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              controller: _nameSite,
+              controller: _noteCle,
               decoration: InputDecoration(
-                hintText: 'Nom du Site',
+                hintText: 'Note?',
                 prefixIcon: Icon(
-                  Icons.account_circle,
-                  size: 30,
-                ),
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding: EdgeInsets.all(15),
-              ),
-            ),
-            SizedBox(height: 15),
-            TextFormField(
-              controller: _numberCle,
-              decoration: InputDecoration(
-                hintText: 'Numero du Clé',
-                prefixIcon: Icon(
-                  Icons.add,
+                  Icons.note,
                   size: 30,
                 ),
                 fillColor: Colors.white,
@@ -89,7 +82,7 @@ class _CreateCleState extends State<CreateCle> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildCleType('Clé'),
+                  _buildCleType('Cle'),
                   SizedBox(width: 10),
                   _buildCleType('Badge'),
                   SizedBox(width: 10),
@@ -126,17 +119,26 @@ class _CreateCleState extends State<CreateCle> {
     );
   }
 
-  void SaveCle() {
-    String nameSite = _nameSite.text;
-    String numberSite = _numberCle.text;
+  void SaveCle() async {
+    String cleTableSecurityPass = 'check';
+    DataSnapshot snapshotlocation =
+        await _refLocation.child(widget.locationKey).once();
+    Map location = snapshotlocation.value;
+    String nombreofCle = location['nombredecle'];
+    nombreofCle = (int.parse(nombreofCle) + 1).toString();
+    Map<String, String> updatelocation = {
+      'nombredecle': nombreofCle,
+    };
+    _refLocation.child(widget.locationKey).update(updatelocation);
 
-    Map<String, String> cle = {
-      'nomSite': nameSite,
-      'numeroSite': numberSite,
+    String noteCle = _noteCle.text;
+    Map<String, String> newcle = {
+      'noteCle': noteCle,
+      'location_key': widget.locationKey,
       'type': _typeSelected,
     };
 
-    _ref.push().set(cle).then((value) {
+    _refCle.push().set(newcle).then((value) {
       Navigator.pop(context);
     });
   }

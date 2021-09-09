@@ -1,24 +1,26 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
 import 'create_cle.dart';
 import 'update_cle.dart';
+import 'edit_cle_information.dart';
 
-class ShowCle extends StatefulWidget {
+class ShowListLocation extends StatefulWidget {
   @override
-  _ShowCleState createState() => _ShowCleState();
+  _ShowListLocationState createState() => _ShowListLocationState();
 }
 
-class _ShowCleState extends State<ShowCle> {
-  Query _ref = FirebaseDatabase.instance
+class _ShowListLocationState extends State<ShowListLocation> {
+  Query _refLocation = FirebaseDatabase.instance
       .reference()
-      .child('Clé')
-      .orderByChild('nomeSite');
+      .child('Location')
+      .orderByChild('nomLocation');
   DatabaseReference reference =
-      FirebaseDatabase.instance.reference().child('Clé');
+      FirebaseDatabase.instance.reference().child('Location');
 
-  Widget _buildCleItem({required Map cle}) {
-    Color typeColor = getTypeColor(cle['type']);
+  Widget _buildCleItem({required Map location}) {
+    Color typeColor = getTypeColor(location['type']);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.all(10),
@@ -31,7 +33,7 @@ class _ShowCleState extends State<ShowCle> {
           Row(
             children: [
               Icon(
-                Icons.location_on,
+                Icons.home,
                 color: Theme.of(context).primaryColor,
                 size: 20,
               ),
@@ -39,7 +41,7 @@ class _ShowCleState extends State<ShowCle> {
                 width: 6,
               ),
               Text(
-                cle['nomSite'],
+                location['nomLocation'],
                 style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).primaryColor,
@@ -53,7 +55,7 @@ class _ShowCleState extends State<ShowCle> {
           Row(
             children: [
               Icon(
-                Icons.check,
+                Icons.location_on,
                 color: Theme.of(context).accentColor,
                 size: 20,
               ),
@@ -61,11 +63,32 @@ class _ShowCleState extends State<ShowCle> {
                 width: 6,
               ),
               Text(
-                cle['numeroSite'],
+                location['addressLocation'],
                 style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).accentColor,
                     fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Icon(
+                Icons.vpn_key,
+                color: typeColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 6,
+              ),
+              Text(
+                location['nombredecle'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: typeColor,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                width: 15,
               ),
               SizedBox(width: 15),
               Icon(
@@ -77,7 +100,7 @@ class _ShowCleState extends State<ShowCle> {
                 width: 6,
               ),
               Text(
-                cle['type'],
+                location['type'],
                 style: TextStyle(
                     fontSize: 16,
                     color: typeColor,
@@ -93,12 +116,12 @@ class _ShowCleState extends State<ShowCle> {
             children: [
               GestureDetector(
                 onTap: () {
+                  //print('key before send ${location['key']}');
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => UpdateCle(
-                                cleKey: cle['key'],
-                              )));
+                          builder: (_) => EditCleInformation(
+                              locationKey: location['key'])));
                 },
                 child: Row(
                   children: [
@@ -109,7 +132,7 @@ class _ShowCleState extends State<ShowCle> {
                     SizedBox(
                       width: 6,
                     ),
-                    Text('Edit',
+                    Text('Edit Cle',
                         style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).primaryColor,
@@ -117,26 +140,28 @@ class _ShowCleState extends State<ShowCle> {
                   ],
                 ),
               ),
-              SizedBox(
-                width: 20,
-              ),
               GestureDetector(
                 onTap: () {
-                  _showDeleteDialog(cle: cle);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => CreateCle(
+                                locationKey: location['key'],
+                              )));
                 },
                 child: Row(
                   children: [
                     Icon(
-                      Icons.delete,
-                      color: Colors.red[700],
+                      Icons.add,
+                      color: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
                       width: 6,
                     ),
-                    Text('Delete',
+                    Text('Add Cle',
                         style: TextStyle(
                             fontSize: 16,
-                            color: Colors.red[700],
+                            color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.w600)),
                   ],
                 ),
@@ -151,12 +176,12 @@ class _ShowCleState extends State<ShowCle> {
     );
   }
 
-  _showDeleteDialog({required Map cle}) {
+  _showDeleteDialog({required Map location}) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Delete ${cle['name']}'),
+            title: Text('Delete ${location['name']}'),
             content: Text('Are you sure you want to delete?'),
             actions: [
               FlatButton(
@@ -167,7 +192,7 @@ class _ShowCleState extends State<ShowCle> {
               FlatButton(
                   onPressed: () {
                     reference
-                        .child(cle['key'])
+                        .child(location['key'])
                         .remove()
                         .whenComplete(() => Navigator.pop(context));
                   },
@@ -181,17 +206,17 @@ class _ShowCleState extends State<ShowCle> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Clé'),
+        title: Text('List Location'),
       ),
       body: Container(
         height: double.infinity,
         child: FirebaseAnimatedList(
-          query: _ref,
+          query: _refLocation,
           itemBuilder: (BuildContext context, DataSnapshot snapshot,
               Animation<double> animation, int index) {
-            Map cle = snapshot.value;
-            cle['key'] = snapshot.key;
-            return _buildCleItem(cle: cle);
+            Map location = snapshot.value;
+            location['key'] = snapshot.key;
+            return _buildCleItem(location: location);
           },
         ),
       ),
@@ -200,7 +225,7 @@ class _ShowCleState extends State<ShowCle> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) {
-              return CreateCle();
+              return CreateLocation();
             }),
           );
         },
@@ -213,13 +238,13 @@ class _ShowCleState extends State<ShowCle> {
     Color color = Theme.of(context).accentColor;
 
     switch (type) {
-      case 'Clé':
+      case 'Resto':
         color = Colors.brown;
         break;
-      case 'Badge':
+      case 'Crous':
         color = Colors.green;
         break;
-      case 'Carte':
+      case 'Cantine':
         color = Colors.teal;
         break;
       case 'Autre':

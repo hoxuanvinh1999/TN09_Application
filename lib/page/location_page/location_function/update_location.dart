@@ -27,7 +27,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
   String oldnameLocation = '';
   String oldaddressLocation = '';
 
-  DatabaseReference _ref =
+  DatabaseReference _refLocation =
       FirebaseDatabase.instance.reference().child('Location');
 
   Widget _buildLocationType(String title) {
@@ -198,11 +198,13 @@ class _UpdateLocationState extends State<UpdateLocation> {
     //print('$_addressLocationController.text');
     //String received_key = widget.locationKey;
 
-    DataSnapshot snapshot = await _ref.child(widget.locationKey).once();
+    DataSnapshot snapshot = await _refLocation.child(widget.locationKey).once();
     Map oldlocation = snapshot.value;
     oldnameLocation = oldlocation['nomLocation'];
     oldaddressLocation = oldlocation['addressLocation'];
-    print('old $oldnameLocation');
+    // int nombreofcle = int.parse(numberofcle);
+
+    //print('old $oldnameLocation');
 
     //didnot work here
     /*
@@ -240,7 +242,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
     newnameLocation = _nameLocationController.text;
     newaddressLocation = _addressLocationController.text;
 
-    print('new $newaddressLocation');
+    //print('new $newaddressLocation');
 
     if (newaddressLocation == oldaddressLocation &&
         newnameLocation == oldnameLocation) {
@@ -257,7 +259,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
         'type': typeSelected,
       };
 
-      _ref.child(widget.locationKey).update(newlocation).then((value) {
+      _refLocation.child(widget.locationKey).update(newlocation).then((value) {
         Navigator.pop(context);
       });
     }

@@ -1,6 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import '../cle_page.dart';
+
 class UpdateCle extends StatefulWidget {
   String cleKey;
 
@@ -11,9 +13,9 @@ class UpdateCle extends StatefulWidget {
 }
 
 class _UpdateCleState extends State<UpdateCle> {
-  TextEditingController _nameSite = TextEditingController();
-  TextEditingController _numberCle = TextEditingController();
-  DatabaseReference _ref = FirebaseDatabase.instance.reference().child('Clé');
+  TextEditingController _noteKey = TextEditingController();
+  DatabaseReference _refCle =
+      FirebaseDatabase.instance.reference().child('Cle');
   String _typeSelected = '';
 
   Widget _buildCleType(String title) {
@@ -54,9 +56,9 @@ class _UpdateCleState extends State<UpdateCle> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              controller: _nameSite,
+              controller: _noteKey,
               decoration: InputDecoration(
-                hintText: 'Enter Name',
+                hintText: 'Enter New Note',
                 prefixIcon: Icon(
                   Icons.account_circle,
                   size: 30,
@@ -67,34 +69,18 @@ class _UpdateCleState extends State<UpdateCle> {
               ),
             ),
             SizedBox(height: 15),
-            TextFormField(
-              controller: _numberCle,
-              decoration: InputDecoration(
-                hintText: 'Enter Number',
-                prefixIcon: Icon(
-                  Icons.phone_iphone,
-                  size: 30,
-                ),
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding: EdgeInsets.all(15),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
             Container(
               height: 40,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildCleType('Work'),
+                  _buildCleType('Cle'),
                   SizedBox(width: 10),
-                  _buildCleType('Family'),
+                  _buildCleType('Badge'),
                   SizedBox(width: 10),
-                  _buildCleType('Friends'),
+                  _buildCleType('Carte'),
                   SizedBox(width: 10),
-                  _buildCleType('Others'),
+                  _buildCleType('Autre'),
                 ],
               ),
             ),
@@ -125,33 +111,29 @@ class _UpdateCleState extends State<UpdateCle> {
     );
   }
 
-  getCleDetail() async {
-    DataSnapshot snapshot = await _ref.child(widget.cleKey).once();
+  void saveCle() async {
+    print('widget locationKey: ${widget.cleKey}');
 
-    Map cle = snapshot.value;
+    DataSnapshot snapshot = await _refCle.child(widget.cleKey).once();
+    Map oldkey = snapshot.value;
 
-    _nameSite.text = cle['name'];
+    String newnotekey = _noteKey.text;
 
-    _numberCle.text = cle['number'];
+    if (newnotekey == oldkey['noteCle']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Notthing changed')),
+      );
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ClePage(),
+      ));
+    } else {
+      Map<String, String> newCle = {
+        'noteCle': newnotekey,
+      };
 
-    setState(() {
-      _typeSelected = cle['type'];
-    });
-  }
-
-  void saveCle() {
-    getCleDetail();
-    String name = _nameSite.text;
-    String number = _numberCle.text;
-
-    Map<String, String> cle = {
-      'name': name,
-      'number': number,
-      'type': _typeSelected,
-    };
-
-    _ref.child(widget.cleKey).update(cle).then((value) {
-      Navigator.pop(context);
-    });
+      _refCle.child(widget.cleKey).update(newCle).then((value) {
+        Navigator.pop(context);
+      });
+    }
   }
 }
