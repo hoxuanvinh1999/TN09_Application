@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'login_page/login.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -36,19 +38,11 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        drawer: NavigationDrawerWidget(),
-        // endDrawer: NavigationDrawerWidget(),
-        appBar: AppBar(
-          title: Text(MyApp.title),
-        ),
-        body: Card(
-          child: Column(
-            children: <Widget>[
-              Image.asset('assets/logo_1.jpg'),
-              Text('Demo app homepage')
-            ],
-          ),
-        ),
-      );
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Login App',
+      theme: ThemeData(accentColor: Colors.orange, primarySwatch: Colors.blue),
+      home: LoginScreen(),
+    );
+  }
 }
