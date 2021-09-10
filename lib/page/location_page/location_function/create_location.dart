@@ -6,6 +6,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 class CreateLocation extends StatefulWidget {
+  String contactKey;
+
+  CreateLocation({required this.contactKey});
   @override
   _CreateLocationState createState() => _CreateLocationState();
 }
@@ -15,6 +18,8 @@ class _CreateLocationState extends State<CreateLocation> {
   TextEditingController _addressLocation = TextEditingController();
   String _typeSelected = '';
 
+  DatabaseReference _refContact =
+      FirebaseDatabase.instance.reference().child('Contact');
   DatabaseReference _refLocation =
       FirebaseDatabase.instance.reference().child('Location');
 
@@ -60,7 +65,7 @@ class _CreateLocationState extends State<CreateLocation> {
               decoration: InputDecoration(
                 hintText: 'Nom de la Location',
                 prefixIcon: Icon(
-                  Icons.account_circle,
+                  Icons.home,
                   size: 30,
                 ),
                 fillColor: Colors.white,
@@ -74,7 +79,7 @@ class _CreateLocationState extends State<CreateLocation> {
               decoration: InputDecoration(
                 hintText: 'Address de la Location',
                 prefixIcon: Icon(
-                  Icons.add,
+                  Icons.location_on,
                   size: 30,
                 ),
                 fillColor: Colors.white,
@@ -127,11 +132,20 @@ class _CreateLocationState extends State<CreateLocation> {
     );
   }
 
-  void SaveLocation() {
+  void SaveLocation() async {
+    DataSnapshot snapshotlocation =
+        await _refContact.child(widget.contactKey).once();
+    Map contact = snapshotlocation.value;
+    String numberofLocation = contact['nombredelocation'];
+    numberofLocation = (int.parse(numberofLocation) + 1).toString();
+    Map<String, String> updateContact = {
+      'nombredelocation': numberofLocation,
+    };
+    _refContact.child(widget.contactKey).update(updateContact);
     String nameSite = _nameLocation.text;
     String numberSite = _addressLocation.text;
-
     Map<String, String> location = {
+      'contact_key': widget.contactKey,
       'nomLocation': nameSite,
       'addressLocation': numberSite,
       'type': _typeSelected,

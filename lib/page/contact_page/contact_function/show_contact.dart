@@ -1,35 +1,29 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:tn09_app_demo/page/cle_page/cle_function/create_cle.dart';
-import 'package:tn09_app_demo/page/cle_page/cle_function/view_cle_information.dart';
-import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
-import 'create_location.dart';
-import 'update_location.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
+import 'create_contact.dart';
+import 'update_contact.dart';
+import 'view_list_location.dart';
 
-class ShowLocation extends StatefulWidget {
+class ShowContact extends StatefulWidget {
   @override
-  _ShowLocationState createState() => _ShowLocationState();
+  _ShowContactState createState() => _ShowContactState();
 }
 
-class _ShowLocationState extends State<ShowLocation> {
-  Query _refLocation = FirebaseDatabase.instance
+class _ShowContactState extends State<ShowContact> {
+  Query _refContact = FirebaseDatabase.instance
       .reference()
-      .child('Location')
-      .orderByChild('nomeLocation');
+      .child('Contact')
+      .orderByChild('nomContact');
+  DatabaseReference referenceContact =
+      FirebaseDatabase.instance.reference().child('Contact');
 
-  DatabaseReference referenceLocation =
-      FirebaseDatabase.instance.reference().child('Location');
-  DatabaseReference referenceCle =
-      FirebaseDatabase.instance.reference().child('Cle');
-
-  Widget _buildLocationItem({required Map location}) {
-    Color typeColor = getTypeColor(location['type']);
+  Widget _buildContactItem({required Map contact}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.all(10),
-      height: 180,
+      height: 380,
       color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -38,7 +32,7 @@ class _ShowLocationState extends State<ShowLocation> {
           Row(
             children: [
               Icon(
-                Icons.home,
+                Icons.person,
                 color: Theme.of(context).primaryColor,
                 size: 20,
               ),
@@ -46,7 +40,7 @@ class _ShowLocationState extends State<ShowLocation> {
                 width: 6,
               ),
               Text(
-                location['nomLocation'],
+                contact['nomContact'],
                 style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).primaryColor,
@@ -59,53 +53,14 @@ class _ShowLocationState extends State<ShowLocation> {
           ),
           Row(
             children: [
-              Icon(
-                Icons.location_on,
-                color: Theme.of(context).accentColor,
-                size: 20,
-              ),
               SizedBox(
-                width: 6,
+                width: 26,
               ),
               Text(
-                location['addressLocation'],
+                'Prenom: ' + contact['prenomContact'],
                 style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(width: 15),
-              Icon(
-                Icons.vpn_key,
-                color: typeColor,
-                size: 20,
-              ),
-              SizedBox(
-                width: 6,
-              ),
-              Text(
-                location['nombredecle'],
-                style: TextStyle(
-                    fontSize: 16,
-                    color: typeColor,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              Icon(
-                Icons.category,
-                color: typeColor,
-                size: 20,
-              ),
-              SizedBox(
-                width: 6,
-              ),
-              Text(
-                location['type'],
-                style: TextStyle(
-                    fontSize: 16,
-                    color: typeColor,
                     fontWeight: FontWeight.w600),
               ),
             ],
@@ -114,38 +69,136 @@ class _ShowLocationState extends State<ShowLocation> {
             height: 15,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              GestureDetector(
-                onTap: () {
-                  print('key before send ${location['contact_key']}');
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => ViewContact(
-                              contactKey: location['contact_key'])));
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.checklist_rtl,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Text('View Contact',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.w600)),
-                  ],
-                ),
+              Icon(
+                Icons.calendar_today,
+                color: Theme.of(context).primaryColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Text(
+                'Date de Création: ' + contact['datecreeContact'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w600),
               ),
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 15,
+          ),
+          Row(
+            children: [
+              Icon(
+                Icons.location_on,
+                color: Theme.of(context).primaryColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Text(
+                'Adress: ' + contact['addressContact'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Row(
+            children: [
+              Icon(
+                Icons.phone,
+                color: Theme.of(context).primaryColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Text(
+                'Phone: ' + contact['telephoneContact'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Row(
+            children: [
+              Icon(
+                Icons.contact_mail,
+                color: Theme.of(context).primaryColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Text(
+                'Mail: ' + contact['mailContact'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Row(
+            children: [
+              Icon(
+                Icons.receipt,
+                color: Theme.of(context).primaryColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Text(
+                'Argent à payer: ' + contact['payerContact'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Row(
+            children: [
+              Icon(
+                Icons.house,
+                color: Theme.of(context).primaryColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Text(
+                'Nombre des locations: ' + contact['nombredelocation'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 16,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -153,11 +206,42 @@ class _ShowLocationState extends State<ShowLocation> {
               GestureDetector(
                 onTap: () {
                   //print('key before send ${location['key']}');
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (_) =>
-                              UpdateLocation(locationKey: location['key'])));
+                              CreateLocation(contactKey: contact['key'])));
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: Colors.green,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text('Add Location',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 6,
+              ),
+              GestureDetector(
+                onTap: () {
+                  //print('key before send ${location['key']}');
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) =>
+                              UpdateContact(contactKey: contact['key'])));
                 },
                 child: Row(
                   children: [
@@ -181,7 +265,7 @@ class _ShowLocationState extends State<ShowLocation> {
               ),
               GestureDetector(
                 onTap: () {
-                  _showDeleteDialog(location: location);
+                  _showDeleteDialog(contact: contact);
                 },
                 child: Row(
                   children: [
@@ -218,35 +302,7 @@ class _ShowLocationState extends State<ShowLocation> {
                       context,
                       MaterialPageRoute(
                           builder: (_) =>
-                              CreateCle(locationKey: location['key'])));
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.add,
-                      color: Colors.green,
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Text('Add Key',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.green,
-                            fontWeight: FontWeight.w600)),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => EditCleInformation(
-                              locationKey: location['key'])));
+                              ViewListLocation(contactKey: contact['key'])));
                 },
                 child: Row(
                   children: [
@@ -257,16 +313,13 @@ class _ShowLocationState extends State<ShowLocation> {
                     SizedBox(
                       width: 6,
                     ),
-                    Text('View Key',
+                    Text('View Location',
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.blue,
                             fontWeight: FontWeight.w600)),
                   ],
                 ),
-              ),
-              SizedBox(
-                width: 20,
               ),
             ],
           )
@@ -275,12 +328,12 @@ class _ShowLocationState extends State<ShowLocation> {
     );
   }
 
-  _showDeleteDialog({required Map location}) {
+  _showDeleteDialog({required Map contact}) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Delete ${location['nomLocation']}'),
+            title: Text('Delete ${contact['nomcontact']}'),
             content: Text('Are you sure you want to delete?'),
             actions: [
               FlatButton(
@@ -290,17 +343,10 @@ class _ShowLocationState extends State<ShowLocation> {
                   child: Text('Cancel')),
               FlatButton(
                   onPressed: () {
-                    /*
-                    Query hello = FirebaseDatabase.instance
-                        .reference()
-                        .child('Cle')
-                        .equalTo(location['key']);
-                    
-                    referenceLocation
-                        .child(location['key'])
+                    referenceContact
+                        .child(contact['key'])
                         .remove()
                         .whenComplete(() => Navigator.pop(context));
-                  */
                   },
                   child: Text('Delete'))
             ],
@@ -312,57 +358,31 @@ class _ShowLocationState extends State<ShowLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List Location'),
+        title: Text('List Contact'),
       ),
       body: Container(
         height: double.infinity,
         child: FirebaseAnimatedList(
-          query: _refLocation,
+          query: _refContact,
           itemBuilder: (BuildContext context, DataSnapshot snapshot,
               Animation<double> animation, int index) {
-            Map location = snapshot.value;
-            location['key'] = snapshot.key;
-            return _buildLocationItem(location: location);
+            Map contact = snapshot.value;
+            contact['key'] = snapshot.key;
+            return _buildContactItem(contact: contact);
           },
         ),
       ),
-      /*
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          /*
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) {
-              return CreateLocation();
+              return CreateContact();
             }),
           );
-          */
         },
         child: Icon(Icons.add, color: Colors.white),
       ),
-      */
     );
-  }
-
-  Color getTypeColor(String type) {
-    Color color = Theme.of(context).accentColor;
-    switch (type) {
-      case 'Resto':
-        color = Colors.brown;
-        break;
-      case 'Crous':
-        color = Colors.green;
-        break;
-      case 'Cantine':
-        color = Colors.teal;
-        break;
-      case 'Autre':
-        color = Colors.black;
-        break;
-      default:
-        color = Colors.red;
-        break;
-    }
-    return color;
   }
 }

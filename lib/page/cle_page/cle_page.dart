@@ -4,9 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/show_cle.dart';
 
 import 'cle_function/create_cle.dart';
-import 'cle_function/show_list_location.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/show_list_location.dart';
 
 class ClePage extends StatelessWidget {
   @override
@@ -19,7 +20,7 @@ class ClePage extends StatelessWidget {
         appBar: AppBar(
           title: const Text(pageTitle),
         ),
-        body: ShowListLocation(),
+        body: ShowCle(),
       ),
     );
   }

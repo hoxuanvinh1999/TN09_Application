@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tn09_app_demo/page/login_page/login_screen.dart';
 //import 'widget/button_widget.dart';
 import 'widget/navigation_drawer_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-import 'login_page/login.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,8 +39,8 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login App',
-      theme: ThemeData(accentColor: Colors.orange, primarySwatch: Colors.blue),
+      title: 'Login Page',
+      theme: ThemeData(accentColor: Colors.green, primarySwatch: Colors.blue),
       home: LoginScreen(),
     );
   }

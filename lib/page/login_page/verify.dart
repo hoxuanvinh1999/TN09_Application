@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../page/home_page.dart';
+import 'package:tn09_app_demo/page/home_page.dart';
 import 'dart:async';
 
 class VerifyScreen extends StatefulWidget {

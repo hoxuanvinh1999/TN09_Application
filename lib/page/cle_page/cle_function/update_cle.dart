@@ -60,7 +60,7 @@ class _UpdateCleState extends State<UpdateCle> {
               decoration: InputDecoration(
                 hintText: 'Enter New Note',
                 prefixIcon: Icon(
-                  Icons.account_circle,
+                  Icons.vpn_key,
                   size: 30,
                 ),
                 fillColor: Colors.white,

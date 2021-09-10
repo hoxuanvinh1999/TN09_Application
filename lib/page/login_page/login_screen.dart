@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tn09_app_demo/page/home_page.dart';
 
-import '../page/home_page.dart';
 import 'reset.dart';
 import 'verify.dart';
 
@@ -82,10 +82,12 @@ class _LoginScreenState extends State<LoginScreen> {
       await auth.signInWithEmailAndPassword(email: _email, password: _password);
 
       //Success
+      Fluttertoast.showToast(
+          msg: 'Sign In Successed', gravity: ToastGravity.TOP);
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => HomeScreen()));
     } on FirebaseAuthException catch (error) {
-      String msgerror = 'Error sign in';
+      //String msgerror = 'Error sign in';
       Fluttertoast.showToast(
           msg: (error.message).toString(), gravity: ToastGravity.TOP);
     }
@@ -98,10 +100,12 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _email, password: _password);
 
       //Success
+      Fluttertoast.showToast(
+          msg: 'Sign Up Successed', gravity: ToastGravity.TOP);
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => HomeScreen()));
     } on FirebaseAuthException catch (error) {
-      String msgerror = 'Error sign up';
+      //String msgerror = 'Error sign up';
       Fluttertoast.showToast(
         msg: (error.message).toString(),
         gravity: ToastGravity.TOP,

@@ -60,7 +60,7 @@ class _EditCleInformationState extends State<EditCleInformation> {
                 width: 15,
               ),
               Icon(
-                Icons.group_work,
+                Icons.category,
                 color: typeColor,
                 size: 20,
               ),
@@ -143,7 +143,7 @@ class _EditCleInformationState extends State<EditCleInformation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Cle Information'),
+        title: Text('View Cle Information'),
       ),
       body: Container(
         height: double.infinity,
@@ -225,7 +225,7 @@ class _EditCleInformationState extends State<EditCleInformation> {
         color = Colors.teal;
         break;
       case 'Autre':
-        color = Colors.grey;
+        color = Colors.black;
         break;
       default:
         color = Colors.red;

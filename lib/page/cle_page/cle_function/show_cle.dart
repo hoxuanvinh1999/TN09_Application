@@ -1,26 +1,27 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
-import 'create_cle.dart';
-import 'update_cle.dart';
-import 'view_cle_information.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/create_cle.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/update_cle.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/view_cle_information.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/view_location.dart';
+import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
 
-class ShowListLocation extends StatefulWidget {
+class ShowCle extends StatefulWidget {
   @override
-  _ShowListLocationState createState() => _ShowListLocationState();
+  _ShowCleState createState() => _ShowCleState();
 }
 
-class _ShowListLocationState extends State<ShowListLocation> {
-  Query _refLocation = FirebaseDatabase.instance
+class _ShowCleState extends State<ShowCle> {
+  Query _refCle = FirebaseDatabase.instance
       .reference()
-      .child('Location')
-      .orderByChild('nomLocation');
-  DatabaseReference reference =
-      FirebaseDatabase.instance.reference().child('Location');
+      .child('Cle')
+      .orderByChild('noteCle');
+  DatabaseReference referenceCle =
+      FirebaseDatabase.instance.reference().child('Cle');
 
-  Widget _buildCleItem({required Map location}) {
-    Color typeColor = getTypeColor(location['type']);
+  Widget _buildCleItem({required Map cle}) {
+    Color typeColor = getTypeColor(cle['type']);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.all(10),
@@ -33,7 +34,7 @@ class _ShowListLocationState extends State<ShowListLocation> {
           Row(
             children: [
               Icon(
-                Icons.home,
+                Icons.note,
                 color: Theme.of(context).primaryColor,
                 size: 20,
               ),
@@ -41,56 +42,15 @@ class _ShowListLocationState extends State<ShowListLocation> {
                 width: 6,
               ),
               Text(
-                location['nomLocation'],
+                cle['noteCle'],
                 style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w600),
               ),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                color: Theme.of(context).accentColor,
-                size: 20,
-              ),
-              SizedBox(
-                width: 6,
-              ),
-              Text(
-                location['addressLocation'],
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.w600),
-              ),
               SizedBox(
                 width: 15,
               ),
-              Icon(
-                Icons.vpn_key,
-                color: typeColor,
-                size: 20,
-              ),
-              SizedBox(
-                width: 6,
-              ),
-              Text(
-                location['nombredecle'],
-                style: TextStyle(
-                    fontSize: 16,
-                    color: typeColor,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              SizedBox(width: 15),
               Icon(
                 Icons.category,
                 color: typeColor,
@@ -100,7 +60,7 @@ class _ShowListLocationState extends State<ShowListLocation> {
                 width: 6,
               ),
               Text(
-                location['type'],
+                cle['type'],
                 style: TextStyle(
                     fontSize: 16,
                     color: typeColor,
@@ -109,7 +69,7 @@ class _ShowListLocationState extends State<ShowListLocation> {
             ],
           ),
           SizedBox(
-            height: 15,
+            height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -117,11 +77,11 @@ class _ShowListLocationState extends State<ShowListLocation> {
               GestureDetector(
                 onTap: () {
                   //print('key before send ${location['key']}');
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => EditCleInformation(
-                              locationKey: location['key'])));
+                          builder: (_) => UpdateCle(cleKey: cle['key'])));
                 },
                 child: Row(
                   children: [
@@ -142,23 +102,54 @@ class _ShowListLocationState extends State<ShowListLocation> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => CreateCle(
-                                locationKey: location['key'],
-                              )));
+                  _showDeleteDialog(cle: cle);
                 },
                 child: Row(
                   children: [
                     Icon(
-                      Icons.add,
+                      Icons.delete,
                       color: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
                       width: 6,
                     ),
-                    Text('Add Cle',
+                    Text('Delete',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.red[700],
+                            fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) =>
+                              ViewLocation(locationKey: cle['location_key'])));
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.checklist_rtl,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text('View Location',
                         style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).primaryColor,
@@ -176,12 +167,12 @@ class _ShowListLocationState extends State<ShowListLocation> {
     );
   }
 
-  _showDeleteDialog({required Map location}) {
+  _showDeleteDialog({required Map cle}) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Delete ${location['name']}'),
+            title: Text('Delete ${cle['nomLocation']}'),
             content: Text('Are you sure you want to delete?'),
             actions: [
               FlatButton(
@@ -191,8 +182,8 @@ class _ShowListLocationState extends State<ShowListLocation> {
                   child: Text('Cancel')),
               FlatButton(
                   onPressed: () {
-                    reference
-                        .child(location['key'])
+                    referenceCle
+                        .child(cle['key'])
                         .remove()
                         .whenComplete(() => Navigator.pop(context));
                   },
@@ -206,20 +197,21 @@ class _ShowListLocationState extends State<ShowListLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List Location'),
+        title: Text('List Cle'),
       ),
       body: Container(
         height: double.infinity,
         child: FirebaseAnimatedList(
-          query: _refLocation,
+          query: _refCle,
           itemBuilder: (BuildContext context, DataSnapshot snapshot,
               Animation<double> animation, int index) {
-            Map location = snapshot.value;
-            location['key'] = snapshot.key;
-            return _buildCleItem(location: location);
+            Map cle = snapshot.value;
+            cle['key'] = snapshot.key;
+            return _buildCleItem(cle: cle);
           },
         ),
       ),
+      /*
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           /*
@@ -233,20 +225,20 @@ class _ShowListLocationState extends State<ShowListLocation> {
         },
         child: Icon(Icons.add, color: Colors.white),
       ),
+      */
     );
   }
 
   Color getTypeColor(String type) {
     Color color = Theme.of(context).accentColor;
-
     switch (type) {
-      case 'Resto':
+      case 'Cle':
         color = Colors.brown;
         break;
-      case 'Crous':
+      case 'Badge':
         color = Colors.green;
         break;
-      case 'Cantine':
+      case 'Carte':
         color = Colors.teal;
         break;
       case 'Autre':

@@ -124,10 +124,10 @@ class _CreateCleState extends State<CreateCle> {
     DataSnapshot snapshotlocation =
         await _refLocation.child(widget.locationKey).once();
     Map location = snapshotlocation.value;
-    String nombreofCle = location['nombredecle'];
-    nombreofCle = (int.parse(nombreofCle) + 1).toString();
+    String numberofCle = location['nombredecle'];
+    numberofCle = (int.parse(numberofCle) + 1).toString();
     Map<String, String> updatelocation = {
-      'nombredecle': nombreofCle,
+      'nombredecle': numberofCle,
     };
     _refLocation.child(widget.locationKey).update(updatelocation);
 
