@@ -9,7 +9,7 @@ import 'package:tn09_app_demo/page/cle_page/cle_function/update_cle.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/view_location.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
 
-Widget buildCleItem({required BuildContext context, required Map cle}) {
+Widget buildItemCle({required BuildContext context, required Map cle}) {
   Color typeColor = getTypeColorCle(cle['type']);
   return Container(
     margin: EdgeInsets.symmetric(vertical: 10),

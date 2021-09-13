@@ -44,7 +44,7 @@ class _ViewInformationCleState extends State<ViewInformationCle> {
               Animation<double> animation, int index) {
             Map cle = snapshot.value;
             cle['key'] = snapshot.key;
-            return buildCleItem(context: context, cle: cle);
+            return buildItemCle(context: context, cle: cle);
           },
         ),
       ),

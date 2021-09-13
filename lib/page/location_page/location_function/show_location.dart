@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/cle_page/cle_function/create_cle.dart';
 import 'package:tn09_app_demo/page/cle_page/cle_function/view_information_cle.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/get_type_color_location.dart';
 import 'create_location.dart';
 import 'update_location.dart';
 
@@ -25,7 +26,7 @@ class _ShowLocationState extends State<ShowLocation> {
       FirebaseDatabase.instance.reference().child('Cle');
 
   Widget _buildLocationItem({required Map location}) {
-    Color typeColor = getTypeColor(location['type']);
+    Color typeColor = getTypeColorLocation(location['type']);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.all(10),
@@ -342,27 +343,5 @@ class _ShowLocationState extends State<ShowLocation> {
       ),
       */
     );
-  }
-
-  Color getTypeColor(String type) {
-    Color color = Theme.of(context).accentColor;
-    switch (type) {
-      case 'Resto':
-        color = Colors.brown;
-        break;
-      case 'Crous':
-        color = Colors.green;
-        break;
-      case 'Cantine':
-        color = Colors.teal;
-        break;
-      case 'Autre':
-        color = Colors.black;
-        break;
-      default:
-        color = Colors.red;
-        break;
-    }
-    return color;
   }
 }

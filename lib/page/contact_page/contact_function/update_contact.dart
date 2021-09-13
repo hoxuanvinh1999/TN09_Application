@@ -176,7 +176,7 @@ class _UpdateContactState extends State<UpdateContact> {
                   ),
                   onPressed: () {
                     if (_updateContactKey.currentState!.validate()) {
-                      SaveContact();
+                      UpdateContact();
                     }
                   },
                   color: Theme.of(context).primaryColor,
@@ -189,7 +189,7 @@ class _UpdateContactState extends State<UpdateContact> {
     );
   }
 
-  void SaveContact() async {
+  void UpdateContact() async {
     print('widget locationKey: ${widget.contactKey}');
 
     DataSnapshot snapshot = await _refContact.child(widget.contactKey).once();

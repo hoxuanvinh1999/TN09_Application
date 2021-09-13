@@ -6,6 +6,7 @@ import 'package:tn09_app_demo/page/cle_page/cle_function/delete_cle.dart';
 import 'package:tn09_app_demo/page/cle_page/cle_function/view_information_cle.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/get_type_color_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/update_location.dart';
 
 class ViewListLocation extends StatefulWidget {
@@ -28,7 +29,7 @@ class _ViewListLocationState extends State<ViewListLocation> {
       FirebaseDatabase.instance.reference().child('Contact');
 
   Widget _buildLocationItem({required Map location}) {
-    Color typeColor = getTypeColor(location['type']);
+    Color typeColor = getTypeColorLocation(location['type']);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.all(10),
@@ -244,40 +245,6 @@ class _ViewListLocationState extends State<ViewListLocation> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('List of Location and Information'),
-      ),
-      body: Container(
-        height: double.infinity,
-        child: FirebaseAnimatedList(
-          query: _refLocation
-              .orderByChild('contact_key')
-              .equalTo(widget.contactKey),
-          itemBuilder: (BuildContext context, DataSnapshot snapshot,
-              Animation<double> animation, int index) {
-            Map location = snapshot.value;
-            location['key'] = snapshot.key;
-            return _buildLocationItem(location: location);
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) {
-              return CreateLocation(contactKey: widget.contactKey);
-            }),
-          );
-        },
-        child: Icon(Icons.add, color: Colors.white),
-      ),
-    );
-  }
-
   _showDeleteDialog({required Map location}) {
     showDialog(
         context: context,
@@ -321,25 +288,37 @@ class _ViewListLocationState extends State<ViewListLocation> {
     _refContact.child(widget.contactKey).update(updatecontact);
   }
 
-  Color getTypeColor(String type) {
-    Color color = Theme.of(context).accentColor;
-    switch (type) {
-      case 'Resto':
-        color = Colors.brown;
-        break;
-      case 'Crous':
-        color = Colors.green;
-        break;
-      case 'Cantine':
-        color = Colors.teal;
-        break;
-      case 'Autre':
-        color = Colors.black;
-        break;
-      default:
-        color = Colors.red;
-        break;
-    }
-    return color;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('List of Location and Information'),
+      ),
+      body: Container(
+        height: double.infinity,
+        child: FirebaseAnimatedList(
+          query: _refLocation
+              .orderByChild('contact_key')
+              .equalTo(widget.contactKey),
+          itemBuilder: (BuildContext context, DataSnapshot snapshot,
+              Animation<double> animation, int index) {
+            Map location = snapshot.value;
+            location['key'] = snapshot.key;
+            return _buildLocationItem(location: location);
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) {
+              return CreateLocation(contactKey: widget.contactKey);
+            }),
+          );
+        },
+        child: Icon(Icons.add, color: Colors.white),
+      ),
+    );
   }
 }
