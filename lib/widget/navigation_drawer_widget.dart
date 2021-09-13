@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_page.dart';
+import 'package:tn09_app_demo/page/etape_page/etape_page.dart';
 import 'package:tn09_app_demo/page/testing_page.dart';
 //import 'package:http/http.dart' as http;
 import '../page/collecteur_page.dart';
@@ -68,12 +69,17 @@ class NavigationDrawerWidget extends StatelessWidget {
                   const SizedBox(height: 16),
                   //Divider(color: Colors.white70),
                   buildMenuItem(
-                    text: 'Testing',
+                    text: 'Etape',
                     //icon: Icons.update,
                     onClicked: () => selectedItem(context, 6),
                   ),
                   const SizedBox(height: 16),
                   //Divider(color: Colors.white70),
+                  buildMenuItem(
+                    text: 'Testing',
+                    //icon: Icons.update,
+                    onClicked: () => selectedItem(context, 7),
+                  ),
                 ],
               ),
             ),
@@ -134,6 +140,11 @@ class NavigationDrawerWidget extends StatelessWidget {
         ));
         break;
       case 6:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => EtapePage(),
+        ));
+        break;
+      case 7:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => TestingPage(),
         ));

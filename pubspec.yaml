@@ -33,6 +33,7 @@ dependencies:
   #Google Icons
   font_awesome_flutter: ^9.0.0
   intl: ^0.17.0
+  basic_utils: ^3.6.0
 
 
 

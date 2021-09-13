@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:tn09_app_demo/page/home_page.dart';
+import 'package:tn09_app_demo/page/home_page/home_page.dart';
 
 import 'reset.dart';
 import 'verify.dart';

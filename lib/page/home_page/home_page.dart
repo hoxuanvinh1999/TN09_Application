@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/login_page/login_screen.dart';
-import '../widget/navigation_drawer_widget.dart';
+import '../../widget/navigation_drawer_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   final auth = FirebaseAuth.instance;
