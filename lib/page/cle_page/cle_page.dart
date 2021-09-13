@@ -6,9 +6,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/page/cle_page/cle_function/show_cle.dart';
 
-import 'cle_function/create_cle.dart';
-import 'package:tn09_app_demo/page/cle_page/cle_function/show_list_location.dart';
-
 class ClePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

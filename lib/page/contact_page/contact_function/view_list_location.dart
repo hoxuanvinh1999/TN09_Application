@@ -2,7 +2,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/cle_page/cle_function/create_cle.dart';
-import 'package:tn09_app_demo/page/cle_page/cle_function/view_cle_information.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/delete_cle.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/view_information_cle.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/update_location.dart';
@@ -213,7 +214,7 @@ class _ViewListLocationState extends State<ViewListLocation> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => EditCleInformation(
+                          builder: (_) => ViewInformationCle(
                               locationKey: location['key'])));
                 },
                 child: Row(
@@ -293,6 +294,9 @@ class _ViewListLocationState extends State<ViewListLocation> {
               FlatButton(
                   onPressed: () {
                     reduceNumberofLocation();
+                    if (location['nombredecle'] != '0') {
+                      deleteCle(location_key: location['key']);
+                    }
                     _refLocation
                         .child(location['key'])
                         .remove()

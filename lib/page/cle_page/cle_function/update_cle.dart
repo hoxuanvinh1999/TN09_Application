@@ -18,7 +18,7 @@ class _UpdateCleState extends State<UpdateCle> {
       FirebaseDatabase.instance.reference().child('Cle');
   String _typeSelected = '';
 
-  Widget _buildCleType(String title) {
+  Widget _buildCleType(BuildContext context, String title) {
     return InkWell(
       child: Container(
         height: 40,
@@ -74,13 +74,13 @@ class _UpdateCleState extends State<UpdateCle> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildCleType('Cle'),
+                  _buildCleType(context, 'Cle'),
                   SizedBox(width: 10),
-                  _buildCleType('Badge'),
+                  _buildCleType(context, 'Badge'),
                   SizedBox(width: 10),
-                  _buildCleType('Carte'),
+                  _buildCleType(context, 'Carte'),
                   SizedBox(width: 10),
-                  _buildCleType('Autre'),
+                  _buildCleType(context, 'Autre'),
                 ],
               ),
             ),
@@ -100,7 +100,7 @@ class _UpdateCleState extends State<UpdateCle> {
                   ),
                 ),
                 onPressed: () {
-                  saveCle();
+                  updateCle();
                 },
                 color: Theme.of(context).primaryColor,
               ),
@@ -111,7 +111,7 @@ class _UpdateCleState extends State<UpdateCle> {
     );
   }
 
-  void saveCle() async {
+  void updateCle() async {
     print('widget locationKey: ${widget.cleKey}');
 
     DataSnapshot snapshot = await _refCle.child(widget.cleKey).once();

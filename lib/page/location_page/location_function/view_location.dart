@@ -4,7 +4,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/cle_page/cle_function/create_cle.dart';
 import 'package:tn09_app_demo/page/cle_page/cle_function/delete_cle.dart';
-import 'package:tn09_app_demo/page/cle_page/cle_function/view_cle_information.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/view_information_cle.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/update_contact.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/view_list_location.dart';
@@ -256,7 +256,7 @@ class _ViewLocationState extends State<ViewLocation> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => EditCleInformation(
+                            builder: (_) => ViewInformationCle(
                                 locationKey: location['key'])));
                   },
                   child: Row(
@@ -306,9 +306,9 @@ class _ViewLocationState extends State<ViewLocation> {
                   child: Text('Cancel')),
               FlatButton(
                   onPressed: () {
-                    String text = location['key'];
+                    String location_key = location['key'];
                     //print('location key to delete: $text');
-                    deleteCle(location_key: text);
+                    deleteCle(location_key: location_key);
                     _refLocation
                         .child(location['key'])
                         .remove()
