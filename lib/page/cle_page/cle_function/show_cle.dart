@@ -19,6 +19,8 @@ class _ShowCleState extends State<ShowCle> {
       .orderByChild('noteCle');
   DatabaseReference referenceCle =
       FirebaseDatabase.instance.reference().child('Cle');
+  DatabaseReference referenceLocation =
+      FirebaseDatabase.instance.reference().child('Location');
 
   Widget _buildCleItem({required Map cle}) {
     Color typeColor = getTypeColor(cle['type']);
@@ -182,6 +184,7 @@ class _ShowCleState extends State<ShowCle> {
                   child: Text('Cancel')),
               FlatButton(
                   onPressed: () {
+                    reduceNumberofKey(location_key: cle['location_key']);
                     referenceCle
                         .child(cle['key'])
                         .remove()
@@ -227,6 +230,19 @@ class _ShowCleState extends State<ShowCle> {
       ),
       */
     );
+  }
+
+  void reduceNumberofKey({required String location_key}) async {
+    String cleTableSecurityPass = 'check';
+    DataSnapshot snapshotlocation =
+        await referenceLocation.child(location_key).once();
+    Map location = snapshotlocation.value;
+    String nombreofCle = location['nombredecle'];
+    nombreofCle = (int.parse(nombreofCle) - 1).toString();
+    Map<String, String> updatelocation = {
+      'nombredecle': nombreofCle,
+    };
+    referenceLocation.child(location_key).update(updatelocation);
   }
 
   Color getTypeColor(String type) {

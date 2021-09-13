@@ -291,6 +291,7 @@ class _ViewLocationState extends State<ViewLocation> {
   }
 
   _showDeleteDialog({required Map location}) {
+    print('Indo delete function');
     showDialog(
         context: context,
         builder: (context) {
@@ -305,18 +306,9 @@ class _ViewLocationState extends State<ViewLocation> {
                   child: Text('Cancel')),
               FlatButton(
                   onPressed: () {
-                    FirebaseAnimatedList(
-                      query: _referenceCle,
-                      itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                          Animation<double> animation, int index) {
-                        Map cle = snapshot.value;
-                        cle['key'] = snapshot.key;
-                        if (cle['location_key'] == location['key']) {
-                          _refCle.child(cle['location_key']).remove();
-                        }
-                        return SizedBox.shrink();
-                      },
-                    );
+                    String text = location['key'];
+                    //print('location key to delete: $text');
+                    deleteCle(location_key: text);
                     _refLocation
                         .child(location['key'])
                         .remove()
@@ -332,7 +324,7 @@ class _ViewLocationState extends State<ViewLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contact Information'),
+        title: Text('Location Information'),
       ),
       body: Container(
         height: double.infinity,
@@ -340,7 +332,7 @@ class _ViewLocationState extends State<ViewLocation> {
           query: _referenceLocation,
           itemBuilder: (BuildContext context, DataSnapshot snapshot,
               Animation<double> animation, int index) {
-            print('inside ${widget.locationKey}');
+            //print('inside ${widget.locationKey}');
             Map location = snapshot.value;
             location['key'] = snapshot.key;
             return _buildLocationItem(location: location);
