@@ -6,7 +6,6 @@ import 'package:tn09_app_demo/page/location_page/location_function/delete_locati
 import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
 import 'create_contact.dart';
 import 'update_contact.dart';
-import 'view_list_location.dart';
 
 class ShowContact extends StatefulWidget {
   @override

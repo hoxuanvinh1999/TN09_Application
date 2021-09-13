@@ -1,18 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:tn09_app_demo/page/contact_page/contact_function/show_delete_dialog_contact.dart';
-import 'package:tn09_app_demo/page/location_page/location_function/delete_location.dart';
-import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
-import 'create_contact.dart';
-import 'update_contact.dart';
-import '../../location_page/location_function/view_information_location.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/create_cle.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/view_information_cle.dart';
+import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/get_type_color_location.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/show_delete_dialog_location.dart';
+import 'create_location.dart';
+import 'update_location.dart';
 
-Widget buildItemContact({required BuildContext context, required Map contact}) {
+Widget buildItemLocation(
+    {required BuildContext context, required Map location}) {
+  Color typeColor = getTypeColorLocation(location['type']);
   return Container(
     margin: EdgeInsets.symmetric(vertical: 10),
     padding: EdgeInsets.all(10),
-    height: 380,
+    height: 180,
     color: Colors.white,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -21,7 +25,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
         Row(
           children: [
             Icon(
-              Icons.person,
+              Icons.home,
               color: Theme.of(context).primaryColor,
               size: 20,
             ),
@@ -29,7 +33,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
               width: 6,
             ),
             Text(
-              contact['nomContact'],
+              location['nomLocation'],
               style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).primaryColor,
@@ -42,59 +46,50 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
         ),
         Row(
           children: [
-            SizedBox(
-              width: 26,
-            ),
-            Text(
-              'Prenom: ' + contact['prenomContact'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Row(
-          children: [
-            Icon(
-              Icons.calendar_today,
-              color: Theme.of(context).primaryColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            Text(
-              'Date de Création: ' + contact['datecreeContact'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Row(
-          children: [
             Icon(
               Icons.location_on,
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).accentColor,
               size: 20,
             ),
             SizedBox(
-              width: 12,
+              width: 6,
             ),
             Text(
-              'Adress: ' + contact['addressContact'],
+              location['addressLocation'],
               style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).accentColor,
                   fontWeight: FontWeight.w600),
+            ),
+            SizedBox(width: 15),
+            Icon(
+              Icons.vpn_key,
+              color: typeColor,
+              size: 20,
+            ),
+            SizedBox(
+              width: 6,
+            ),
+            Text(
+              location['nombredecle'],
+              style: TextStyle(
+                  fontSize: 16, color: typeColor, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Icon(
+              Icons.category,
+              color: typeColor,
+              size: 20,
+            ),
+            SizedBox(
+              width: 6,
+            ),
+            Text(
+              location['type'],
+              style: TextStyle(
+                  fontSize: 16, color: typeColor, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -102,92 +97,38 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
           height: 15,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Icon(
-              Icons.phone,
-              color: Theme.of(context).primaryColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            Text(
-              'Phone: ' + contact['telephoneContact'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w600),
+            GestureDetector(
+              onTap: () {
+                print('key before send ${location['contact_key']}');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            ViewContact(contactKey: location['contact_key'])));
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.checklist_rtl,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Text('View Contact',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
             ),
           ],
         ),
         SizedBox(
-          height: 15,
-        ),
-        Row(
-          children: [
-            Icon(
-              Icons.contact_mail,
-              color: Theme.of(context).primaryColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            Text(
-              'Mail: ' + contact['mailContact'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Row(
-          children: [
-            Icon(
-              Icons.receipt,
-              color: Theme.of(context).primaryColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            Text(
-              'Argent à payer: ' + contact['payerContact'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Row(
-          children: [
-            Icon(
-              Icons.house,
-              color: Theme.of(context).primaryColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            Text(
-              'Nombre des locations: ' + contact['nombredelocation'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 16,
+          height: 8,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -195,42 +136,11 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
             GestureDetector(
               onTap: () {
                 //print('key before send ${location['key']}');
-
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (_) =>
-                            CreateLocation(contactKey: contact['key'])));
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.add,
-                    color: Colors.green,
-                  ),
-                  SizedBox(
-                    width: 6,
-                  ),
-                  Text('Add Location',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.green,
-                          fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: 6,
-            ),
-            GestureDetector(
-              onTap: () {
-                //print('key before send ${location['key']}');
-
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) =>
-                            UpdateContact(contactKey: contact['key'])));
+                            UpdateLocation(locationKey: location['key'])));
               },
               child: Row(
                 children: [
@@ -254,7 +164,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
             ),
             GestureDetector(
               onTap: () {
-                showDeleteDialogContact(context: context, contact: contact);
+                showDeleteDialogLocation(context: context, location: location);
               },
               child: Row(
                 children: [
@@ -290,8 +200,36 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => ViewInformationLocation(
-                            contactKey: contact['key'])));
+                        builder: (_) =>
+                            CreateCle(locationKey: location['key'])));
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.add,
+                    color: Colors.green,
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Text('Add Key',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            ViewInformationCle(locationKey: location['key'])));
               },
               child: Row(
                 children: [
@@ -302,13 +240,16 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
                   SizedBox(
                     width: 6,
                   ),
-                  Text('View Location',
+                  Text('View Key',
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.blue,
                           fontWeight: FontWeight.w600)),
                 ],
               ),
+            ),
+            SizedBox(
+              width: 20,
             ),
           ],
         )

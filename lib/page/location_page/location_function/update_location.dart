@@ -145,7 +145,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
                     ),
                   ),
                   onPressed: () {
-                    saveLocation();
+                    updateLocation();
                   },
                   color: Theme.of(context).primaryColor,
                 ),
@@ -191,7 +191,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
     });*/
   }
 */
-  void saveLocation() async {
+  void updateLocation() async {
     //getLocationDetail();
 
     print('widget locationKey: ${widget.locationKey}');

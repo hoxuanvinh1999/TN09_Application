@@ -4,7 +4,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/build_item_contact.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/update_contact.dart';
-import 'package:tn09_app_demo/page/location_page/location_function/view_list_location.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/view_information_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_page.dart';
 
