@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:tn09_app_demo/page/etape_page/etape_function/build_choice_location_etape.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
 
 class CreateEtape extends StatefulWidget {
@@ -16,6 +17,12 @@ class CreateEtape extends StatefulWidget {
 }
 
 class _CreateEtapeState extends State<CreateEtape> {
+  Query _refLocation = FirebaseDatabase.instance
+      .reference()
+      .child('Location')
+      .orderByChild('nomeLocation');
+
+  /*
   String? value;
   Query _refLocation = FirebaseDatabase.instance
       .reference()
@@ -57,16 +64,30 @@ class _CreateEtapeState extends State<CreateEtape> {
           style: TextStyle(fontSize: 16),
         ),
       );
+      */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Créer Etape'),
       ),
-      body: Center(
+      /*body: Center(
         child: DropdownButton<String>(
           items: createList().map(buildMenuItem).toList(),
           onChanged: (value) => setState(() => this.value = value),
+        ),
+      ),*/
+      body: Container(
+        height: double.infinity,
+        child: FirebaseAnimatedList(
+          query: _refLocation,
+          itemBuilder: (BuildContext context, DataSnapshot snapshot,
+              Animation<double> animation, int index) {
+            Map location = snapshot.value;
+            location['key'] = snapshot.key;
+            return buildChoiceLocation(
+                context: context, location: location, reason: 'createEtape');
+          },
         ),
       ),
     );

@@ -1,18 +1,17 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:tn09_app_demo/page/contact_page/contact_function/show_delete_dialog_contact.dart';
-import 'package:tn09_app_demo/page/location_page/location_function/delete_location.dart';
-import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
-import 'create_contact.dart';
-import 'update_contact.dart';
-import '../../location_page/location_function/view_information_location.dart';
+import 'package:tn09_app_demo/page/etape_page/etape_function/change_location_etape.dart';
+import 'package:tn09_app_demo/page/etape_page/etape_function/show_delete_dialog_etape.dart';
+import 'package:tn09_app_demo/page/etape_page/etape_function/update_etape.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/view_information_location.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/view_location.dart';
 
-Widget buildItemContact({required BuildContext context, required Map contact}) {
+Widget buildItemEtape({required BuildContext context, required Map etape}) {
   return Container(
     margin: EdgeInsets.symmetric(vertical: 10),
     padding: EdgeInsets.all(10),
-    height: 380,
+    height: 280,
     color: Colors.white,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -21,7 +20,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
         Row(
           children: [
             Icon(
-              Icons.person,
+              Icons.home,
               color: Theme.of(context).primaryColor,
               size: 20,
             ),
@@ -29,54 +28,10 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
               width: 6,
             ),
             Text(
-              contact['nomContact'],
+              'Nom de la Location: ' + etape['nomLocationEtape'],
               style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          children: [
-            Icon(
-              Icons.person,
-              color: Theme.of(context).primaryColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 6,
-            ),
-            Text(
-              'Prenom: ' + contact['prenomContact'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Row(
-          children: [
-            Icon(
-              Icons.calendar_today,
-              color: Theme.of(context).primaryColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            Text(
-              'Date de Création: ' + contact['datecreeContact'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
                   fontWeight: FontWeight.w600),
             ),
           ],
@@ -92,10 +47,10 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
               size: 20,
             ),
             SizedBox(
-              width: 12,
+              width: 6,
             ),
             Text(
-              'Adress: ' + contact['addressContact'],
+              'Address de la Location:  ' + etape['addressLocationEtape'],
               style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).accentColor,
@@ -109,7 +64,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
         Row(
           children: [
             Icon(
-              Icons.phone,
+              Icons.restore_from_trash,
               color: Theme.of(context).primaryColor,
               size: 20,
             ),
@@ -117,7 +72,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
               width: 12,
             ),
             Text(
-              'Phone: ' + contact['telephoneContact'],
+              'Material: ' + etape['materialEtape'],
               style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).accentColor,
@@ -131,7 +86,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
         Row(
           children: [
             Icon(
-              Icons.contact_mail,
+              Icons.restore_from_trash,
               color: Theme.of(context).primaryColor,
               size: 20,
             ),
@@ -139,7 +94,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
               width: 12,
             ),
             Text(
-              'Mail: ' + contact['mailContact'],
+              'Nombre de bac ' + etape['nombredebac'],
               style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).accentColor,
@@ -153,7 +108,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
         Row(
           children: [
             Icon(
-              Icons.receipt,
+              Icons.sticky_note_2,
               color: Theme.of(context).primaryColor,
               size: 20,
             ),
@@ -161,7 +116,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
               width: 12,
             ),
             Text(
-              'Argent à payer: ' + contact['payerContact'],
+              'Note ' + etape['noteEtape'],
               style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).accentColor,
@@ -171,52 +126,28 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
         ),
         SizedBox(
           height: 15,
-        ),
-        Row(
-          children: [
-            Icon(
-              Icons.house,
-              color: Theme.of(context).primaryColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            Text(
-              'Nombre des locations: ' + contact['nombredelocation'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 16,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             GestureDetector(
               onTap: () {
-                //print('key before send ${location['key']}');
-
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (_) =>
-                            CreateLocation(contactKey: contact['key'])));
+                            ChangeLocationEtape(etapeKey: etape['key'])));
               },
               child: Row(
                 children: [
                   Icon(
-                    Icons.add,
+                    Icons.edit,
                     color: Colors.green,
                   ),
                   SizedBox(
                     width: 6,
                   ),
-                  Text('Add Location',
+                  Text('Change Location',
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.green,
@@ -229,13 +160,10 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
             ),
             GestureDetector(
               onTap: () {
-                //print('key before send ${location['key']}');
-
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) =>
-                            UpdateContact(contactKey: contact['key'])));
+                        builder: (_) => UpdateEtape(etapeKey: etape['key'])));
               },
               child: Row(
                 children: [
@@ -259,7 +187,7 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
             ),
             GestureDetector(
               onTap: () {
-                showDeleteDialogContact(context: context, contact: contact);
+                showDeleteDialogEtape(context: context, etape: etape);
               },
               child: Row(
                 children: [
@@ -295,8 +223,8 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => ViewInformationLocation(
-                            contactKey: contact['key'])));
+                        builder: (_) =>
+                            ViewLocation(locationKey: etape['location_key'])));
               },
               child: Row(
                 children: [
