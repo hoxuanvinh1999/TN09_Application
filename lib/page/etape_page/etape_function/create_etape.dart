@@ -30,7 +30,7 @@ class _CreateEtapeState extends State<CreateEtape> {
       .orderByChild('nomLocation');
   DatabaseReference referenceLocation =
       FirebaseDatabase.instance.reference().child('Location');
-  createList() async {
+    createList() async {
     List<String> result = [];
     await FirebaseDatabase.instance
         .reference()
