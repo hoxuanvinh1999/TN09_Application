@@ -17,7 +17,7 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) => ElevatedButton(
         style: ElevatedButton.styleFrom(
           //padding: EdgeInsets.,
-          minimumSize: Size.fromHeight(20),
+          minimumSize: Size.fromHeight(50),
         ),
         child: buildContent(),
         onPressed: onClicked,

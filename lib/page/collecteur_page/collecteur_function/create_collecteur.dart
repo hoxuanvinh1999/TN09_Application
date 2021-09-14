@@ -7,41 +7,63 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/math_function/is_numeric_function.dart';
+import 'package:tn09_app_demo/widget/button_widget.dart';
 
-class CreateContact extends StatefulWidget {
+class CreateCollecteur extends StatefulWidget {
   @override
-  _CreateContactState createState() => _CreateContactState();
+  _CreateCollecteurState createState() => _CreateCollecteurState();
 }
 
-class _CreateContactState extends State<CreateContact> {
-  final _contactKeyForm = GlobalKey<FormState>();
-  TextEditingController _lastnameContact = TextEditingController();
-  TextEditingController _firstnameContact = TextEditingController();
-  TextEditingController _addressContact = TextEditingController();
-  TextEditingController _telephoneContact = TextEditingController();
-  TextEditingController _mailContact = TextEditingController();
+class _CreateCollecteurState extends State<CreateCollecteur> {
+  final _collecteurKeyForm = GlobalKey<FormState>();
+  TextEditingController _lastnameCollecteur = TextEditingController();
+  TextEditingController _firstnameCollecteur = TextEditingController();
 
-  DatabaseReference _refContact =
-      FirebaseDatabase.instance.reference().child('Contact');
+  DatabaseReference _refCollecteur =
+      FirebaseDatabase.instance.reference().child('Collecteur');
+  DateTime date = DateTime.now();
+
+  String getText() {
+    if (date == null) {
+      return 'Select Date';
+    } else {
+      return DateFormat('MM/dd/yyyy').format(date);
+      // return '${date.month}/${date.day}/${date.year}';
+    }
+  }
+
+  Future pickDate(BuildContext context) async {
+    final initialDate = DateTime.now();
+    final newDate = await showDatePicker(
+      context: context,
+      initialDate: date,
+      firstDate: DateTime(DateTime.now().year - 25),
+      lastDate: DateTime(DateTime.now().year + 10),
+    );
+
+    if (newDate == null) return;
+
+    setState(() => date = newDate);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Créer Contact'),
+        title: const Text('Créer Collecteur'),
       ),
       body: Container(
           margin: EdgeInsets.all(15),
           height: double.infinity,
           child: Form(
-            key: _contactKeyForm,
+            key: _collecteurKeyForm,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextFormField(
-                  controller: _lastnameContact,
+                  controller: _lastnameCollecteur,
                   decoration: InputDecoration(
-                    hintText: 'Nom du Contact',
+                    hintText: 'Nom du Colllecteur',
                     prefixIcon: Icon(
                       Icons.person,
                       size: 30,
@@ -50,12 +72,17 @@ class _CreateContactState extends State<CreateContact> {
                     filled: true,
                     contentPadding: EdgeInsets.all(15),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a something';
+                    }
+                  },
                 ),
                 SizedBox(height: 15),
                 TextFormField(
-                  controller: _firstnameContact,
+                  controller: _firstnameCollecteur,
                   decoration: InputDecoration(
-                    hintText: 'Prenom du Contact',
+                    hintText: 'Prenom du Collecteur',
                     prefixIcon: Icon(
                       Icons.person,
                       size: 30,
@@ -64,20 +91,11 @@ class _CreateContactState extends State<CreateContact> {
                     filled: true,
                     contentPadding: EdgeInsets.all(15),
                   ),
-                ),
-                SizedBox(height: 15),
-                TextFormField(
-                  controller: _addressContact,
-                  decoration: InputDecoration(
-                    hintText: 'Address du Contact',
-                    prefixIcon: Icon(
-                      Icons.home,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a something';
+                    }
+                  },
                 ),
                 SizedBox(height: 15),
                 TextFormField(
@@ -97,20 +115,28 @@ class _CreateContactState extends State<CreateContact> {
                   },
                 ),
                 SizedBox(height: 15),
-                TextFormField(
-                  controller: _mailContact,
-                  decoration: InputDecoration(
-                    hintText: 'Mail du Contact',
-                    prefixIcon: Icon(
-                      Icons.home,
+                Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_today_rounded,
                       size: 30,
                     ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text('Date de naissance',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600)),
+                  ],
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 6),
+                ButtonWidget(
+                  icon: Icons.calendar_today,
+                  text: DateFormat('yMd').format(date).toString(),
+                  onClicked: () => pickDate(context),
+                ),
                 SizedBox(
                   height: 25,
                 ),
@@ -119,7 +145,7 @@ class _CreateContactState extends State<CreateContact> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: RaisedButton(
                     child: Text(
-                      'Créer Contact',
+                      'Créer Collecteur',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.white,
@@ -127,8 +153,8 @@ class _CreateContactState extends State<CreateContact> {
                       ),
                     ),
                     onPressed: () {
-                      if (_contactKeyForm.currentState!.validate()) {
-                        SaveContact();
+                      if (_collecteurKeyForm.currentState!.validate()) {
+                        SaveCollecteur();
                       }
                     },
                     color: Theme.of(context).primaryColor,
@@ -140,26 +166,18 @@ class _CreateContactState extends State<CreateContact> {
     );
   }
 
-  void SaveContact() {
-    String nomContact = _lastnameContact.text;
-    String prenomContact = _firstnameContact.text;
-    String datecreeContact = DateFormat('yMd').format(DateTime.now());
-    String addressContact = _addressContact.text;
-    String telephoneContact = _telephoneContact.text;
-    String mailContact = _mailContact.text;
+  void SaveCollecteur() {
+    String nomCollecteur = _lastnameCollecteur.text;
+    String prenomCollecteur = _firstnameCollecteur.text;
+    String datedeNaissance = DateFormat('yMd').format(date).toString();
 
-    Map<String, String> contact = {
-      'nomContact': nomContact,
-      'prenomContact': prenomContact,
-      'datecreeContact': datecreeContact,
-      'addressContact': addressContact,
-      'telephoneContact': telephoneContact,
-      'mailContact': mailContact,
-      'payerContact': '0',
-      'nombredelocation': '0',
+    Map<String, String> collecteur = {
+      'nomCollecteur': nomCollecteur,
+      'prenomCollecteur': prenomCollecteur,
+      'datedeNaissance': datedeNaissance,
     };
 
-    _refContact.push().set(contact).then((value) {
+    _refCollecteur.push().set(collecteur).then((value) {
       Navigator.pop(context);
     });
   }

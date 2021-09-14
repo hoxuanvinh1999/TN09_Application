@@ -9,7 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/build_choice_location_etape.dart';
-import 'package:tn09_app_demo/page/is_numeric_function.dart';
+import 'package:tn09_app_demo/math_function/is_numeric_function.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
 
 class ConfirmEtape extends StatefulWidget {

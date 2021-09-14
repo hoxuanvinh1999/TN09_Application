@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_page.dart';
+import 'package:tn09_app_demo/page/collecteur_page/collecteur_page.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_page.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_page.dart';
+import 'package:tn09_app_demo/page/location_page/location_page.dart';
+import 'package:tn09_app_demo/page/planning_page.dart';
 import 'package:tn09_app_demo/page/testing_page.dart';
+import 'package:tn09_app_demo/page/vehicule_page.dart';
 //import 'package:http/http.dart' as http;
-import '../page/collecteur_page.dart';
-import '../page/planning_page.dart';
-import '../page/cle_page/cle_page.dart';
-import '../page/vehicule_page.dart';
-import '../page/testing_page.dart';
-import '../page/location_page/location_page.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   final padding = EdgeInsets.symmetric(horizontal: 20);

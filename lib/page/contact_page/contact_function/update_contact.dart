@@ -5,8 +5,8 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:tn09_app_demo/page/is_numeric_function.dart';
-import '../contact_page.dart';
+import 'package:tn09_app_demo/page/contact_page/contact_page.dart';
+import 'package:tn09_app_demo/math_function/is_numeric_function.dart';
 
 class UpdateContact extends StatefulWidget {
   String contactKey;
