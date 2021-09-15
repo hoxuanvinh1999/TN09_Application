@@ -31,8 +31,23 @@ Widget buildChoiceLocation(
                 context,
                 MaterialPageRoute(builder: (_) {
                   return ConfirmEtape(
-                    location: location,
-                  );
+                      location: location, reason: 'confirmEtape');
+                }),
+              );
+            } else if (reason == 'createPlanning') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) {
+                  return ConfirmEtape(
+                      location: location, reason: 'createPlanning');
+                }),
+              );
+            } else if (reason == 'continuePlanning') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) {
+                  return ConfirmEtape(
+                      location: location, reason: 'continuePlanning');
                 }),
               );
             } else {

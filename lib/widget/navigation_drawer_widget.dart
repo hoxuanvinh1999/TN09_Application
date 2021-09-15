@@ -4,7 +4,7 @@ import 'package:tn09_app_demo/page/collecteur_page/collecteur_page.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_page.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_page.dart';
 import 'package:tn09_app_demo/page/location_page/location_page.dart';
-import 'package:tn09_app_demo/page/planning_page.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_page.dart';
 import 'package:tn09_app_demo/page/testing_page.dart';
 import 'package:tn09_app_demo/page/vehicule_page/vehicule_page.dart';
 //import 'package:http/http.dart' as http;
