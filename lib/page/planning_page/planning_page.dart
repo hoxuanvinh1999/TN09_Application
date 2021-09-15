@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/create_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/show_planning.dart';
 
 class PlanningPage extends StatefulWidget {
   @override
@@ -49,9 +50,12 @@ class _PlanningPageState extends State<PlanningPage> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              onPressed: (
-                  //Will update later
-                  ) {},
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) {
+                  return ShowPlanning();
+                }),
+              ),
               color: Theme.of(context).primaryColor,
             ),
           ],
