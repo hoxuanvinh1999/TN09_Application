@@ -2,9 +2,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tn09_app_demo/page/planning_page/planning_function/build_collecteur_part_planning.dart';
-import 'package:tn09_app_demo/page/planning_page/planning_function/build_etape_planning.dart';
-import 'package:tn09_app_demo/page/planning_page/planning_function/build_vehicule_part_planning.dart';
+import 'package:tn09_app_demo/trash/build_collecteur_part_planning.dart';
+import 'package:tn09_app_demo/trash/build_etape_planning.dart';
+import 'package:tn09_app_demo/trash/build_vehicule_part_planning.dart';
 
 class buildItemPlanning extends StatefulWidget {
   BuildContext context;
@@ -54,6 +54,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
         });
       });
     }
+    print('$listNomLocationEtape');
   }
 
   getInformationCollecteur() async {
@@ -85,7 +86,6 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
   }
 
   List<Widget> buildInformation() {
-    getInformationEtape();
     print('$listNomLocationEtape');
     int numberofEtape = int.parse(widget.planning['nombredeEtape']);
     print('$numberofEtape');
@@ -93,10 +93,15 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
       listWidget.add(new Container(
         margin: EdgeInsets.symmetric(vertical: 10),
         padding: EdgeInsets.all(10),
-        color: Colors.white,
+        decoration: BoxDecoration(
+            border: Border.all(
+          color: Colors.green,
+          width: 2,
+        )),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               children: [
@@ -194,140 +199,313 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
   @override
   Widget build(BuildContext context) {
     getInformationCollecteur();
-    getInformationEtape();
     getInformationVehicule();
-    return Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        padding: EdgeInsets.all(10),
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    getInformationEtape();
+    return FutureBuilder<List<String>>(
+      future: futureWait(),
+      builder: (context, snapshot) {
+        print('$snapshot');
+        if (listNomLocationEtape != [] &&
+                listNombredebacEtape != [] &&
+                listAddressLocationEtape != [] &&
+                listMaterialEtape != [] &&
+                nomCollecteur != '' &&
+                prenomCollecteur != '' &&
+                typeVehicule != '' &&
+                numeroimmatriculation != ''
+            //have to change this check in the future
+            ) {
+          return Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                border: Border.all(
+              color: Colors.blueAccent,
+              width: 5,
+            )),
+            child: Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.person,
-                  color: Theme.of(context).primaryColor,
-                  size: 20,
+                Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_today,
+                      color: Colors.redAccent,
+                      size: 30,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text(
+                      widget.planning['startdate'],
+                      style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.redAccent,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                  ],
                 ),
                 SizedBox(
-                  width: 6,
+                  height: 12,
                 ),
-                Text(
-                  prenomCollecteur + '  ' + nomCollecteur,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  width: 6,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    /*
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        /*
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (_) => UpdateCollecteur(
                             collecteurKey: collecteur['key'])));
                 */
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.edit,
-                        color: Theme.of(context).primaryColor,
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            color: Colors.red,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text('Delete Planning',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600)),
+                        ],
                       ),
-                      SizedBox(
-                        width: 6,
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        /*
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => UpdateCollecteur(
+                            collecteurKey: collecteur['key'])));
+                */
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            color: Colors.red,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text('Copy Planning',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600)),
+                        ],
                       ),
-                      Text('Edit Collecteur',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w600)),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.car_rental,
-                  color: Theme.of(context).primaryColor,
-                  size: 20,
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        /*
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => UpdateCollecteur(
+                            collecteurKey: collecteur['key'])));
+                */
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            color: Colors.red,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text('Edit Planning',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        /*
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => UpdateCollecteur(
+                            collecteurKey: collecteur['key'])));
+                */
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            color: Colors.red,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text('Edit Start Date',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 6,
-                ),
-                Text(
-                  typeVehicule + '  ' + numeroimmatriculation,
-                  style: TextStyle(
-                      fontSize: 16,
+                SizedBox(height: 12),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.person,
                       color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600),
+                      size: 20,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text(
+                      prenomCollecteur + '  ' + nomCollecteur,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
                 SizedBox(
-                  width: 6,
+                  height: 10,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    /*
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(
+                      width: 6,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        /*
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => UpdateCollecteur(
+                            collecteurKey: collecteur['key'])));
+                */
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text('Edit Collecteur',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.car_rental,
+                      color: Theme.of(context).primaryColor,
+                      size: 20,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text(
+                      typeVehicule + '  ' + numeroimmatriculation,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(
+                      width: 6,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        /*
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (_) => Updatevehicule(
                             vehiculeKey: vehicule['key'])));
                 */
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.edit,
-                        color: Theme.of(context).primaryColor,
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text('Edit Vehicule',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.w600)),
+                        ],
                       ),
-                      SizedBox(
-                        width: 6,
-                      ),
-                      Text('Edit Vehicule',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w600)),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+                SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
+                    height: 250, child: ListView(children: buildInformation())),
+                Divider(color: Colors.black),
               ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            SizedBox(
-                height: 100 * double.parse(widget.planning['nombredeEtape']),
-                child: ListView(children: buildInformation()))
-          ],
-        ));
+            )),
+          );
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
   }
 }

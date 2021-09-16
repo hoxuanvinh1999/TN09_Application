@@ -26,7 +26,6 @@ class _ShowPlanningState extends State<ShowPlanning> {
         title: Text('List Planning'),
       ),
       body: Container(
-        height: double.infinity,
         child: FirebaseAnimatedList(
           query: _refPlanning,
           itemBuilder: (BuildContext context, DataSnapshot snapshot,
