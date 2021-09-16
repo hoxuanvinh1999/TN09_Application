@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/choice_collecteur_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_page.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
 
 Widget buildChoiceVehicule(
@@ -28,12 +29,21 @@ Widget buildChoiceVehicule(
               ' ' +
               vehicule['numeroimmatriculation'],
           onClicked: () {
-            if (true || reason == 'createPlanning') {
+            if (reason == 'createPlanning') {
               updatePlanning(vehicule: vehicule);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) {
                   return ChoiceCollecteurPlanning(reason: 'createPlanning');
+                }),
+              );
+            } else {
+              changeVehiculePlanning(
+                  vehicule_key: vehicule['key'], planning_key: reason);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) {
+                  return PlanningPage();
                 }),
               );
             }
@@ -50,6 +60,24 @@ updatePlanning({required Map vehicule}) async {
         print('Into If right');
         Map<String, String> planning = {
           'vehicule_key': vehicule['key'],
+        };
+        _refPlanning.child(key).update(planning);
+      }
+    });
+  });
+}
+
+changeVehiculePlanning(
+    {required String vehicule_key, required String planning_key}) async {
+  DatabaseReference _refPlanning =
+      FirebaseDatabase.instance.reference().child('Planning');
+  await _refPlanning.once().then((DataSnapshot snapshot) {
+    Map<dynamic, dynamic> planning = snapshot.value;
+    planning.forEach((key, values) {
+      if (key == planning_key) {
+        print('Into If right');
+        Map<String, String> planning = {
+          'vehicule_key': vehicule_key,
         };
         _refPlanning.child(key).update(planning);
       }

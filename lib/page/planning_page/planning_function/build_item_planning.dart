@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/change_date_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/choice_collecteur_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/choice_vehicule_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/show_delete_dialog_planning.dart';
 import 'package:tn09_app_demo/trash/build_collecteur_part_planning.dart';
 import 'package:tn09_app_demo/trash/build_etape_planning.dart';
@@ -461,13 +462,12 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        /*
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => Updatevehicule(
-                            vehiculeKey: vehicule['key'])));
-                */
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ChoiceVehiculePlanning(
+                                      reason: widget.planning['key'],
+                                    )));
                       },
                       child: Row(
                         children: [
