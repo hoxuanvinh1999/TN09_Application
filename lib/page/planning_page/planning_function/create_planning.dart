@@ -32,7 +32,10 @@ class _CreatePlanningState extends State<CreatePlanning> {
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) {
-                  return CreateEtape(reason: 'createPlanning');
+                  return CreateEtape(
+                    reason: 'createPlanning',
+                    numberofEtape: '0',
+                  );
                 }),
               ),
               color: Theme.of(context).primaryColor,

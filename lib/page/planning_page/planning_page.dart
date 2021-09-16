@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/create_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/show_planning.dart';
 
@@ -54,6 +55,26 @@ class _PlanningPageState extends State<PlanningPage> {
                 context,
                 MaterialPageRoute(builder: (_) {
                   return ShowPlanning();
+                }),
+              ),
+              color: Theme.of(context).primaryColor,
+            ),
+            SizedBox(
+              height: 12,
+            ),
+            RaisedButton(
+              child: Text(
+                'Back to Home',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) {
+                  return HomeScreen();
                 }),
               ),
               color: Theme.of(context).primaryColor,

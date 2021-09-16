@@ -2,35 +2,35 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
-class buildVehiculePlanning extends StatefulWidget {
-  String vehicule_key;
+class buildCollecteurPlanning extends StatefulWidget {
+  String collecteur_key;
   BuildContext context;
-  buildVehiculePlanning({required this.context, required this.vehicule_key});
+  buildCollecteurPlanning(
+      {required this.context, required this.collecteur_key});
   @override
-  _buildVehiculePlanningState createState() => _buildVehiculePlanningState();
+  _buildCollecteurPlanningState createState() =>
+      _buildCollecteurPlanningState();
 }
 
-class _buildVehiculePlanningState extends State<buildVehiculePlanning> {
-  String numeroimmatriculation = '';
-  String typeVehicule = '';
+class _buildCollecteurPlanningState extends State<buildCollecteurPlanning> {
+  String nomCollecteur = '';
+  String prenomCollecteur = '';
   @override
   Widget build(BuildContext context) => buildInformation(
-      context: widget.context, Vehicule_key: widget.vehicule_key);
+      context: widget.context, collecteur_key: widget.collecteur_key);
 
   Widget buildInformation(
-      {required BuildContext context, required String Vehicule_key}) {
+      {required BuildContext context, required String collecteur_key}) {
     getInformation();
     return Container(
       height: 80,
       color: Colors.white,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Icon(
-                Icons.car_rental,
+                Icons.person,
                 color: Theme.of(context).primaryColor,
                 size: 20,
               ),
@@ -38,7 +38,7 @@ class _buildVehiculePlanningState extends State<buildVehiculePlanning> {
                 width: 6,
               ),
               Text(
-                typeVehicule + '  ' + numeroimmatriculation,
+                prenomCollecteur + '  ' + nomCollecteur,
                 style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).primaryColor,
@@ -61,8 +61,8 @@ class _buildVehiculePlanningState extends State<buildVehiculePlanning> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => Updatevehicule(
-                            vehiculeKey: vehicule['key'])));
+                        builder: (_) => UpdateCollecteur(
+                            collecteurKey: collecteur['key'])));
                 */
                 },
                 child: Row(
@@ -74,7 +74,7 @@ class _buildVehiculePlanningState extends State<buildVehiculePlanning> {
                     SizedBox(
                       width: 6,
                     ),
-                    Text('Edit Vehicule',
+                    Text('Edit Collecteur',
                         style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).primaryColor,
@@ -90,14 +90,14 @@ class _buildVehiculePlanningState extends State<buildVehiculePlanning> {
   }
 
   getInformation() async {
-    DatabaseReference _refVehicule =
-        FirebaseDatabase.instance.reference().child('Vehicule');
-    await _refVehicule.once().then((DataSnapshot snapshot) {
+    DatabaseReference _refCollecteur =
+        FirebaseDatabase.instance.reference().child('Collecteur');
+    await _refCollecteur.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> planning = snapshot.value;
       planning.forEach((key, values) {
-        if (key == widget.vehicule_key) {
-          typeVehicule = values['typeVehicule'];
-          numeroimmatriculation = values['numeroimmatriculation'];
+        if (key == widget.collecteur_key) {
+          nomCollecteur = values['nomCollecteur'];
+          prenomCollecteur = values['prenomCollecteur'];
         }
       });
     });

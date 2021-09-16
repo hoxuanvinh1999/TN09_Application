@@ -14,7 +14,8 @@ import 'package:tn09_app_demo/widget/button_widget.dart';
 Widget buildChoiceLocation(
     {required BuildContext context,
     required Map location,
-    required String reason}) {
+    required String reason,
+    required String numberofEtape}) {
   //print('Into build choice location');
   //print('${location['nomLocation']}');
   return Container(
@@ -31,7 +32,10 @@ Widget buildChoiceLocation(
                 context,
                 MaterialPageRoute(builder: (_) {
                   return ConfirmEtape(
-                      location: location, reason: 'confirmEtape');
+                    location: location,
+                    reason: 'confirmEtape',
+                    numberofEtape: 'null',
+                  );
                 }),
               );
             } else if (reason == 'createPlanning') {
@@ -39,7 +43,10 @@ Widget buildChoiceLocation(
                 context,
                 MaterialPageRoute(builder: (_) {
                   return ConfirmEtape(
-                      location: location, reason: 'createPlanning');
+                    location: location,
+                    reason: 'createPlanning',
+                    numberofEtape: numberofEtape,
+                  );
                 }),
               );
             } else if (reason == 'continuePlanning') {
@@ -47,7 +54,10 @@ Widget buildChoiceLocation(
                 context,
                 MaterialPageRoute(builder: (_) {
                   return ConfirmEtape(
-                      location: location, reason: 'continuePlanning');
+                    location: location,
+                    reason: 'continuePlanning',
+                    numberofEtape: numberofEtape,
+                  );
                 }),
               );
             } else {

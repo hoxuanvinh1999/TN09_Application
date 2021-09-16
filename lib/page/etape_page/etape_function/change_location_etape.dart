@@ -31,7 +31,10 @@ class _ChangeLocationEtapeState extends State<ChangeLocationEtape> {
             Map location = snapshot.value;
             location['key'] = snapshot.key;
             return buildChoiceLocation(
-                context: context, location: location, reason: widget.etapeKey);
+                context: context,
+                location: location,
+                reason: widget.etapeKey,
+                numberofEtape: 'null');
           },
         ),
       ),

@@ -2,37 +2,33 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
-class buildCollecteurPlanning extends StatefulWidget {
-  String collecteur_key;
+class buildVehiculePlanning extends StatefulWidget {
+  String vehicule_key;
   BuildContext context;
-  buildCollecteurPlanning(
-      {required this.context, required this.collecteur_key});
+  buildVehiculePlanning({required this.context, required this.vehicule_key});
   @override
-  _buildCollecteurPlanningState createState() =>
-      _buildCollecteurPlanningState();
+  _buildVehiculePlanningState createState() => _buildVehiculePlanningState();
 }
 
-class _buildCollecteurPlanningState extends State<buildCollecteurPlanning> {
-  String nomCollecteur = '';
-  String prenomCollecteur = '';
+class _buildVehiculePlanningState extends State<buildVehiculePlanning> {
+  String numeroimmatriculation = '';
+  String typeVehicule = '';
   @override
   Widget build(BuildContext context) => buildInformation(
-      context: widget.context, collecteur_key: widget.collecteur_key);
+      context: widget.context, Vehicule_key: widget.vehicule_key);
 
   Widget buildInformation(
-      {required BuildContext context, required String collecteur_key}) {
+      {required BuildContext context, required String Vehicule_key}) {
     getInformation();
     return Container(
       height: 80,
       color: Colors.white,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Icon(
-                Icons.person,
+                Icons.car_rental,
                 color: Theme.of(context).primaryColor,
                 size: 20,
               ),
@@ -40,7 +36,7 @@ class _buildCollecteurPlanningState extends State<buildCollecteurPlanning> {
                 width: 6,
               ),
               Text(
-                prenomCollecteur + '  ' + nomCollecteur,
+                typeVehicule + '  ' + numeroimmatriculation,
                 style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).primaryColor,
@@ -63,8 +59,8 @@ class _buildCollecteurPlanningState extends State<buildCollecteurPlanning> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => UpdateCollecteur(
-                            collecteurKey: collecteur['key'])));
+                        builder: (_) => Updatevehicule(
+                            vehiculeKey: vehicule['key'])));
                 */
                 },
                 child: Row(
@@ -76,7 +72,7 @@ class _buildCollecteurPlanningState extends State<buildCollecteurPlanning> {
                     SizedBox(
                       width: 6,
                     ),
-                    Text('Edit Collecteur',
+                    Text('Edit Vehicule',
                         style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).primaryColor,
@@ -92,14 +88,14 @@ class _buildCollecteurPlanningState extends State<buildCollecteurPlanning> {
   }
 
   getInformation() async {
-    DatabaseReference _refCollecteur =
-        FirebaseDatabase.instance.reference().child('Collecteur');
-    await _refCollecteur.once().then((DataSnapshot snapshot) {
+    DatabaseReference _refVehicule =
+        FirebaseDatabase.instance.reference().child('Vehicule');
+    await _refVehicule.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> planning = snapshot.value;
       planning.forEach((key, values) {
-        if (key == widget.collecteur_key) {
-          nomCollecteur = values['nomCollecteur'];
-          prenomCollecteur = values['prenomCollecteur'];
+        if (key == widget.vehicule_key) {
+          typeVehicule = values['typeVehicule'];
+          numeroimmatriculation = values['numeroimmatriculation'];
         }
       });
     });

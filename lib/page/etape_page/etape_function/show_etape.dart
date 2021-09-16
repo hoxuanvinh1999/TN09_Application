@@ -39,7 +39,10 @@ class _ShowEtapeState extends State<ShowEtape> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) {
-              return CreateEtape(reason: 'createEtape');
+              return CreateEtape(
+                reason: 'createEtape',
+                numberofEtape: 'null',
+              );
             }),
           );
         },

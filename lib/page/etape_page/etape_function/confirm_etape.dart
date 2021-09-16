@@ -19,7 +19,11 @@ import 'package:tn09_app_demo/widget/button_widget.dart';
 class ConfirmEtape extends StatefulWidget {
   Map location;
   String reason;
-  ConfirmEtape({required this.location, required this.reason});
+  String numberofEtape;
+  ConfirmEtape(
+      {required this.location,
+      required this.reason,
+      required this.numberofEtape});
   @override
   _ConfirmEtapeState createState() => _ConfirmEtapeState();
 }
@@ -298,6 +302,8 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         state == 'continuePlanning') {
       beforeEtape_key = 'start';
       afterEtape_key = 'wait';
+      String numberofEtape = widget.numberofEtape;
+      numberofEtape = (int.parse(numberofEtape) + 1).toString();
       Map<String, String> etape = {
         'nomLocationEtape': nomLocationEtape,
         'addressLocationEtape': addressLocationEtape,
@@ -318,6 +324,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
           MaterialPageRoute(
               builder: (context) => CreateEtape(
                     reason: 'continuePlanning',
+                    numberofEtape: numberofEtape,
                   )),
         );
       });
@@ -351,6 +358,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
             Map<String, String> planning = {
               'startetape_key': startEtape_key,
               'finished_create': 'false',
+              'nombredeEtape': (int.parse(widget.numberofEtape) + 1).toString(),
             };
             FirebaseDatabase.instance
                 .reference()
@@ -373,6 +381,8 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         });
       });
     } else if (state == 'continuePlanning') {
+      String numberofEtape = widget.numberofEtape;
+      numberofEtape = (int.parse(numberofEtape) + 1).toString();
       DatabaseReference _refContinueEtape =
           FirebaseDatabase.instance.reference().child('Etape');
       await _refContinueEtape.once().then((DataSnapshot snapshot) {
@@ -435,6 +445,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
                 MaterialPageRoute(
                     builder: (context) => CreateEtape(
                           reason: 'continuePlanning',
+                          numberofEtape: numberofEtape,
                         )),
               );
             });
@@ -511,6 +522,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
             Map<String, String> planning = {
               'startetape_key': startEtape_key,
               'finished_create': 'false',
+              'nombredeEtape': (int.parse(widget.numberofEtape) + 1).toString(),
             };
             Map<String, String> endetape = {
               'beforeEtape_key': 'null',

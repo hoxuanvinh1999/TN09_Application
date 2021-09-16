@@ -13,7 +13,8 @@ import 'package:tn09_app_demo/widget/button_widget.dart';
 
 class CreateEtape extends StatefulWidget {
   String reason;
-  CreateEtape({required this.reason});
+  String numberofEtape;
+  CreateEtape({required this.reason, required this.numberofEtape});
   @override
   _CreateEtapeState createState() => _CreateEtapeState();
 }
@@ -96,7 +97,10 @@ class _CreateEtapeState extends State<CreateEtape> {
             Map location = snapshot.value;
             location['key'] = snapshot.key;
             return buildChoiceLocation(
-                context: context, location: location, reason: widget.reason);
+                context: context,
+                location: location,
+                reason: widget.reason,
+                numberofEtape: widget.numberofEtape);
           },
         ),
       ),
