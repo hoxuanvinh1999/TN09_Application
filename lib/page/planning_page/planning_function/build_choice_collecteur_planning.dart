@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/finish_create_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_page.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
 
 Widget buildChoiceCollecteur(
@@ -28,13 +29,22 @@ Widget buildChoiceCollecteur(
               ' ' +
               collecteur['nomCollecteur'],
           onClicked: () {
-            if (true || reason == 'createPlanning') {
+            if (reason == 'createPlanning') {
               updatePlanning(collecteur: collecteur);
 
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) {
                   return FinishCreatePlanning();
+                }),
+              );
+            } else {
+              changeCollecteurPlanning(
+                  collecteur_key: collecteur['key'], planning_key: reason);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) {
+                  return PlanningPage();
                 }),
               );
             }
@@ -51,6 +61,24 @@ updatePlanning({required Map collecteur}) async {
         print('Into If right');
         Map<String, String> planning = {
           'collecteur_key': collecteur['key'],
+        };
+        _refPlanning.child(key).update(planning);
+      }
+    });
+  });
+}
+
+changeCollecteurPlanning(
+    {required String collecteur_key, required String planning_key}) async {
+  DatabaseReference _refPlanning =
+      FirebaseDatabase.instance.reference().child('Planning');
+  await _refPlanning.once().then((DataSnapshot snapshot) {
+    Map<dynamic, dynamic> planning = snapshot.value;
+    planning.forEach((key, values) {
+      if (key == planning_key) {
+        print('Into If right');
+        Map<String, String> planning = {
+          'collecteur_key': collecteur_key,
         };
         _refPlanning.child(key).update(planning);
       }

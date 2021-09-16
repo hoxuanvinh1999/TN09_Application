@@ -29,7 +29,7 @@ class _ChoiceCollecteurPlanningState extends State<ChoiceCollecteurPlanning> {
     if (widget.reason == 'createPlanning') {
       return Text('Choice Collecteur');
     } else {
-      return Text('Unknown');
+      return Text('Change Collecteur');
     }
   }
 

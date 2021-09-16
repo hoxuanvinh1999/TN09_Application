@@ -2,6 +2,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/change_date_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/choice_collecteur_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/show_delete_dialog_planning.dart';
 import 'package:tn09_app_demo/trash/build_collecteur_part_planning.dart';
 import 'package:tn09_app_demo/trash/build_etape_planning.dart';
 import 'package:tn09_app_demo/trash/build_vehicule_part_planning.dart';
@@ -258,13 +261,8 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        /*
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => UpdateCollecteur(
-                            collecteurKey: collecteur['key'])));
-                */
+                        showDeleteDialogPlanning(
+                            context: context, planning: widget.planning);
                       },
                       child: Row(
                         children: [
@@ -336,7 +334,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                           SizedBox(
                             width: 6,
                           ),
-                          Text('Edit Planning',
+                          Text('Edit Etape',
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.red,
@@ -349,13 +347,11 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        /*
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => UpdateCollecteur(
-                            collecteurKey: collecteur['key'])));
-                */
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ChangeDatePlanning(
+                                    planningKey: widget.planning['key'])));
                       },
                       child: Row(
                         children: [
@@ -407,13 +403,11 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        /*
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => UpdateCollecteur(
-                            collecteurKey: collecteur['key'])));
-                */
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ChoiceCollecteurPlanning(
+                                    reason: widget.planning['key'])));
                       },
                       child: Row(
                         children: [
