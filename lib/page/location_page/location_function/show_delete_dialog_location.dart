@@ -8,8 +8,6 @@ import 'package:tn09_app_demo/page/cle_page/cle_function/view_information_cle.da
 import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/get_type_color_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/reduce_number_of_location.dart';
-import 'create_location.dart';
-import 'update_location.dart';
 
 showDeleteDialogLocation(
     {required BuildContext context, required Map location}) {

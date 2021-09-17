@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/choice_collecteur_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/show_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_page.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
 
@@ -43,7 +44,7 @@ Widget buildChoiceVehicule(
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) {
-                  return PlanningPage();
+                  return ShowPlanning();
                 }),
               );
             }

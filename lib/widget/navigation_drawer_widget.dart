@@ -25,8 +25,9 @@ class NavigationDrawerWidget extends StatelessWidget {
                   Container(
                     height: 50.0,
                     child: DrawerHeader(
-                        child:
-                            Text('Menu', style: TextStyle(color: Colors.white)),
+                        child: Text('Menu',
+                            style:
+                                TextStyle(fontSize: 25, color: Colors.white)),
                         margin: const EdgeInsets.only(top: 10.0),
                         padding: EdgeInsets.all(0.0)),
                   ),
@@ -35,36 +36,42 @@ class NavigationDrawerWidget extends StatelessWidget {
                     //icon: Icons.people,
                     onClicked: () => selectedItem(context, 0),
                   ),
+
                   const SizedBox(height: 16),
                   buildMenuItem(
                     text: 'Planning',
                     //icon: Icons.favorite_border,
                     onClicked: () => selectedItem(context, 1),
                   ),
+
                   const SizedBox(height: 16),
                   buildMenuItem(
                     text: 'Contact',
                     //icon: Icons.workspaces_outline,
                     onClicked: () => selectedItem(context, 2),
                   ),
+
                   const SizedBox(height: 16),
                   buildMenuItem(
                     text: 'Location',
                     //icon: Icons.update,
                     onClicked: () => selectedItem(context, 3),
                   ),
+
                   const SizedBox(height: 16),
                   buildMenuItem(
                     text: 'Vehicule',
                     //icon: Icons.update,
                     onClicked: () => selectedItem(context, 4),
                   ),
+
                   const SizedBox(height: 16),
                   buildMenuItem(
                     text: 'Cle',
                     //icon: Icons.update,
                     onClicked: () => selectedItem(context, 5),
                   ),
+
                   const SizedBox(height: 16),
                   //Divider(color: Colors.white70),
                   buildMenuItem(
@@ -72,6 +79,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                     //icon: Icons.update,
                     onClicked: () => selectedItem(context, 6),
                   ),
+
                   const SizedBox(height: 16),
                   //Divider(color: Colors.white70),
                   buildMenuItem(

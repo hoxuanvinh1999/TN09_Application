@@ -268,6 +268,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
     String nomLocationEtape = widget.location['nomLocation'];
     String addressLocationEtape = widget.location['addressLocation'];
     String location_key = widget.location['key'];
+    String contact_key = widget.location['contact_key'];
     String materialEtape = material_Etape;
     String nombredebac = _numberofbac.text;
     String noteEtape = _noteEtape.text;
@@ -282,6 +283,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'nomLocationEtape': nomLocationEtape,
         'addressLocationEtape': addressLocationEtape,
         'location_key': location_key,
+        'contact_key': contact_key,
         'materialEtape': materialEtape,
         'nombredebac': nombredebac,
         'checked': 'false',
@@ -308,6 +310,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'nomLocationEtape': nomLocationEtape,
         'addressLocationEtape': addressLocationEtape,
         'location_key': location_key,
+        'contact_key': contact_key,
         'materialEtape': materialEtape,
         'nombredebac': nombredebac,
         'checked': 'false',
@@ -335,6 +338,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'nomLocationEtape': nomLocationEtape,
         'addressLocationEtape': addressLocationEtape,
         'location_key': location_key,
+        'contact_key': contact_key,
         'materialEtape': materialEtape,
         'nombredebac': nombredebac,
         'checked': 'false',
@@ -398,6 +402,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'nomLocationEtape': nomLocationEtape,
         'addressLocationEtape': addressLocationEtape,
         'location_key': location_key,
+        'contact_key': contact_key,
         'materialEtape': materialEtape,
         'nombredebac': nombredebac,
         'checked': 'false',
@@ -468,6 +473,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'nomLocationEtape': nomLocationEtape,
         'addressLocationEtape': addressLocationEtape,
         'location_key': location_key,
+        'contact_key': contact_key,
         'materialEtape': materialEtape,
         'nombredebac': nombredebac,
         'checked': 'false',

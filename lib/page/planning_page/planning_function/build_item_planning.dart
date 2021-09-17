@@ -2,13 +2,17 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tn09_app_demo/page/cle_page/cle_function/build_item_cle.dart';
+import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/change_date_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/choice_collecteur_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/choice_vehicule_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/edit_etape_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/show_delete_dialog_planning.dart';
 import 'package:tn09_app_demo/trash/build_collecteur_part_planning.dart';
 import 'package:tn09_app_demo/trash/build_etape_planning.dart';
 import 'package:tn09_app_demo/trash/build_vehicule_part_planning.dart';
+import 'package:tn09_app_demo/widget/button_widget.dart';
 
 class buildItemPlanning extends StatefulWidget {
   BuildContext context;
@@ -19,11 +23,14 @@ class buildItemPlanning extends StatefulWidget {
 }
 
 class _buildItemPlanningState extends State<buildItemPlanning> {
+  List<String> listKeyEtape = [];
   List<String> listNomLocationEtape = [];
   List<String> listAddressLocationEtape = [];
   List<String> listMaterialEtape = [];
   List<String> listNombredebacEtape = [];
   List<Widget> listWidget = [];
+  List<String> listKeyLocation = [];
+  List<String> listKeyContact = [];
   String nomCollecteur = '';
   String prenomCollecteur = '';
   String typeVehicule = '';
@@ -42,23 +49,38 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
   getInformationEtape() async {
     DatabaseReference _refEtape =
         FirebaseDatabase.instance.reference().child('Etape');
+    DatabaseReference _refLocation =
+        FirebaseDatabase.instance.reference().child('Location');
     String etape_key = widget.planning['startetape_key'];
     int numberofEtape = int.parse(widget.planning['nombredeEtape']);
+    /*if (listNomLocationEtape != [] &&
+        listAddressLocationEtape != [] &&
+        listMaterialEtape != [] &&
+        listNombredebacEtape != []) {
+      return;
+    } 
+    */
+    // else {
     for (int i = 0; i < numberofEtape; i++) {
       await _refEtape.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> planning = snapshot.value;
         planning.forEach((key, values) {
           if (key == etape_key) {
+            listKeyEtape.add(key);
             listNomLocationEtape.add(values['nomLocationEtape']);
             listAddressLocationEtape.add(values['addressLocationEtape']);
             listMaterialEtape.add(values['materialEtape']);
             listNombredebacEtape.add(values['nombredebac']);
+            listKeyLocation.add(values['location_key']);
+            listKeyContact.add(values['contact_key']);
             etape_key = values['afterEtape_key'];
           }
         });
       });
     }
     print('$listNomLocationEtape');
+    print('$listKeyContact');
+    //}
   }
 
   getInformationCollecteur() async {
@@ -89,7 +111,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
     });
   }
 
-  List<Widget> buildInformation() {
+  List<Widget> buildEtapeInformation() {
     print('$listNomLocationEtape');
     int numberofEtape = int.parse(widget.planning['nombredeEtape']);
     print('$numberofEtape');
@@ -213,9 +235,11 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                 listNombredebacEtape != [] &&
                 listAddressLocationEtape != [] &&
                 listMaterialEtape != [] &&
+                listKeyEtape != [] &&
                 nomCollecteur != '' &&
                 prenomCollecteur != '' &&
                 typeVehicule != '' &&
+                listKeyLocation != [] &&
                 numeroimmatriculation != ''
             //have to change this check in the future
             ) {
@@ -268,7 +292,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.edit,
+                            Icons.delete,
                             color: Colors.red,
                           ),
                           SizedBox(
@@ -298,8 +322,8 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.edit,
-                            color: Colors.red,
+                            Icons.content_copy,
+                            color: Colors.blue,
                           ),
                           SizedBox(
                             width: 6,
@@ -307,7 +331,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                           Text('Copy Planning',
                               style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.red,
+                                  color: Colors.blue,
                                   fontWeight: FontWeight.w600)),
                         ],
                       ),
@@ -318,19 +342,23 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        /*
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => UpdateCollecteur(
-                            collecteurKey: collecteur['key'])));
-                */
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => EditEtapePlanning(
+                                    planning: widget.planning,
+                                    listKeyEtape: listKeyEtape,
+                                    listNomLocationEtape: listNomLocationEtape,
+                                    listAddressLocationEtape:
+                                        listAddressLocationEtape,
+                                    listKeyLocation: listKeyLocation,
+                                    listKeyContact: listKeyContact)));
                       },
                       child: Row(
                         children: [
                           Icon(
                             Icons.edit,
-                            color: Colors.red,
+                            color: Colors.green,
                           ),
                           SizedBox(
                             width: 6,
@@ -338,7 +366,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                           Text('Edit Etape',
                               style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.red,
+                                  color: Colors.green,
                                   fontWeight: FontWeight.w600)),
                         ],
                       ),
@@ -358,7 +386,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                         children: [
                           Icon(
                             Icons.edit,
-                            color: Colors.red,
+                            color: Colors.green,
                           ),
                           SizedBox(
                             width: 6,
@@ -366,7 +394,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                           Text('Edit Start Date',
                               style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.red,
+                                  color: Colors.green,
                                   fontWeight: FontWeight.w600)),
                         ],
                       ),
@@ -492,7 +520,8 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                   height: 15,
                 ),
                 SizedBox(
-                    height: 250, child: ListView(children: buildInformation())),
+                    height: 250,
+                    child: ListView(children: buildEtapeInformation())),
                 Divider(color: Colors.black),
               ],
             )),

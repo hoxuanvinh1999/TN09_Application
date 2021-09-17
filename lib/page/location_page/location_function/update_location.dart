@@ -29,6 +29,8 @@ class _UpdateLocationState extends State<UpdateLocation> {
 
   DatabaseReference _refLocation =
       FirebaseDatabase.instance.reference().child('Location');
+  DatabaseReference _refEtape =
+      FirebaseDatabase.instance.reference().child('Etape');
 
   Widget _buildLocationType(String title) {
     return InkWell(
@@ -253,6 +255,19 @@ class _UpdateLocationState extends State<UpdateLocation> {
         builder: (context) => LocationPage(),
       ));
     } else {
+      await _refEtape.once().then((DataSnapshot snapshot) {
+        Map<dynamic, dynamic> etape = snapshot.value;
+        etape.forEach((key, values) {
+          if (values['location_key'] == widget.locationKey) {
+            print('Into If right');
+            Map<String, String> etape = {
+              'nomLocationEtape': newnameLocation,
+              'addressLocationEtape': newaddressLocation,
+            };
+            _refEtape.child(key).update(etape);
+          }
+        });
+      });
       Map<String, String> newlocation = {
         'nomLocation': newnameLocation,
         'addressLocation': newaddressLocation,

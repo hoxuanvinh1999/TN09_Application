@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/change_location_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/show_delete_dialog_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/update_etape.dart';
@@ -217,6 +218,35 @@ Widget buildItemEtape({required BuildContext context, required Map etape}) {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            GestureDetector(
+              onTap: () {
+                //print('key before send ${location['key']}');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            ViewContact(contactKey: etape['contact_key'])));
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.view_list,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Text('View Contact',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 12,
+            ),
             GestureDetector(
               onTap: () {
                 //print('key before send ${location['key']}');

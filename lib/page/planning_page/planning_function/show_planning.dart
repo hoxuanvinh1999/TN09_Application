@@ -5,6 +5,7 @@ import 'package:tn09_app_demo/page/contact_page/contact_function/build_item_cont
 import 'package:tn09_app_demo/page/etape_page/etape_function/build_item_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/create_etape.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/build_item_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_page.dart';
 
 class ShowPlanning extends StatefulWidget {
   @override
@@ -35,6 +36,17 @@ class _ShowPlanningState extends State<ShowPlanning> {
             return buildItemPlanning(context: context, planning: planning);
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) {
+              return PlanningPage();
+            }),
+          );
+        },
+        child: Icon(Icons.arrow_back, color: Colors.white),
       ),
     );
   }
