@@ -1,9 +1,12 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:tn09_app_demo/math_function/is_numeric_function.dart';
 
 class CreateLocation extends StatefulWidget {
   String contactKey;
@@ -16,6 +19,7 @@ class CreateLocation extends StatefulWidget {
 class _CreateLocationState extends State<CreateLocation> {
   TextEditingController _nameLocation = TextEditingController();
   TextEditingController _addressLocation = TextEditingController();
+  TextEditingController _numberofbac = TextEditingController();
   String _typeSelected = '';
 
   DatabaseReference _refContact =
@@ -90,6 +94,40 @@ class _CreateLocationState extends State<CreateLocation> {
             SizedBox(
               height: 15,
             ),
+            Row(
+              children: [
+                Icon(
+                  Icons.restore_from_trash_outlined,
+                  color: Colors.blue,
+                ),
+                SizedBox(
+                  width: 6,
+                ),
+                Text('Number of Bac: ',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w600)),
+                SizedBox(
+                  width: 6,
+                ),
+              ],
+            ),
+            SizedBox(height: 15),
+            TextFormField(
+              controller: _numberofbac,
+              decoration: const InputDecoration(
+                hintText: 'Number of Bac',
+              ),
+              validator: (value) {
+                if (value == null ||
+                    isNumericUsing_tryParse(value) == false ||
+                    value.isEmpty) {
+                  return 'Please enter a real number';
+                }
+              },
+            ),
+            SizedBox(height: 15),
             Container(
               height: 40,
               child: ListView(
@@ -142,12 +180,14 @@ class _CreateLocationState extends State<CreateLocation> {
       'nombredelocation': numberofLocation,
     };
     _refContact.child(widget.contactKey).update(updateContact);
-    String nameSite = _nameLocation.text;
-    String numberSite = _addressLocation.text;
+    String nomLocation = _nameLocation.text;
+    String addressLocation = _addressLocation.text;
+    String nombredebac = _numberofbac.text;
     Map<String, String> location = {
+      'nombredebac': nombredebac,
       'contact_key': widget.contactKey,
-      'nomLocation': nameSite,
-      'addressLocation': numberSite,
+      'nomLocation': nomLocation,
+      'addressLocation': addressLocation,
       'type': _typeSelected,
       'nombredecle': '0',
     };

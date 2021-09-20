@@ -234,8 +234,9 @@ Widget buildItemContact({required BuildContext context, required Map contact}) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) =>
-                            UpdateContact(contactKey: contact['key'])));
+                        builder: (_) => UpdateContact(
+                              contact: contact,
+                            )));
               },
               child: Row(
                 children: [
