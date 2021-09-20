@@ -9,6 +9,7 @@ import 'package:tn09_app_demo/page/location_page/location_function/create_locati
 import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/get_type_color_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/update_location.dart';
+import 'package:tn09_app_demo/widget/border_decoration.dart';
 
 class ViewInformationLocation extends StatefulWidget {
   String contactKey;

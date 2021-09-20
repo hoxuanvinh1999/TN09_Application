@@ -7,13 +7,14 @@ import 'package:tn09_app_demo/page/etape_page/etape_function/show_delete_dialog_
 import 'package:tn09_app_demo/page/etape_page/etape_function/update_etape.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/view_information_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/view_location.dart';
+import 'package:tn09_app_demo/widget/border_decoration.dart';
 
 Widget buildItemEtape({required BuildContext context, required Map etape}) {
   return Container(
-    margin: EdgeInsets.symmetric(vertical: 10),
+    decoration: buildBorderDecoration(),
+    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
     padding: EdgeInsets.all(10),
     height: 280,
-    color: Colors.white,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,

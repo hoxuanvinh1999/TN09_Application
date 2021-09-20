@@ -244,7 +244,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
             //have to change this check in the future
             ) {
           return Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
                 border: Border.all(

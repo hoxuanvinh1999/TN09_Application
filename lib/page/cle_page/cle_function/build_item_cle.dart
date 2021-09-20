@@ -8,14 +8,15 @@ import 'package:tn09_app_demo/page/cle_page/cle_function/show_delete_dialog_cle.
 import 'package:tn09_app_demo/page/cle_page/cle_function/update_cle.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/view_location.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
+import 'package:tn09_app_demo/widget/border_decoration.dart';
 
 Widget buildItemCle({required BuildContext context, required Map cle}) {
   Color typeColor = getTypeColorCle(cle['type']);
   return Container(
-    margin: EdgeInsets.symmetric(vertical: 10),
+    decoration: buildBorderDecoration(),
+    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
     padding: EdgeInsets.all(10),
     height: 130,
-    color: Colors.white,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,

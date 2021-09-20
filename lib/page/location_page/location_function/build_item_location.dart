@@ -7,6 +7,7 @@ import 'package:tn09_app_demo/page/cle_page/cle_function/view_information_cle.da
 import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/get_type_color_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/show_delete_dialog_location.dart';
+import 'package:tn09_app_demo/widget/border_decoration.dart';
 import 'create_location.dart';
 import 'update_location.dart';
 
@@ -14,10 +15,10 @@ Widget buildItemLocation(
     {required BuildContext context, required Map location}) {
   Color typeColor = getTypeColorLocation(location['type']);
   return Container(
-    margin: EdgeInsets.symmetric(vertical: 10),
+    decoration: buildBorderDecoration(),
+    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
     padding: EdgeInsets.all(10),
     height: 180,
-    color: Colors.white,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,

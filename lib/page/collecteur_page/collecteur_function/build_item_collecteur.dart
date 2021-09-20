@@ -3,14 +3,15 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/collecteur_page/collecteur_function/show_delete_dialog_collecteur.dart';
 import 'package:tn09_app_demo/page/collecteur_page/collecteur_function/update_collecteur.dart';
+import 'package:tn09_app_demo/widget/border_decoration.dart';
 
 Widget buildItemCollecteur(
     {required BuildContext context, required Map collecteur}) {
   return Container(
-    margin: EdgeInsets.symmetric(vertical: 10),
+    decoration: buildBorderDecoration(),
+    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
     padding: EdgeInsets.all(10),
     height: 200,
-    color: Colors.white,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
