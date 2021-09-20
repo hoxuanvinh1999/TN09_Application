@@ -18,7 +18,6 @@ class _UpdateEtapeState extends State<UpdateEtape> {
   final _etapeKeyForm = GlobalKey<FormState>();
   String material_Etape = 'biodechet';
   List<String> listmaterial = ['biodechet', 'papier', 'verre'];
-  TextEditingController _numberofbac = TextEditingController();
   TextEditingController _noteEtape = TextEditingController();
   DatabaseReference referenceEtape =
       FirebaseDatabase.instance.reference().child('Etape');
@@ -69,43 +68,6 @@ class _UpdateEtapeState extends State<UpdateEtape> {
                         },
                         hint: Text("Select type of material")),
                   ],
-                ),
-                SizedBox(height: 15),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.restore_from_trash_outlined,
-                      color: Colors.blue,
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Text('Number of Bac: ',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(
-                      width: 6,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Container(
-                  width: 200,
-                  child: TextFormField(
-                    controller: _numberofbac,
-                    decoration: const InputDecoration(
-                      hintText: 'Number of Bac',
-                    ),
-                    validator: (value) {
-                      if (value == null ||
-                          isNumericUsing_tryParse(value) == false ||
-                          value.isEmpty) {
-                        return 'Please enter a real number';
-                      }
-                    },
-                  ),
                 ),
                 SizedBox(height: 15),
                 Row(
@@ -171,7 +133,6 @@ class _UpdateEtapeState extends State<UpdateEtape> {
         FirebaseDatabase.instance.reference().child('Etape');
     Map<String, String> etape = {
       'materialEtape': material_Etape,
-      'nombredebac': _numberofbac.text,
       'noteEtape': _noteEtape.text,
     };
     await _refEtape.child(widget.etapeKey).update(etape).then((value) {

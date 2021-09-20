@@ -10,8 +10,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/build_choice_location_etape.dart';
 import 'package:tn09_app_demo/math_function/is_numeric_function.dart';
+import 'package:tn09_app_demo/page/etape_page/etape_function/cancel_creating_planning.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/create_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/show_etape.dart';
+import 'package:tn09_app_demo/page/etape_page/etape_page.dart';
+import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/choice_vehicule_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/finish_planning.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
@@ -32,7 +35,6 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
   final _etapeKeyForm = GlobalKey<FormState>();
   String material_Etape = 'biodechet';
   List<String> listmaterial = ['biodechet', 'papier', 'verre'];
-  TextEditingController _numberofbac = TextEditingController();
   TextEditingController _noteEtape = TextEditingController();
   DatabaseReference referenceEtape =
       FirebaseDatabase.instance.reference().child('Etape');
@@ -61,206 +63,227 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: setTitle(),
-      ),
-      body: Container(
-          margin: EdgeInsets.all(15),
-          height: double.infinity,
-          child: Form(
-            key: _etapeKeyForm,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                        'Nom de la Location: ' + widget.location['nomLocation'],
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w600))
-                  ],
-                ),
-                SizedBox(height: 15),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.restore_from_trash,
-                      color: Colors.blue,
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Text('Material: ',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    DropdownButton(
-                        value: material_Etape,
-                        items: listmaterial.map((String item) {
-                          return DropdownMenuItem<String>(
-                            child: Text('$item'),
-                            value: item,
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            material_Etape = value.toString();
-                          });
-                        },
-                        hint: Text("Select type of material")),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.restore_from_trash_outlined,
-                      color: Colors.blue,
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Text('Number of Bac: ',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(
-                      width: 6,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Container(
-                  width: 200,
-                  child: TextFormField(
-                    controller: _numberofbac,
-                    decoration: const InputDecoration(
-                      hintText: 'Number of Bac',
-                    ),
-                    validator: (value) {
-                      if (value == null ||
-                          isNumericUsing_tryParse(value) == false ||
-                          value.isEmpty) {
-                        return 'Please enter a real number';
-                      }
+  Future<bool?> dialogDecide(BuildContext context) async {
+    if (widget.reason == 'confirmEtape') {
+      return showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Cancel Create New Etape?'),
+                actions: [
+                  ElevatedButton(
+                    child: Text('No'),
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
                   ),
-                ),
-                SizedBox(height: 15),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.sticky_note_2,
-                      color: Colors.blue,
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Text('Note: ',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(
-                      width: 6,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15),
-                Container(
-                  height: 50,
-                  child: TextFormField(
-                    controller: _noteEtape,
-                    decoration: const InputDecoration(
-                      hintText: 'Note',
+                  ElevatedButton(
+                    child: Text('Yes'),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
+                    },
+                  )
+                ],
+              ));
+    } else {
+      return showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Cancel Create New Planning?'),
+                actions: [
+                  ElevatedButton(
+                    child: Text('No'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ElevatedButton(
+                    child: Text('Yes'),
+                    onPressed: () {
+                      deleteCreatingPlanningProcess();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      );
+                    },
+                  )
+                ],
+              ));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        final goback = await dialogDecide(context);
+        return goback ?? false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: setTitle(),
+        ),
+        body: Container(
+            margin: EdgeInsets.all(15),
+            height: double.infinity,
+            child: Form(
+              key: _etapeKeyForm,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                          'Nom de la Location: ' +
+                              widget.location['nomLocation'],
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w600))
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.restore_from_trash,
+                        color: Colors.blue,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Text('Material: ',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      DropdownButton(
+                          value: material_Etape,
+                          items: listmaterial.map((String item) {
+                            return DropdownMenuItem<String>(
+                              child: Text('$item'),
+                              value: item,
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              material_Etape = value.toString();
+                            });
+                          },
+                          hint: Text("Select type of material")),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.sticky_note_2,
+                        color: Colors.blue,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Text('Note: ',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(
+                        width: 6,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Container(
+                    height: 50,
+                    child: TextFormField(
+                      controller: _noteEtape,
+                      decoration: const InputDecoration(
+                        hintText: 'Note',
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Visibility(
-                    visible: checkProgression(),
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: RaisedButton(
-                        child: Text(
-                          'Créer Etape',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Visibility(
+                      visible: checkProgression(),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: RaisedButton(
+                          child: Text(
+                            'Créer Etape',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
+                          onPressed: () {
+                            if (_etapeKeyForm.currentState!.validate()) {
+                              SaveEtape(state: widget.reason);
+                            }
+                          },
+                          color: Theme.of(context).primaryColor,
                         ),
-                        onPressed: () {
-                          if (_etapeKeyForm.currentState!.validate()) {
-                            SaveEtape(state: widget.reason);
-                          }
-                        },
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    )),
-                Visibility(
-                    visible: !checkProgression(),
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: RaisedButton(
-                        child: Text(
-                          'Continue?',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                      )),
+                  Visibility(
+                      visible: !checkProgression(),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: RaisedButton(
+                          child: Text(
+                            'Continue?',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
+                          onPressed: () {
+                            if (_etapeKeyForm.currentState!.validate()) {
+                              SaveEtape(state: 'continuePlanning');
+                            }
+                          },
+                          color: Theme.of(context).primaryColor,
                         ),
-                        onPressed: () {
-                          if (_etapeKeyForm.currentState!.validate()) {
-                            SaveEtape(state: 'continuePlanning');
-                          }
-                        },
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    )),
-                SizedBox(
-                  height: 25,
-                ),
-                Visibility(
-                    visible: !checkProgression(),
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: RaisedButton(
-                        child: Text(
-                          'End?',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                      )),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Visibility(
+                      visible: !checkProgression(),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: RaisedButton(
+                          child: Text(
+                            'End?',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
+                          onPressed: () {
+                            if (_etapeKeyForm.currentState!.validate()) {
+                              SaveEtape(state: 'endPlanning');
+                            }
+                          },
+                          color: Theme.of(context).primaryColor,
                         ),
-                        onPressed: () {
-                          if (_etapeKeyForm.currentState!.validate()) {
-                            SaveEtape(state: 'endPlanning');
-                          }
-                        },
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ))
-              ],
-            ),
-          )),
+                      ))
+                ],
+              ),
+            )),
+      ),
     );
   }
 
@@ -270,7 +293,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
     String location_key = widget.location['key'];
     String contact_key = widget.location['contact_key'];
     String materialEtape = material_Etape;
-    String nombredebac = _numberofbac.text;
+    String nombredebac = widget.location['nombredebac'];
     String noteEtape = _noteEtape.text;
     String beforeEtape_key = '';
     String afterEtape_key = '';
@@ -313,7 +336,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'contact_key': contact_key,
         'materialEtape': materialEtape,
         'nombredebac': nombredebac,
-        'checked': 'false',
+        'checked': 'creating',
         'reason_not_checked': '',
         'noteEtape': noteEtape,
         'dateEtape': '',
@@ -405,7 +428,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'contact_key': contact_key,
         'materialEtape': materialEtape,
         'nombredebac': nombredebac,
-        'checked': 'false',
+        'checked': 'creating',
         'reason_not_checked': '',
         'noteEtape': noteEtape,
         'dateEtape': '',
@@ -476,7 +499,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'contact_key': contact_key,
         'materialEtape': materialEtape,
         'nombredebac': nombredebac,
-        'checked': 'false',
+        'checked': 'creating',
         'reason_not_checked': '',
         'noteEtape': noteEtape,
         'dateEtape': '',

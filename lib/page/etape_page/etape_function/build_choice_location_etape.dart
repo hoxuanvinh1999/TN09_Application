@@ -72,6 +72,7 @@ updateLocationEtape({required Map location, required String etapeKey}) async {
       FirebaseDatabase.instance.reference().child('Etape');
   Map<String, String> etape = {
     'nomLocationEtape': location['nomLocation'],
+    'nombredebac': location['nombredebac'],
     'addressLocationEtape': location['addressLocation'],
     'location_key': location['key'],
   };

@@ -7,6 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/math_function/is_numeric_function.dart';
+import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/cancel_creating_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_page.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
 
@@ -45,68 +47,98 @@ class _FinishCreatePlanningState extends State<FinishCreatePlanning> {
     setState(() => date = newDate);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Finish Create Planning'),
-      ),
-      body: Container(
-          margin: EdgeInsets.all(15),
-          height: double.infinity,
-          child: Form(
-            key: _planningKeyForm,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_today_rounded,
-                      size: 30,
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Text('Start date: ',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.green,
-                            fontWeight: FontWeight.w600)),
-                  ],
+  Future<bool?> dialogDecide(BuildContext context) async {
+    return showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Cancel Create New Planning?'),
+              actions: [
+                ElevatedButton(
+                  child: Text('No'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                SizedBox(height: 6),
-                ButtonWidget(
-                  icon: Icons.calendar_today,
-                  text: DateFormat('yMd').format(date).toString(),
-                  onClicked: () => pickDate(context),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: RaisedButton(
-                    child: Text(
-                      'Finish Create Planning',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    onPressed: () {
-                      if (_planningKeyForm.currentState!.validate()) {
-                        SavePlanning();
-                      }
-                    },
-                    color: Theme.of(context).primaryColor,
-                  ),
+                ElevatedButton(
+                  child: Text('Yes'),
+                  onPressed: () {
+                    deleteCreatingPlanningProcess();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                  },
                 )
               ],
-            ),
-          )),
+            ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        final goback = await dialogDecide(context);
+        return goback ?? false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Finish Create Planning'),
+        ),
+        body: Container(
+            margin: EdgeInsets.all(15),
+            height: double.infinity,
+            child: Form(
+              key: _planningKeyForm,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today_rounded,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Text('Start date: ',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.green,
+                              fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                  SizedBox(height: 6),
+                  ButtonWidget(
+                    icon: Icons.calendar_today,
+                    text: DateFormat('yMd').format(date).toString(),
+                    onClicked: () => pickDate(context),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: RaisedButton(
+                      child: Text(
+                        'Finish Create Planning',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_planningKeyForm.currentState!.validate()) {
+                          SavePlanning();
+                        }
+                      },
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            )),
+      ),
     );
   }
 

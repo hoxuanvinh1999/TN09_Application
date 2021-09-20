@@ -18,7 +18,7 @@ Widget buildItemLocation(
     decoration: buildBorderDecoration(),
     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
     padding: EdgeInsets.all(10),
-    height: 180,
+    height: 250,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,6 +89,26 @@ Widget buildItemLocation(
             ),
             Text(
               location['type'],
+              style: TextStyle(
+                  fontSize: 16, color: typeColor, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: [
+            Icon(
+              Icons.restore_from_trash_outlined,
+              color: typeColor,
+              size: 20,
+            ),
+            SizedBox(
+              width: 6,
+            ),
+            Text(
+              location['nombredebac'],
               style: TextStyle(
                   fontSize: 16, color: typeColor, fontWeight: FontWeight.w600),
             ),
