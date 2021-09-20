@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/show_delete_dialog_contact.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/delete_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/create_location.dart';
+import 'package:tn09_app_demo/widget/border_decoration.dart';
 import 'create_contact.dart';
 import 'update_contact.dart';
 import '../../location_page/location_function/view_information_location.dart';
 
 Widget buildItemContact({required BuildContext context, required Map contact}) {
   return Container(
-    margin: EdgeInsets.symmetric(vertical: 10),
+    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
     padding: EdgeInsets.all(10),
+    decoration: buildBorderDecoration(),
     height: 380,
-    color: Colors.white,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,

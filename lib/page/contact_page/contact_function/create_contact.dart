@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/math_function/is_numeric_function.dart';
+import 'package:tn09_app_demo/widget/build_decoration.dart';
 
 class CreateContact extends StatefulWidget {
   @override
@@ -35,106 +36,113 @@ class _CreateContactState extends State<CreateContact> {
           height: double.infinity,
           child: Form(
             key: _contactKeyForm,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextFormField(
-                  controller: _lastnameContact,
-                  decoration: InputDecoration(
-                    hintText: 'Nom du Contact',
-                    prefixIcon: Icon(
-                      Icons.person,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                ),
-                SizedBox(height: 15),
-                TextFormField(
-                  controller: _firstnameContact,
-                  decoration: InputDecoration(
-                    hintText: 'Prenom du Contact',
-                    prefixIcon: Icon(
-                      Icons.person,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                ),
-                SizedBox(height: 15),
-                TextFormField(
-                  controller: _addressContact,
-                  decoration: InputDecoration(
-                    hintText: 'Address du Contact',
-                    prefixIcon: Icon(
-                      Icons.home,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                ),
-                SizedBox(height: 15),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      size: 30,
-                    ),
-                    hintText: 'Telephone',
-                  ),
-                  validator: (value) {
-                    if (value == null ||
-                        isNumericUsing_tryParse(value) == false ||
-                        value.isEmpty) {
-                      return 'Please enter a telephone number';
-                    }
-                  },
-                ),
-                SizedBox(height: 15),
-                TextFormField(
-                  controller: _mailContact,
-                  decoration: InputDecoration(
-                    hintText: 'Mail du Contact',
-                    prefixIcon: Icon(
-                      Icons.home,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                ),
-                SizedBox(height: 15),
-                SizedBox(
-                  height: 25,
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: RaisedButton(
-                    child: Text(
-                      'Créer Contact',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    onPressed: () {
-                      if (_contactKeyForm.currentState!.validate()) {
-                        SaveContact();
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    controller: _lastnameContact,
+                    decoration: buildInputDecoration(
+                        'Nom du Contact', '', Icon(Icons.person, size: 30)),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This can not be null';
                       }
                     },
-                    color: Theme.of(context).primaryColor,
                   ),
-                )
-              ],
+                  SizedBox(height: 15),
+                  TextFormField(
+                    controller: _firstnameContact,
+                    decoration: buildInputDecoration(
+                        'Prenom du Contact',
+                        '',
+                        Icon(
+                          null,
+                          size: 30,
+                        )),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This can not be null';
+                      }
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  TextFormField(
+                    controller: _addressContact,
+                    decoration: buildInputDecoration(
+                        'Address du Contact',
+                        '',
+                        Icon(
+                          Icons.home,
+                          size: 30,
+                        )),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This can not be null';
+                      }
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  TextFormField(
+                    controller: _telephoneContact,
+                    decoration: buildInputDecoration(
+                        'Phone du Contact',
+                        '',
+                        Icon(
+                          Icons.phone,
+                          size: 30,
+                        )),
+                    validator: (value) {
+                      if (value == null ||
+                          isNumericUsing_tryParse(value) == false ||
+                          value.isEmpty) {
+                        return 'Please enter a telephone number';
+                      }
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  TextFormField(
+                    controller: _mailContact,
+                    decoration: buildInputDecoration(
+                        'Enter mail du Contact',
+                        '',
+                        Icon(
+                          Icons.contact_mail,
+                          size: 30,
+                        )),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This can not be null';
+                        /* } else if (!isEmail(value)) {
+                      return 'please enter a mail';*/
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: RaisedButton(
+                      child: Text(
+                        'Créer Contact',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_contactKeyForm.currentState!.validate()) {
+                          SaveContact();
+                        }
+                      },
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
             ),
           )),
     );
