@@ -9,6 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/build_choice_location_etape.dart';
+import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/cancel_creating_planning.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
 
 class CreateEtape extends StatefulWidget {
@@ -76,32 +78,93 @@ class _CreateEtapeState extends State<CreateEtape> {
     }
   }
 
+  Future<bool?> dialogDecide(BuildContext context) async {
+    if (widget.reason == 'confirmEtape') {
+      return showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Cancel Create New Etape?'),
+                actions: [
+                  ElevatedButton(
+                    child: Text('No'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ElevatedButton(
+                    child: Text('Yes'),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
+                    },
+                  )
+                ],
+              ));
+    } else {
+      return showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Cancel Create New Planning?'),
+                actions: [
+                  ElevatedButton(
+                    child: Text('No'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ElevatedButton(
+                    child: Text('Yes'),
+                    onPressed: () {
+                      deleteCreatingPlanningProcess();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      );
+                    },
+                  )
+                ],
+              ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: setTitle(),
-      ),
-      /*body: Center(
+    return WillPopScope(
+      onWillPop: () async {
+        final goback = await dialogDecide(context);
+        return goback ?? false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: setTitle(),
+        ),
+        /*body: Center(
         child: DropdownButton<String>(
           items: createList().map(buildMenuItem).toList(),
           onChanged: (value) => setState(() => this.value = value),
         ),
       ),*/
-      body: Container(
-        height: double.infinity,
-        child: FirebaseAnimatedList(
-          query: _refLocation,
-          itemBuilder: (BuildContext context, DataSnapshot snapshot,
-              Animation<double> animation, int index) {
-            Map location = snapshot.value;
-            location['key'] = snapshot.key;
-            return buildChoiceLocation(
-                context: context,
-                location: location,
-                reason: widget.reason,
-                numberofEtape: widget.numberofEtape);
-          },
+        body: Container(
+          height: double.infinity,
+          child: FirebaseAnimatedList(
+            query: _refLocation,
+            itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                Animation<double> animation, int index) {
+              Map location = snapshot.value;
+              location['key'] = snapshot.key;
+              if (location['showed'] == 'false') {
+                return buildChoiceLocation(
+                    context: context,
+                    location: location,
+                    reason: widget.reason,
+                    numberofEtape: widget.numberofEtape);
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          ),
         ),
       ),
     );

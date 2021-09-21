@@ -53,14 +53,12 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
         FirebaseDatabase.instance.reference().child('Location');
     String etape_key = widget.planning['startetape_key'];
     int numberofEtape = int.parse(widget.planning['nombredeEtape']);
-    /*if (listNomLocationEtape != [] &&
-        listAddressLocationEtape != [] &&
-        listMaterialEtape != [] &&
-        listNombredebacEtape != []) {
+    /*if (listNomLocationEtape.length == numberofEtape &&
+        listAddressLocationEtape.length == numberofEtape &&
+        listMaterialEtape.length == numberofEtape &&
+        listNombredebacEtape.length == numberofEtape) {
       return;
-    } 
-    */
-    // else {
+    } else {*/
     for (int i = 0; i < numberofEtape; i++) {
       await _refEtape.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> planning = snapshot.value;
@@ -80,7 +78,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
     }
     print('$listNomLocationEtape');
     print('$listKeyContact');
-    //}
+    // }
   }
 
   getInformationCollecteur() async {
@@ -115,6 +113,10 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
     print('$listNomLocationEtape');
     int numberofEtape = int.parse(widget.planning['nombredeEtape']);
     print('$numberofEtape');
+    print('widgetlist = ${listWidget.length}');
+    if (listWidget.length == numberofEtape) {
+      return listWidget;
+    }
     for (int i = 0; i < listNomLocationEtape.length; i++) {
       listWidget.add(new Container(
         margin: EdgeInsets.symmetric(vertical: 10),
@@ -218,6 +220,9 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
           ],
         ),
       ));
+      if (listWidget.length == numberofEtape) {
+        return listWidget;
+      }
     }
     return listWidget;
   }

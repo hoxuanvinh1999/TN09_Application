@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/create_etape.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/open_list_etape_planning.dart';
 
 class CreatePlanning extends StatefulWidget {
   @override
@@ -52,9 +53,15 @@ class _CreatePlanningState extends State<CreatePlanning> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              onPressed: (
-                  //Will update later
-                  ) {},
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) {
+                  return OpenListEtape(
+                    reason: 'createPlanning',
+                    numberofEtape: '0',
+                  );
+                }),
+              ),
               color: Theme.of(context).primaryColor,
             ),
           ],

@@ -190,6 +190,7 @@ class _CreateLocationState extends State<CreateLocation> {
       'addressLocation': addressLocation,
       'type': _typeSelected,
       'nombredecle': '0',
+      'showed': 'false',
     };
 
     _refLocation.push().set(location).then((value) {

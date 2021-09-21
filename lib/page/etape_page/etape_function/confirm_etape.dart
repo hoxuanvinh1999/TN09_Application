@@ -10,13 +10,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/build_choice_location_etape.dart';
 import 'package:tn09_app_demo/math_function/is_numeric_function.dart';
-import 'package:tn09_app_demo/page/etape_page/etape_function/cancel_creating_planning.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/create_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/show_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_page.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/cancel_creating_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/choice_vehicule_planning.dart';
-import 'package:tn09_app_demo/page/planning_page/planning_function/finish_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/open_list_etape_planning.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
 
 class ConfirmEtape extends StatefulWidget {
@@ -240,7 +240,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: RaisedButton(
                           child: Text(
-                            'Continue?',
+                            'Continue with new Etape',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.white,
@@ -249,7 +249,32 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
                           ),
                           onPressed: () {
                             if (_etapeKeyForm.currentState!.validate()) {
-                              SaveEtape(state: 'continuePlanning');
+                              SaveEtape(state: 'newEtape');
+                            }
+                          },
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      )),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Visibility(
+                      visible: !checkProgression(),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: RaisedButton(
+                          child: Text(
+                            'Continue with avalable Etape',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (_etapeKeyForm.currentState!.validate()) {
+                              SaveEtape(state: 'availableEtape');
                             }
                           },
                           color: Theme.of(context).primaryColor,
@@ -298,7 +323,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
     String beforeEtape_key = '';
     String afterEtape_key = '';
     String startEtape_key = '';
-
+    int i = 0;
     if (state == 'confirmEtape') {
       beforeEtape_key = 'null';
       afterEtape_key = 'null';
@@ -315,6 +340,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
         'afterEtape_key': afterEtape_key,
+        'showed': 'false',
       };
 
       referenceEtape.push().set(etape).then((value) {
@@ -323,37 +349,107 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
           MaterialPageRoute(builder: (context) => ShowEtape()),
         );
       });
-    } else if (widget.reason == 'createPlanning' &&
-        state == 'continuePlanning') {
-      beforeEtape_key = 'start';
-      afterEtape_key = 'wait';
-      String numberofEtape = widget.numberofEtape;
-      numberofEtape = (int.parse(numberofEtape) + 1).toString();
-      Map<String, String> etape = {
-        'nomLocationEtape': nomLocationEtape,
-        'addressLocationEtape': addressLocationEtape,
-        'location_key': location_key,
-        'contact_key': contact_key,
-        'materialEtape': materialEtape,
-        'nombredebac': nombredebac,
-        'checked': 'creating',
-        'reason_not_checked': '',
-        'noteEtape': noteEtape,
-        'dateEtape': '',
-        'beforeEtape_key': beforeEtape_key,
-        'afterEtape_key': afterEtape_key,
-      };
+    } else if (widget.reason == 'createPlanning' && state != 'endPlanning') {
+      if (state == 'newEtape') {
+        await referenceLocation.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> check_location = snapshot.value;
+          check_location.forEach((key, values) {
+            if (values['showed'] == 'false') {
+              i++;
+            }
+          });
+        });
+      }
+      if (state == 'availableEtape') {
+        await referenceEtape.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> check_etape = snapshot.value;
+          check_etape.forEach((key, values) {
+            if (values['showed'] == 'false') {
+              i++;
+            }
+          });
+        });
+      }
+      print(' i = $i');
+      if (i == 1) {
+        return showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title:
+                      Text('We used all Location or Etape available, finish?'),
+                  actions: [
+                    ElevatedButton(
+                      child: Text('Ok'),
+                      onPressed: () {
+                        SaveEtape(state: 'endPlanning');
+                      },
+                    ),
+                    ElevatedButton(
+                      child: Text('Cancel planning'),
+                      onPressed: () {
+                        deleteCreatingPlanningProcess();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      },
+                    )
+                  ],
+                ));
+      } else {
+        await referenceLocation.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> location = snapshot.value;
+          location.forEach((key, values) {
+            if (key == widget.location['key']) {
+              Map<String, String> update_location = {
+                'showed': 'true',
+              };
+              referenceLocation.child(key).update(update_location);
+            }
+          });
+        });
+        beforeEtape_key = 'start';
+        afterEtape_key = 'wait';
+        String numberofEtape = widget.numberofEtape;
+        numberofEtape = (int.parse(numberofEtape) + 1).toString();
+        Map<String, String> etape = {
+          'nomLocationEtape': nomLocationEtape,
+          'addressLocationEtape': addressLocationEtape,
+          'location_key': location_key,
+          'contact_key': contact_key,
+          'materialEtape': materialEtape,
+          'nombredebac': nombredebac,
+          'checked': 'creating',
+          'reason_not_checked': '',
+          'noteEtape': noteEtape,
+          'dateEtape': '',
+          'beforeEtape_key': beforeEtape_key,
+          'afterEtape_key': afterEtape_key,
+          'showed': 'true',
+        };
 
-      referenceEtape.push().set(etape).then((value) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CreateEtape(
-                    reason: 'continuePlanning',
-                    numberofEtape: numberofEtape,
-                  )),
-        );
-      });
+        referenceEtape.push().set(etape).then((value) {
+          if (state == 'newEtape') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateEtape(
+                        reason: 'continuePlanning',
+                        numberofEtape: numberofEtape,
+                      )),
+            );
+          } else if (state == 'availableEtape') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OpenListEtape(
+                        reason: 'continuePlanning',
+                        numberofEtape: numberofEtape,
+                      )),
+            );
+          }
+        });
+      }
     } else if (widget.reason == 'createPlanning' && state == 'endPlanning') {
       beforeEtape_key = 'start';
       afterEtape_key = 'null';
@@ -370,6 +466,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
         'afterEtape_key': afterEtape_key,
+        'showed': 'true',
       };
 
       referenceEtape.push().set(etape);
@@ -407,79 +504,149 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
           }
         });
       });
-    } else if (state == 'continuePlanning') {
-      String numberofEtape = widget.numberofEtape;
-      numberofEtape = (int.parse(numberofEtape) + 1).toString();
-      DatabaseReference _refContinueEtape =
-          FirebaseDatabase.instance.reference().child('Etape');
-      await _refContinueEtape.once().then((DataSnapshot snapshot) {
-        Map<dynamic, dynamic> etape = snapshot.value;
-        etape.forEach((key, values) {
-          if (values['afterEtape_key'] == 'wait') {
-            print('Into If right');
-            beforeEtape_key = key;
-          }
+    } else if (widget.reason == 'continuePlanning' && state != 'endPlanning') {
+      if (state == 'newEtape') {
+        await referenceLocation.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> check_location = snapshot.value;
+          check_location.forEach((key, values) {
+            if (values['showed'] == 'false') {
+              i++;
+            }
+          });
         });
-      });
-      Map<String, String> newetape_1 = {
-        'nomLocationEtape': nomLocationEtape,
-        'addressLocationEtape': addressLocationEtape,
-        'location_key': location_key,
-        'contact_key': contact_key,
-        'materialEtape': materialEtape,
-        'nombredebac': nombredebac,
-        'checked': 'creating',
-        'reason_not_checked': '',
-        'noteEtape': noteEtape,
-        'dateEtape': '',
-        'beforeEtape_key': beforeEtape_key,
-        'afterEtape_key': 'waitting'
-      };
+      }
+      if (state == 'availableEtape') {
+        await referenceEtape.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> check_etape = snapshot.value;
+          check_etape.forEach((key, values) {
+            if (values['showed'] == 'false') {
+              i++;
+            }
+          });
+        });
+      }
+      print(' i = $i');
+      if (i == 1) {
+        return showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title:
+                      Text('We used all location or Etape available, finish?'),
+                  actions: [
+                    ElevatedButton(
+                      child: Text('Ok'),
+                      onPressed: () {
+                        SaveEtape(state: 'endPlanning');
+                      },
+                    ),
+                    ElevatedButton(
+                      child: Text('Cancel planning'),
+                      onPressed: () {
+                        deleteCreatingPlanningProcess();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      },
+                    )
+                  ],
+                ));
+      } else {
+        await referenceLocation.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> location = snapshot.value;
+          location.forEach((key, values) {
+            if (key == widget.location['key']) {
+              Map<String, String> update_location = {
+                'showed': 'true',
+              };
+              referenceLocation.child(key).update(update_location);
+            }
+          });
+        });
+        String numberofEtape = widget.numberofEtape;
+        numberofEtape = (int.parse(numberofEtape) + 1).toString();
+        DatabaseReference _refContinueEtape =
+            FirebaseDatabase.instance.reference().child('Etape');
+        await _refContinueEtape.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> etape = snapshot.value;
+          etape.forEach((key, values) {
+            if (values['afterEtape_key'] == 'wait') {
+              print('Into If right');
+              beforeEtape_key = key;
+            }
+          });
+        });
+        Map<String, String> newetape_1 = {
+          'nomLocationEtape': nomLocationEtape,
+          'addressLocationEtape': addressLocationEtape,
+          'location_key': location_key,
+          'contact_key': contact_key,
+          'materialEtape': materialEtape,
+          'nombredebac': nombredebac,
+          'checked': 'creating',
+          'reason_not_checked': '',
+          'noteEtape': noteEtape,
+          'dateEtape': '',
+          'beforeEtape_key': beforeEtape_key,
+          'afterEtape_key': 'waitting',
+          'showed': 'true',
+        };
 
-      referenceEtape.push().set(newetape_1);
+        referenceEtape.push().set(newetape_1);
 
-      await _refContinueEtape.once().then((DataSnapshot snapshot) {
-        Map<dynamic, dynamic> etape = snapshot.value;
-        etape.forEach((key, values) {
-          if (values['afterEtape_key'] == 'waitting') {
-            print('Into If right');
-            afterEtape_key = key;
-          }
+        await _refContinueEtape.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> etape = snapshot.value;
+          etape.forEach((key, values) {
+            if (values['afterEtape_key'] == 'waitting') {
+              print('Into If right');
+              afterEtape_key = key;
+            }
+          });
         });
-      });
-      await _refContinueEtape.once().then((DataSnapshot snapshot) {
-        Map<dynamic, dynamic> etape = snapshot.value;
-        etape.forEach((key, values) {
-          if (values['afterEtape_key'] == 'wait') {
-            print('Into If right');
-            Map<String, String> oldetape = {
-              'afterEtape_key': afterEtape_key,
-            };
-            referenceEtape.child(key).update(oldetape);
-          }
+        await _refContinueEtape.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> etape = snapshot.value;
+          etape.forEach((key, values) {
+            if (values['afterEtape_key'] == 'wait') {
+              print('Into If right');
+              Map<String, String> oldetape = {
+                'afterEtape_key': afterEtape_key,
+              };
+              referenceEtape.child(key).update(oldetape);
+            }
+          });
         });
-      });
-      await _refContinueEtape.once().then((DataSnapshot snapshot) {
-        Map<dynamic, dynamic> etape = snapshot.value;
-        etape.forEach((key, values) {
-          if (values['afterEtape_key'] == 'waitting') {
-            print('Into If right');
-            Map<String, String> newetape_2 = {
-              'afterEtape_key': 'wait',
-            };
-            referenceEtape.child(key).update(newetape_2).then((value) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CreateEtape(
-                          reason: 'continuePlanning',
-                          numberofEtape: numberofEtape,
-                        )),
-              );
-            });
-          }
+        await _refContinueEtape.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> etape = snapshot.value;
+          etape.forEach((key, values) {
+            if (values['afterEtape_key'] == 'waitting') {
+              print('Into If right');
+              Map<String, String> newetape_2 = {
+                'afterEtape_key': 'wait',
+              };
+              referenceEtape.child(key).update(newetape_2);
+            }
+          });
         });
-      });
+        if (state == 'newEtape') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreateEtape(
+                      reason: 'continuePlanning',
+                      numberofEtape: numberofEtape,
+                    )),
+          );
+        } else if (state == 'availableEtape') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OpenListEtape(
+                      reason: 'continuePlanning',
+                      numberofEtape: numberofEtape,
+                    )),
+          );
+        }
+      }
     } else if (state == 'endPlanning') {
       DatabaseReference _refEndEtape =
           FirebaseDatabase.instance.reference().child('Etape');
@@ -504,7 +671,8 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'noteEtape': noteEtape,
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
-        'afterEtape_key': 'waitting'
+        'afterEtape_key': 'waitting',
+        'showed': 'true',
       };
 
       referenceEtape.push().set(newetape_1);
