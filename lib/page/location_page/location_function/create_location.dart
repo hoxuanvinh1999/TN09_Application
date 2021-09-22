@@ -17,6 +17,7 @@ class CreateLocation extends StatefulWidget {
 }
 
 class _CreateLocationState extends State<CreateLocation> {
+  final _LocationKeyForm = GlobalKey<FormState>();
   TextEditingController _nameLocation = TextEditingController();
   TextEditingController _addressLocation = TextEditingController();
   TextEditingController _numberofbac = TextEditingController();
@@ -62,113 +63,117 @@ class _CreateLocationState extends State<CreateLocation> {
         title: const Text('Créer Location'),
       ),
       body: Container(
-        margin: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _nameLocation,
-              decoration: InputDecoration(
-                hintText: 'Nom de la Location',
-                prefixIcon: Icon(
-                  Icons.home,
-                  size: 30,
-                ),
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding: EdgeInsets.all(15),
-              ),
-            ),
-            SizedBox(height: 15),
-            TextFormField(
-              controller: _addressLocation,
-              decoration: InputDecoration(
-                hintText: 'Address de la Location',
-                prefixIcon: Icon(
-                  Icons.location_on,
-                  size: 30,
-                ),
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding: EdgeInsets.all(15),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Row(
+          margin: EdgeInsets.all(15),
+          child: Form(
+            key: _LocationKeyForm,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.restore_from_trash_outlined,
-                  color: Colors.blue,
-                ),
-                SizedBox(
-                  width: 6,
-                ),
-                Text('Number of Bac: ',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w600)),
-                SizedBox(
-                  width: 6,
-                ),
-              ],
-            ),
-            SizedBox(height: 15),
-            TextFormField(
-              controller: _numberofbac,
-              decoration: const InputDecoration(
-                hintText: 'Number of Bac',
-              ),
-              validator: (value) {
-                if (value == null ||
-                    isNumericUsing_tryParse(value) == false ||
-                    value.isEmpty) {
-                  return 'Please enter a real number';
-                }
-              },
-            ),
-            SizedBox(height: 15),
-            Container(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildLocationType('Resto'),
-                  SizedBox(width: 10),
-                  _buildLocationType('Crous'),
-                  SizedBox(width: 10),
-                  _buildLocationType('Cantine'),
-                  SizedBox(width: 10),
-                  _buildLocationType('Autre'),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: RaisedButton(
-                child: Text(
-                  'Créer Location',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                TextFormField(
+                  controller: _nameLocation,
+                  decoration: InputDecoration(
+                    hintText: 'Nom de la Location',
+                    prefixIcon: Icon(
+                      Icons.home,
+                      size: 30,
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    contentPadding: EdgeInsets.all(15),
                   ),
                 ),
-                onPressed: () {
-                  SaveLocation();
-                },
-                color: Theme.of(context).primaryColor,
-              ),
-            )
-          ],
-        ),
-      ),
+                SizedBox(height: 15),
+                TextFormField(
+                  controller: _addressLocation,
+                  decoration: InputDecoration(
+                    hintText: 'Address de la Location',
+                    prefixIcon: Icon(
+                      Icons.location_on,
+                      size: 30,
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    contentPadding: EdgeInsets.all(15),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.restore_from_trash_outlined,
+                      color: Colors.blue,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text('Number of Bac: ',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w600)),
+                    SizedBox(
+                      width: 6,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15),
+                TextFormField(
+                  controller: _numberofbac,
+                  decoration: const InputDecoration(
+                    hintText: 'Number of Bac',
+                  ),
+                  validator: (value) {
+                    if (value == null ||
+                        isNumericUsing_tryParse(value) == false ||
+                        value.isEmpty) {
+                      return 'Please enter a real number';
+                    }
+                  },
+                ),
+                SizedBox(height: 15),
+                Container(
+                  height: 40,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      _buildLocationType('Resto'),
+                      SizedBox(width: 10),
+                      _buildLocationType('Crous'),
+                      SizedBox(width: 10),
+                      _buildLocationType('Cantine'),
+                      SizedBox(width: 10),
+                      _buildLocationType('Autre'),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: RaisedButton(
+                    child: Text(
+                      'Créer Location',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_LocationKeyForm.currentState!.validate()) {
+                        SaveLocation();
+                      }
+                    },
+                    color: Theme.of(context).primaryColor,
+                  ),
+                )
+              ],
+            ),
+          )),
     );
   }
 
