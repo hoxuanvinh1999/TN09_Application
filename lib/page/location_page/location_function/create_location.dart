@@ -22,10 +22,12 @@ class _CreateLocationState extends State<CreateLocation> {
   TextEditingController _numberofbac = TextEditingController();
   String _typeSelected = '';
 
-  DatabaseReference _refContact =
+  DatabaseReference referenceContact =
       FirebaseDatabase.instance.reference().child('Contact');
-  DatabaseReference _refLocation =
+  DatabaseReference referenceLocation =
       FirebaseDatabase.instance.reference().child('Location');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
 
   Widget _buildLocationType(String title) {
     return InkWell(
@@ -172,14 +174,14 @@ class _CreateLocationState extends State<CreateLocation> {
 
   void SaveLocation() async {
     DataSnapshot snapshotlocation =
-        await _refContact.child(widget.contactKey).once();
+        await referenceContact.child(widget.contactKey).once();
     Map contact = snapshotlocation.value;
     String numberofLocation = contact['nombredelocation'];
     numberofLocation = (int.parse(numberofLocation) + 1).toString();
     Map<String, String> updateContact = {
       'nombredelocation': numberofLocation,
     };
-    _refContact.child(widget.contactKey).update(updateContact);
+    referenceContact.child(widget.contactKey).update(updateContact);
     String nomLocation = _nameLocation.text;
     String addressLocation = _addressLocation.text;
     String nombredebac = _numberofbac.text;
@@ -192,8 +194,17 @@ class _CreateLocationState extends State<CreateLocation> {
       'nombredecle': '0',
       'showed': 'false',
     };
-
-    _refLocation.push().set(location).then((value) {
+    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> etape = snapshot.value;
+      etape.forEach((key, values) {
+        Map<String, String> totalInformation = {
+          'nombredeLocation':
+              (int.parse(values['nombredeLocation']) + 1).toString(),
+        };
+        referenceTotalInformation.child(key).update(totalInformation);
+      });
+    });
+    referenceLocation.push().set(location).then((value) {
       Navigator.pop(context);
     });
   }

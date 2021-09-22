@@ -20,12 +20,15 @@ class FinishCreatePlanning extends StatefulWidget {
 class _FinishCreatePlanningState extends State<FinishCreatePlanning> {
   final _planningKeyForm = GlobalKey<FormState>();
 
-  DatabaseReference _refPlanning =
+  DatabaseReference referencePlanning =
       FirebaseDatabase.instance.reference().child('Planning');
-  DatabaseReference _refLocation =
+  DatabaseReference referenceLocation =
       FirebaseDatabase.instance.reference().child('Location');
-  DatabaseReference _refEtape =
+  DatabaseReference referenceEtape =
       FirebaseDatabase.instance.reference().child('Etape');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
+
   DateTime date = DateTime.now();
 
   String getText() {
@@ -147,41 +150,53 @@ class _FinishCreatePlanningState extends State<FinishCreatePlanning> {
   }
 
   void SavePlanning() async {
-    await _refLocation.once().then((DataSnapshot snapshot) {
+    await referenceLocation.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> location = snapshot.value;
       location.forEach((key, values) {
         if (values['showed'] == 'true') {
           Map<String, String> update_location = {
             'showed': 'false',
           };
-          _refLocation.child(key).update(update_location);
+          referenceLocation.child(key).update(update_location);
         }
       });
     });
-    await _refEtape.once().then((DataSnapshot snapshot) {
+    await referenceEtape.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> etape = snapshot.value;
       etape.forEach((key, values) {
         if (values['showed'] == 'true') {
           Map<String, String> update_etape = {
             'showed': 'false',
           };
-          _refEtape.child(key).update(update_etape);
+          referenceEtape.child(key).update(update_etape);
         }
       });
     });
-    await _refEtape.once().then((DataSnapshot snapshot) {
+    await referenceEtape.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> etape = snapshot.value;
       etape.forEach((key, values) {
         if (values['checked'] == 'creating') {
           Map<String, String> update_etape = {
             'checked': 'false',
           };
-          _refEtape.child(key).update(update_etape);
+          referenceEtape.child(key).update(update_etape);
         }
       });
     });
+
+    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> etape = snapshot.value;
+      etape.forEach((key, values) {
+        Map<String, String> totalInformation = {
+          'nombredePlanning':
+              (int.parse(values['nombredePlanning']) + 1).toString(),
+        };
+        referenceTotalInformation.child(key).update(totalInformation);
+      });
+    });
+
     String startdate = DateFormat('yMd').format(date).toString();
-    await _refPlanning.once().then((DataSnapshot snapshot) {
+    await referencePlanning.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> planning = snapshot.value;
       planning.forEach((key, values) {
         if (values['finished_create'] == 'false') {
@@ -190,7 +205,7 @@ class _FinishCreatePlanningState extends State<FinishCreatePlanning> {
             'startdate': startdate,
             'finished_create': 'true',
           };
-          _refPlanning.child(key).update(planning).then((value) {
+          referencePlanning.child(key).update(planning).then((value) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PlanningPage()),

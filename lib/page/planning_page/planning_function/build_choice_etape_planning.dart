@@ -251,7 +251,8 @@ void nextStep(
   String startEtape_key = '';
   String number_Etape = '';
   int i = 0;
-
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   if (reason == 'createPlanning' && state != 'endPlanning') {
     print('$reason  $state');
     DatabaseReference referenceEtape =
@@ -309,6 +310,24 @@ void nextStep(
                       };
 
                       referenceEtape.push().set(new_etape);
+
+                      await referenceTotalInformation
+                          .once()
+                          .then((DataSnapshot snapshot) {
+                        Map<dynamic, dynamic> etape = snapshot.value;
+                        etape.forEach((key, values) {
+                          Map<String, String> totalInformation = {
+                            'nombredeEtape':
+                                (int.parse(values['nombredeEtape']) +
+                                        int.parse(numberofEtape) +
+                                        1)
+                                    .toString(),
+                          };
+                          referenceTotalInformation
+                              .child(key)
+                              .update(totalInformation);
+                        });
+                      });
 
                       await referenceEtape.once().then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> check_etape = snapshot.value;
@@ -439,6 +458,19 @@ void nextStep(
 
     referenceEtape.push().set(new_etape);
 
+    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> etape = snapshot.value;
+      etape.forEach((key, values) {
+        Map<String, String> totalInformation = {
+          'nombredeEtape': (int.parse(values['nombredeEtape']) +
+                  int.parse(numberofEtape) +
+                  1)
+              .toString(),
+        };
+        referenceTotalInformation.child(key).update(totalInformation);
+      });
+    });
+
     await referenceEtape.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> check_etape = snapshot.value;
       check_etape.forEach((key, values) {
@@ -566,6 +598,25 @@ void nextStep(
                           }
                         });
                       });
+
+                      await referenceTotalInformation
+                          .once()
+                          .then((DataSnapshot snapshot) {
+                        Map<dynamic, dynamic> etape = snapshot.value;
+                        etape.forEach((key, values) {
+                          Map<String, String> totalInformation = {
+                            'nombredeEtape':
+                                (int.parse(values['nombredeEtape']) +
+                                        int.parse(numberofEtape) +
+                                        1)
+                                    .toString(),
+                          };
+                          referenceTotalInformation
+                              .child(key)
+                              .update(totalInformation);
+                        });
+                      });
+
                       await referenceEtape.once().then((DataSnapshot snapshot) {
                         Map<dynamic, dynamic> check_etape = snapshot.value;
                         check_etape.forEach((key, values) {
@@ -778,6 +829,20 @@ void nextStep(
         }
       });
     });
+
+    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> etape = snapshot.value;
+      etape.forEach((key, values) {
+        Map<String, String> totalInformation = {
+          'nombredeEtape': (int.parse(values['nombredeEtape']) +
+                  int.parse(numberofEtape) +
+                  1)
+              .toString(),
+        };
+        referenceTotalInformation.child(key).update(totalInformation);
+      });
+    });
+
     await _refEndEtape.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> check_etape = snapshot.value;
       check_etape.forEach((key, values) {

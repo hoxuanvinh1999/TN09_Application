@@ -19,8 +19,10 @@ class _CreateCollecteurState extends State<CreateCollecteur> {
   TextEditingController _lastnameCollecteur = TextEditingController();
   TextEditingController _firstnameCollecteur = TextEditingController();
 
-  DatabaseReference _refCollecteur =
+  DatabaseReference referenceCollecteur =
       FirebaseDatabase.instance.reference().child('Collecteur');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   DateTime date = DateTime.now();
 
   String getText() {
@@ -56,117 +58,118 @@ class _CreateCollecteurState extends State<CreateCollecteur> {
           margin: EdgeInsets.all(15),
           height: double.infinity,
           child: Form(
-            key: _collecteurKeyForm,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextFormField(
-                  controller: _lastnameCollecteur,
-                  decoration: InputDecoration(
-                    hintText: 'Nom du Colllecteur',
-                    prefixIcon: Icon(
-                      Icons.person,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a something';
-                    }
-                  },
-                ),
-                SizedBox(height: 15),
-                TextFormField(
-                  controller: _firstnameCollecteur,
-                  decoration: InputDecoration(
-                    hintText: 'Prenom du Collecteur',
-                    prefixIcon: Icon(
-                      Icons.person,
-                      size: 30,
-                    ),
-                    fillColor: Colors.white,
-                    filled: true,
-                    contentPadding: EdgeInsets.all(15),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a something';
-                    }
-                  },
-                ),
-                SizedBox(height: 15),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      size: 30,
-                    ),
-                    hintText: 'Telephone',
-                  ),
-                  validator: (value) {
-                    if (value == null ||
-                        isNumericUsing_tryParse(value) == false ||
-                        value.isEmpty) {
-                      return 'Please enter a telephone number';
-                    }
-                  },
-                ),
-                SizedBox(height: 15),
-                Row(
+              key: _collecteurKeyForm,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.calendar_today_rounded,
-                      size: 30,
+                    TextFormField(
+                      controller: _lastnameCollecteur,
+                      decoration: InputDecoration(
+                        hintText: 'Nom du Colllecteur',
+                        prefixIcon: Icon(
+                          Icons.person,
+                          size: 30,
+                        ),
+                        fillColor: Colors.white,
+                        filled: true,
+                        contentPadding: EdgeInsets.all(15),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a something';
+                        }
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: _firstnameCollecteur,
+                      decoration: InputDecoration(
+                        hintText: 'Prenom du Collecteur',
+                        prefixIcon: Icon(
+                          Icons.person,
+                          size: 30,
+                        ),
+                        fillColor: Colors.white,
+                        filled: true,
+                        contentPadding: EdgeInsets.all(15),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a something';
+                        }
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.phone,
+                          size: 30,
+                        ),
+                        hintText: 'Telephone',
+                      ),
+                      validator: (value) {
+                        if (value == null ||
+                            isNumericUsing_tryParse(value) == false ||
+                            value.isEmpty) {
+                          return 'Please enter a telephone number';
+                        }
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today_rounded,
+                          size: 30,
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text('Date de naissance',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                    SizedBox(height: 6),
+                    ButtonWidget(
+                      icon: Icons.calendar_today,
+                      text: DateFormat('yMd').format(date).toString(),
+                      onClicked: () => pickDate(context),
                     ),
                     SizedBox(
-                      width: 6,
+                      height: 25,
                     ),
-                    Text('Date de naissance',
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.green,
-                            fontWeight: FontWeight.w600)),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: RaisedButton(
+                        child: Text(
+                          'Créer Collecteur',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_collecteurKeyForm.currentState!.validate()) {
+                            SaveCollecteur();
+                          }
+                        },
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )
                   ],
                 ),
-                SizedBox(height: 6),
-                ButtonWidget(
-                  icon: Icons.calendar_today,
-                  text: DateFormat('yMd').format(date).toString(),
-                  onClicked: () => pickDate(context),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: RaisedButton(
-                    child: Text(
-                      'Créer Collecteur',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    onPressed: () {
-                      if (_collecteurKeyForm.currentState!.validate()) {
-                        SaveCollecteur();
-                      }
-                    },
-                    color: Theme.of(context).primaryColor,
-                  ),
-                )
-              ],
-            ),
-          )),
+              ))),
     );
   }
 
-  void SaveCollecteur() {
+  void SaveCollecteur() async {
     String nomCollecteur = _lastnameCollecteur.text;
     String prenomCollecteur = _firstnameCollecteur.text;
     String datedeNaissance = DateFormat('yMd').format(date).toString();
@@ -176,8 +179,18 @@ class _CreateCollecteurState extends State<CreateCollecteur> {
       'prenomCollecteur': prenomCollecteur,
       'datedeNaissance': datedeNaissance,
     };
+    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> etape = snapshot.value;
+      etape.forEach((key, values) {
+        Map<String, String> totalInformation = {
+          'nombredeCollecteur':
+              (int.parse(values['nombredeCollecteur']) + 1).toString(),
+        };
+        referenceTotalInformation.child(key).update(totalInformation);
+      });
+    });
 
-    _refCollecteur.push().set(collecteur).then((value) {
+    referenceCollecteur.push().set(collecteur).then((value) {
       Navigator.pop(context);
     });
   }

@@ -13,6 +13,9 @@ showDeleteDialogLocation(
     {required BuildContext context, required Map location}) {
   DatabaseReference referenceLocation =
       FirebaseDatabase.instance.reference().child('Location');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
+  String number_key = '';
   showDialog(
       context: context,
       builder: (context) {
@@ -26,11 +29,30 @@ showDeleteDialogLocation(
                 },
                 child: Text('Cancel')),
             FlatButton(
-                onPressed: () {
+                onPressed: () async {
                   reduceNumberofLocation(contact_key: location['contact_key']);
                   if (location['nombredecle'] != '0') {
                     deleteCle(location_key: location['key']);
                   }
+                  number_key = location['nombredecle'];
+                  await referenceTotalInformation
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> etape = snapshot.value;
+                    etape.forEach((key, values) {
+                      Map<String, String> totalInformation = {
+                        'nombredeLocation':
+                            (int.parse(values['nombredeLocation']) - 1)
+                                .toString(),
+                        'nombredeCle': (int.parse(values['nombredeCle']) -
+                                int.parse(number_key))
+                            .toString(),
+                      };
+                      referenceTotalInformation
+                          .child(key)
+                          .update(totalInformation);
+                    });
+                  });
                   referenceLocation
                       .child(location['key'])
                       .remove()

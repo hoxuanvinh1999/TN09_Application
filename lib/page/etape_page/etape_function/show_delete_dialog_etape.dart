@@ -7,6 +7,8 @@ import 'package:tn09_app_demo/page/planning_page/planning_page.dart';
 showDeleteDialogEtape({required BuildContext context, required Map etape}) {
   DatabaseReference referenceEtape =
       FirebaseDatabase.instance.reference().child('Etape');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   showDialog(
       context: context,
       builder: (context) {

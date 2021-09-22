@@ -45,9 +45,18 @@ updateState({required etape_key, required Map planning}) async {
       FirebaseDatabase.instance.reference().child('Etape');
   DatabaseReference referencePlanning =
       FirebaseDatabase.instance.reference().child('Planning');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   String beforeEtape_key = '';
   String afterEtape_key = '';
   String newStartEtape_key = '';
+  String total_key = '';
+  await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+    Map<dynamic, dynamic> etape = snapshot.value;
+    etape.forEach((key, values) {
+      total_key = key;
+    });
+  });
   await referenceEtape.once().then((DataSnapshot snapshot) {
     Map<dynamic, dynamic> etape = snapshot.value;
     etape.forEach((key, values) {
@@ -55,6 +64,11 @@ updateState({required etape_key, required Map planning}) async {
         if (values['beforeEtape_key'] == 'null' &&
             values['afterEtape_key'] == 'null') {
           referencePlanning.child(planning['key']).remove();
+          Map<String, String> totalInformation = {
+            'nombredePlanning':
+                (int.parse(values['nombredePlanning']) - 1).toString(),
+          };
+          referenceTotalInformation.child(total_key).update(totalInformation);
           return;
         } else if (values['beforeEtape_key'] == 'null') {
           newStartEtape_key = values['afterEtape_key'];

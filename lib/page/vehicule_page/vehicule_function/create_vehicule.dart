@@ -26,6 +26,8 @@ class _CreateVehiculeState extends State<CreateVehicule> {
   TextEditingController _maxweightVehicule = TextEditingController();
   DatabaseReference referenceVehicule =
       FirebaseDatabase.instance.reference().child('Vehicule');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,7 +178,7 @@ class _CreateVehiculeState extends State<CreateVehicule> {
     );
   }
 
-  void SaveVehicule() {
+  void SaveVehicule() async {
     String numeroimmatriculation = _numeroImmatriculation.text;
     String typeVehicule = type_vehicule;
     String maxWeightVehicule = _maxweightVehicule.text;
@@ -188,7 +190,16 @@ class _CreateVehiculeState extends State<CreateVehicule> {
       'maxWeightVehicule': maxWeightVehicule,
       'stateVehicule': stateVehicule,
     };
-
+    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> etape = snapshot.value;
+      etape.forEach((key, values) {
+        Map<String, String> totalInformation = {
+          'nombredeVehicule':
+              (int.parse(values['nombredeVehicule']) + 1).toString(),
+        };
+        referenceTotalInformation.child(key).update(totalInformation);
+      });
+    });
     referenceVehicule.push().set(vehicule).then((value) {
       Navigator.pop(context);
     });

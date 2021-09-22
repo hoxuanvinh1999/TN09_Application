@@ -22,9 +22,10 @@ class _CreateContactState extends State<CreateContact> {
   TextEditingController _telephoneContact = TextEditingController();
   TextEditingController _mailContact = TextEditingController();
 
-  DatabaseReference _refContact =
+  DatabaseReference referenceContact =
       FirebaseDatabase.instance.reference().child('Contact');
-
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +149,7 @@ class _CreateContactState extends State<CreateContact> {
     );
   }
 
-  void SaveContact() {
+  void SaveContact() async {
     String nomContact = _lastnameContact.text;
     String prenomContact = _firstnameContact.text;
     String datecreeContact = DateFormat('yMd').format(DateTime.now());
@@ -166,8 +167,17 @@ class _CreateContactState extends State<CreateContact> {
       'payerContact': '0',
       'nombredelocation': '0',
     };
-
-    _refContact.push().set(contact).then((value) {
+    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> etape = snapshot.value;
+      etape.forEach((key, values) {
+        Map<String, String> totalInformation = {
+          'nombredeContact':
+              (int.parse(values['nombredeContact']) + 1).toString(),
+        };
+        referenceTotalInformation.child(key).update(totalInformation);
+      });
+    });
+    referenceContact.push().set(contact).then((value) {
       Navigator.pop(context);
     });
   }

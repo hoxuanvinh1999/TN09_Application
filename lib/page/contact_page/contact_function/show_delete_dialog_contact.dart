@@ -9,6 +9,8 @@ import 'update_contact.dart';
 showDeleteDialogContact({required BuildContext context, required Map contact}) {
   DatabaseReference referenceContact =
       FirebaseDatabase.instance.reference().child('Contact');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   showDialog(
       context: context,
       builder: (context) {
@@ -22,11 +24,26 @@ showDeleteDialogContact({required BuildContext context, required Map contact}) {
                 },
                 child: Text('Cancel')),
             FlatButton(
-                onPressed: () {
+                onPressed: () async {
                   String contact_key = contact['key'];
                   if (contact['nombredelocation'] != '0') {
                     deleteLocation(contact_key: contact_key);
                   }
+                  await referenceTotalInformation
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> etape = snapshot.value;
+                    etape.forEach((key, values) {
+                      Map<String, String> totalInformation = {
+                        'nombredeContact':
+                            (int.parse(values['nombredeContact']) - 1)
+                                .toString(),
+                      };
+                      referenceTotalInformation
+                          .child(key)
+                          .update(totalInformation);
+                    });
+                  });
                   referenceContact
                       .child(contact['key'])
                       .remove()

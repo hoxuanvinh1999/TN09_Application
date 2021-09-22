@@ -40,11 +40,8 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
       FirebaseDatabase.instance.reference().child('Etape');
   DatabaseReference referenceLocation =
       FirebaseDatabase.instance.reference().child('Location');
-
-  Query _refLocation = FirebaseDatabase.instance
-      .reference()
-      .child('Location')
-      .orderByChild('nomeLocation');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
 
   String title = '';
   Widget setTitle() {
@@ -342,7 +339,16 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'afterEtape_key': afterEtape_key,
         'showed': 'false',
       };
-
+      await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+        Map<dynamic, dynamic> etape = snapshot.value;
+        etape.forEach((key, values) {
+          Map<String, String> totalInformation = {
+            'nombredeEtape':
+                (int.parse(values['nombredeEtape']) + 1).toString(),
+          };
+          referenceTotalInformation.child(key).update(totalInformation);
+        });
+      });
       referenceEtape.push().set(etape).then((value) {
         Navigator.push(
           context,
@@ -471,9 +477,23 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
 
       referenceEtape.push().set(etape);
 
-      DatabaseReference _refEndEtape =
+      await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+        Map<dynamic, dynamic> etape = snapshot.value;
+        etape.forEach((key, values) {
+          Map<String, String> totalInformation = {
+            'nombredeEtape': (int.parse(values['nombredeEtape']) +
+                    int.parse(widget.numberofEtape) +
+                    1)
+                .toString(),
+          };
+          referenceTotalInformation.child(key).update(totalInformation);
+        });
+      });
+
+      DatabaseReference referenceEndEtape =
           FirebaseDatabase.instance.reference().child('Etape');
-      await _refEndEtape.once().then((DataSnapshot snapshot) {
+
+      await referenceEndEtape.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> etape = snapshot.value;
         etape.forEach((key, values) {
           if (values['beforeEtape_key'] == 'start') {
@@ -565,9 +585,9 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         });
         String numberofEtape = widget.numberofEtape;
         numberofEtape = (int.parse(numberofEtape) + 1).toString();
-        DatabaseReference _refContinueEtape =
+        DatabaseReference referenceContinueEtape =
             FirebaseDatabase.instance.reference().child('Etape');
-        await _refContinueEtape.once().then((DataSnapshot snapshot) {
+        await referenceContinueEtape.once().then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> etape = snapshot.value;
           etape.forEach((key, values) {
             if (values['afterEtape_key'] == 'wait') {
@@ -594,7 +614,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
 
         referenceEtape.push().set(newetape_1);
 
-        await _refContinueEtape.once().then((DataSnapshot snapshot) {
+        await referenceContinueEtape.once().then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> etape = snapshot.value;
           etape.forEach((key, values) {
             if (values['afterEtape_key'] == 'waitting') {
@@ -603,7 +623,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
             }
           });
         });
-        await _refContinueEtape.once().then((DataSnapshot snapshot) {
+        await referenceContinueEtape.once().then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> etape = snapshot.value;
           etape.forEach((key, values) {
             if (values['afterEtape_key'] == 'wait') {
@@ -615,7 +635,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
             }
           });
         });
-        await _refContinueEtape.once().then((DataSnapshot snapshot) {
+        await referenceContinueEtape.once().then((DataSnapshot snapshot) {
           Map<dynamic, dynamic> etape = snapshot.value;
           etape.forEach((key, values) {
             if (values['afterEtape_key'] == 'waitting') {
@@ -648,9 +668,9 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         }
       }
     } else if (state == 'endPlanning') {
-      DatabaseReference _refEndEtape =
+      DatabaseReference referenceEndEtape =
           FirebaseDatabase.instance.reference().child('Etape');
-      await _refEndEtape.once().then((DataSnapshot snapshot) {
+      await referenceEndEtape.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> etape = snapshot.value;
         etape.forEach((key, values) {
           if (values['afterEtape_key'] == 'wait') {
@@ -677,7 +697,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
 
       referenceEtape.push().set(newetape_1);
 
-      await _refEndEtape.once().then((DataSnapshot snapshot) {
+      await referenceEndEtape.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> etape = snapshot.value;
         etape.forEach((key, values) {
           if (values['afterEtape_key'] == 'waitting') {
@@ -686,7 +706,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
           }
         });
       });
-      await _refEndEtape.once().then((DataSnapshot snapshot) {
+      await referenceEndEtape.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> etape = snapshot.value;
         etape.forEach((key, values) {
           if (values['afterEtape_key'] == 'wait') {
@@ -698,7 +718,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
           }
         });
       });
-      await _refEndEtape.once().then((DataSnapshot snapshot) {
+      await referenceEndEtape.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> etape = snapshot.value;
         etape.forEach((key, values) {
           if (values['afterEtape_key'] == 'waitting') {
@@ -710,7 +730,21 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
           }
         });
       });
-      await _refEndEtape.once().then((DataSnapshot snapshot) {
+
+      await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+        Map<dynamic, dynamic> etape = snapshot.value;
+        etape.forEach((key, values) {
+          Map<String, String> totalInformation = {
+            'nombredeEtape': (int.parse(values['nombredeEtape']) +
+                    int.parse(widget.numberofEtape) +
+                    1)
+                .toString(),
+          };
+          referenceTotalInformation.child(key).update(totalInformation);
+        });
+      });
+
+      await referenceEndEtape.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> etape = snapshot.value;
         etape.forEach((key, values) {
           if (values['beforeEtape_key'] == 'start') {

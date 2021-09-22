@@ -19,10 +19,12 @@ class _CreateCleState extends State<CreateCle> {
   String _typeSelected = '';
   String locationKeyValue = '';
 
-  DatabaseReference _refCle =
+  DatabaseReference referenceCle =
       FirebaseDatabase.instance.reference().child('Cle');
-  DatabaseReference _refLocation =
+  DatabaseReference referenceLocation =
       FirebaseDatabase.instance.reference().child('Location');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   @override
   Widget _buildCleType(String title) {
     return InkWell(
@@ -122,14 +124,14 @@ class _CreateCleState extends State<CreateCle> {
   void SaveCle() async {
     String cleTableSecurityPass = 'check';
     DataSnapshot snapshotlocation =
-        await _refLocation.child(widget.locationKey).once();
+        await referenceLocation.child(widget.locationKey).once();
     Map location = snapshotlocation.value;
     String numberofCle = location['nombredecle'];
     numberofCle = (int.parse(numberofCle) + 1).toString();
     Map<String, String> updatelocation = {
       'nombredecle': numberofCle,
     };
-    _refLocation.child(widget.locationKey).update(updatelocation);
+    referenceLocation.child(widget.locationKey).update(updatelocation);
 
     String noteCle = _noteCle.text;
     Map<String, String> newcle = {
@@ -137,8 +139,16 @@ class _CreateCleState extends State<CreateCle> {
       'location_key': widget.locationKey,
       'type': _typeSelected,
     };
-
-    _refCle.push().set(newcle).then((value) {
+    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> etape = snapshot.value;
+      etape.forEach((key, values) {
+        Map<String, String> totalInformation = {
+          'nombredeCle': (int.parse(values['nombredeCle']) + 1).toString(),
+        };
+        referenceTotalInformation.child(key).update(totalInformation);
+      });
+    });
+    referenceCle.push().set(newcle).then((value) {
       Navigator.pop(context);
     });
   }
