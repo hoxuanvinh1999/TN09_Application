@@ -232,10 +232,11 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
     getInformationCollecteur();
     getInformationVehicule();
     getInformationEtape();
+    print('list Nom Location Etape: $listNomLocationEtape');
     return FutureBuilder<List<String>>(
       future: futureWait(),
       builder: (context, snapshot) {
-        print('$snapshot');
+        //print('$snapshot');
         if (listNomLocationEtape != [] &&
                 listNombredebacEtape != [] &&
                 listAddressLocationEtape != [] &&
