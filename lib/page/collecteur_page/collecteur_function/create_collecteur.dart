@@ -180,8 +180,8 @@ class _CreateCollecteurState extends State<CreateCollecteur> {
       'datedeNaissance': datedeNaissance,
     };
     await referenceTotalInformation.once().then((DataSnapshot snapshot) {
-      Map<dynamic, dynamic> etape = snapshot.value;
-      etape.forEach((key, values) {
+      Map<dynamic, dynamic> information = snapshot.value;
+      information.forEach((key, values) {
         Map<String, String> totalInformation = {
           'nombredeCollecteur':
               (int.parse(values['nombredeCollecteur']) + 1).toString(),

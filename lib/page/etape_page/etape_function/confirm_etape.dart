@@ -478,8 +478,8 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
       referenceEtape.push().set(etape);
 
       await referenceTotalInformation.once().then((DataSnapshot snapshot) {
-        Map<dynamic, dynamic> etape = snapshot.value;
-        etape.forEach((key, values) {
+        Map<dynamic, dynamic> information = snapshot.value;
+        information.forEach((key, values) {
           Map<String, String> totalInformation = {
             'nombredeEtape': (int.parse(values['nombredeEtape']) +
                     int.parse(widget.numberofEtape) +
@@ -692,6 +692,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
         'afterEtape_key': 'waitting',
+        'planning_key': 'null',
         'showed': 'true',
       };
 
@@ -732,8 +733,8 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
       });
 
       await referenceTotalInformation.once().then((DataSnapshot snapshot) {
-        Map<dynamic, dynamic> etape = snapshot.value;
-        etape.forEach((key, values) {
+        Map<dynamic, dynamic> information = snapshot.value;
+        information.forEach((key, values) {
           Map<String, String> totalInformation = {
             'nombredeEtape': (int.parse(values['nombredeEtape']) +
                     int.parse(widget.numberofEtape) +

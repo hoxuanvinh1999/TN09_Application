@@ -150,6 +150,27 @@ class _FinishCreatePlanningState extends State<FinishCreatePlanning> {
   }
 
   void SavePlanning() async {
+    String planning_key = '';
+    String startdate = DateFormat('yMd').format(date).toString();
+    await referencePlanning.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> planning = snapshot.value;
+      planning.forEach((key, values) {
+        if (values['finished_create'] == 'false') {
+          print('Into If right');
+          planning_key = key;
+          Map<String, String> planning = {
+            'startdate': startdate,
+            'finished_create': 'true',
+          };
+          referencePlanning.child(key).update(planning).then((value) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PlanningPage()),
+            );
+          });
+        }
+      });
+    });
     await referenceLocation.once().then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> location = snapshot.value;
       location.forEach((key, values) {
@@ -178,6 +199,7 @@ class _FinishCreatePlanningState extends State<FinishCreatePlanning> {
         if (values['checked'] == 'creating') {
           Map<String, String> update_etape = {
             'checked': 'false',
+            'planning_key': planning_key,
           };
           referenceEtape.child(key).update(update_etape);
         }
@@ -185,33 +207,13 @@ class _FinishCreatePlanningState extends State<FinishCreatePlanning> {
     });
 
     await referenceTotalInformation.once().then((DataSnapshot snapshot) {
-      Map<dynamic, dynamic> etape = snapshot.value;
-      etape.forEach((key, values) {
+      Map<dynamic, dynamic> information = snapshot.value;
+      information.forEach((key, values) {
         Map<String, String> totalInformation = {
           'nombredePlanning':
               (int.parse(values['nombredePlanning']) + 1).toString(),
         };
         referenceTotalInformation.child(key).update(totalInformation);
-      });
-    });
-
-    String startdate = DateFormat('yMd').format(date).toString();
-    await referencePlanning.once().then((DataSnapshot snapshot) {
-      Map<dynamic, dynamic> planning = snapshot.value;
-      planning.forEach((key, values) {
-        if (values['finished_create'] == 'false') {
-          print('Into If right');
-          Map<String, String> planning = {
-            'startdate': startdate,
-            'finished_create': 'true',
-          };
-          referencePlanning.child(key).update(planning).then((value) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PlanningPage()),
-            );
-          });
-        }
       });
     });
   }

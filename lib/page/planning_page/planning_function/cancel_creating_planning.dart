@@ -61,8 +61,8 @@ void deleteCreatingPlanningProcess() async {
   });
 
   await referenceTotalInformation.once().then((DataSnapshot snapshot) {
-    Map<dynamic, dynamic> etape = snapshot.value;
-    etape.forEach((key, values) {
+    Map<dynamic, dynamic> information = snapshot.value;
+    information.forEach((key, values) {
       Map<String, String> totalInformation = {
         'nombredeEtape':
             (int.parse(values['nombredeEtape']) - int.parse(numberofEtape))

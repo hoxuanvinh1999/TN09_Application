@@ -5,6 +5,7 @@ import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.da
 import 'package:tn09_app_demo/page/etape_page/etape_function/change_location_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/show_delete_dialog_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/update_etape.dart';
+import 'package:tn09_app_demo/page/etape_page/etape_function/view_planning_etape.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/view_information_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/view_location.dart';
 import 'package:tn09_app_demo/widget/border_decoration.dart';
@@ -14,7 +15,7 @@ Widget buildItemEtape({required BuildContext context, required Map etape}) {
     decoration: buildBorderDecoration(),
     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
     padding: EdgeInsets.all(10),
-    height: 280,
+    height: 300,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,6 +271,36 @@ Widget buildItemEtape({required BuildContext context, required Map etape}) {
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.blue,
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ViewPlanningEtape(
+                            planning_key: etape['planning_key'])));
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.view_list, color: Colors.green),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Text('View Planning',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.green,
                           fontWeight: FontWeight.w600)),
                 ],
               ),

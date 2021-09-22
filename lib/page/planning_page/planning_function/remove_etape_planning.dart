@@ -52,8 +52,8 @@ updateState({required etape_key, required Map planning}) async {
   String newStartEtape_key = '';
   String total_key = '';
   await referenceTotalInformation.once().then((DataSnapshot snapshot) {
-    Map<dynamic, dynamic> etape = snapshot.value;
-    etape.forEach((key, values) {
+    Map<dynamic, dynamic> information = snapshot.value;
+    information.forEach((key, values) {
       total_key = key;
     });
   });

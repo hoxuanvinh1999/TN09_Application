@@ -140,8 +140,8 @@ class _CreateCleState extends State<CreateCle> {
       'type': _typeSelected,
     };
     await referenceTotalInformation.once().then((DataSnapshot snapshot) {
-      Map<dynamic, dynamic> etape = snapshot.value;
-      etape.forEach((key, values) {
+      Map<dynamic, dynamic> information = snapshot.value;
+      information.forEach((key, values) {
         Map<String, String> totalInformation = {
           'nombredeCle': (int.parse(values['nombredeCle']) + 1).toString(),
         };

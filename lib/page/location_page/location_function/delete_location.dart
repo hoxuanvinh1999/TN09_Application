@@ -25,6 +25,7 @@ deleteLocation({required String contact_key}) async {
         if (values['nombredecle'] != '0') {
           deleteCle(location_key: key);
         }
+        i++;
         number_cle += int.parse(values['nombredecle']);
         //reduceNumberofCle(location_key: key);
         FirebaseDatabase.instance
@@ -37,8 +38,8 @@ deleteLocation({required String contact_key}) async {
   });
   print('qqqqqqqqqqqqqqqqqqq');
   await referenceTotalInformation.once().then((DataSnapshot snapshot) {
-    Map<dynamic, dynamic> etape = snapshot.value;
-    etape.forEach((key, values) {
+    Map<dynamic, dynamic> information = snapshot.value;
+    information.forEach((key, values) {
       Map<String, String> totalInformation = {
         'nombredeLocation':
             (int.parse(values['nombredeLocation']) - i).toString(),
