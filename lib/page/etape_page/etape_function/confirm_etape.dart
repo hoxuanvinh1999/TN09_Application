@@ -337,6 +337,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
         'afterEtape_key': afterEtape_key,
+        'planning_key': 'null',
         'showed': 'false',
       };
       await referenceTotalInformation.once().then((DataSnapshot snapshot) {

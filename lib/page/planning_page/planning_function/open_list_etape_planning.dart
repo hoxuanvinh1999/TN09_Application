@@ -131,7 +131,8 @@ class _OpenListEtapeState extends State<OpenListEtape> {
                                     context: context,
                                     reason: widget.reason,
                                     numberofEtape: widget.numberofEtape,
-                                    listNomEtape: listNomEtape));
+                                    listNomEtape:
+                                        listNomEtape.toSet().toList()));
                           } else {
                             const Center(child: CircularProgressIndicator());
                           }
