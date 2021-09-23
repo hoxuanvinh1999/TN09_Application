@@ -287,7 +287,7 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: RaisedButton(
                           child: Text(
-                            'End?',
+                            'End Planning',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.white,

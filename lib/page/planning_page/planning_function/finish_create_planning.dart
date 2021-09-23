@@ -200,6 +200,7 @@ class _FinishCreatePlanningState extends State<FinishCreatePlanning> {
           Map<String, String> update_etape = {
             'checked': 'false',
             'planning_key': planning_key,
+            'dateEtape': startdate,
           };
           referenceEtape.child(key).update(update_etape);
         }
