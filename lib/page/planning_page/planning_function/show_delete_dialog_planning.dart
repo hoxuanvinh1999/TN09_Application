@@ -7,6 +7,10 @@ showDeleteDialogPlanning(
     {required BuildContext context, required Map planning}) {
   DatabaseReference referencePlanning =
       FirebaseDatabase.instance.reference().child('Planning');
+  DatabaseReference referenceEtape =
+      FirebaseDatabase.instance.reference().child('Etape');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   showDialog(
       context: context,
       builder: (context) {
@@ -20,8 +24,33 @@ showDeleteDialogPlanning(
                 },
                 child: Text('Cancel')),
             FlatButton(
-                onPressed: () {
-                  //will update in the future
+                onPressed: () async {
+                  await referenceEtape.once().then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> etape = snapshot.value;
+                    etape.forEach((key, values) {
+                      if (values['planning_key'] == planning['key']) {
+                        referenceEtape.child(key).remove();
+                      }
+                    });
+                  });
+                  await referenceTotalInformation
+                      .once()
+                      .then((DataSnapshot snapshot) {
+                    Map<dynamic, dynamic> information = snapshot.value;
+                    information.forEach((key, values) {
+                      Map<String, String> totalInformation = {
+                        'nombredeEtape': (int.parse(values['nombredeEtape']) -
+                                int.parse(planning['nombredeEtape']))
+                            .toString(),
+                        'nombredePlanning':
+                            (int.parse(values['nombredePlanning']) - 1)
+                                .toString(),
+                      };
+                      referenceTotalInformation
+                          .child(key)
+                          .update(totalInformation);
+                    });
+                  });
                   referencePlanning
                       .child(planning['key'])
                       .remove()
