@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1006764537866-gkrc4l604f32ndh4ut241fo74q9lm6gl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.lesdetritivores.tn09appdemo",
+            "certificate_hash": "63b93d1899d8771287958b2bd492ce15056dfc7c"
+          }
+        },
+        {
           "client_id": "1006764537866-38dr6kibhhsohekk2cb1u7r9fq31rc8a.apps.googleusercontent.com",
           "client_type": 3
         }
