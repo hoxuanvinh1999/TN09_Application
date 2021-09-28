@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:tn09_app_demo/.env.dart';
-import 'package:tn09_app_demo/page/home_page/home_page.dart';
 
 class TestingPage extends StatefulWidget {
   @override
@@ -50,20 +47,6 @@ class _TestingPageState extends State<TestingPage> {
         centerTitle: false,
         title: const Text('Google Maps'),
         actions: [
-          TextButton(
-            onPressed: () async {
-              // show input autocomplete with selected mode
-              // then get the Prediction selected
-              Prediction? predict = await PlacesAutocomplete.show(
-                  context: context, apiKey: googleAPIKey);
-              displayPrediction(predict: predict);
-            },
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-              textStyle: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-            child: const Text('Find'),
-          ),
           if (_origin != null)
             TextButton(
               onPressed: () => _googleMapController!.animateCamera(
@@ -187,23 +170,6 @@ class _TestingPageState extends State<TestingPage> {
           points: polylineCoordinates,
         ));
       });
-    }
-  }
-
-  Future<Null> displayPrediction({required Prediction? predict}) async {
-    if (predict != null) {
-      PlacesDetailsResponse detail =
-          await _places.getDetailsByPlaceId((predict.placeId).toString());
-
-      var placeId = predict.placeId;
-      double lat = detail.result.geometry!.location.lat;
-      double lng = detail.result.geometry!.location.lng;
-
-      var address =
-          await Geocoder.local.findAddressesFromQuery(predict.description);
-
-      print(lat);
-      print(lng);
     }
   }
 }
