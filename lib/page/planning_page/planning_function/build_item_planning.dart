@@ -153,24 +153,27 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
             SizedBox(
               height: 10,
             ),
-            Row(
-              children: [
-                Icon(
-                  Icons.location_on,
-                  color: Theme.of(context).primaryColor,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 6,
-                ),
-                Text(
-                  listAddressLocationEtape[i],
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600),
-                ),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.location_on,
+                    color: Theme.of(context).primaryColor,
+                    size: 20,
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Text(
+                    listAddressLocationEtape[i],
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 10,
