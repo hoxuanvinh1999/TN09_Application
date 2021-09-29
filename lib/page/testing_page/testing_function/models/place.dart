@@ -5,12 +5,14 @@ class Place {
   final String placeId;
   final String name;
   final String vicinity;
+  final String formatted_address;
 
   Place(
       {required this.geometry,
       required this.placeId,
       required this.name,
-      required this.vicinity});
+      required this.vicinity,
+      required this.formatted_address});
 
   factory Place.fromJson(Map<String, dynamic> json) {
     return Place(
@@ -18,6 +20,7 @@ class Place {
       placeId: json['place_id'],
       name: json['formatted_address'],
       vicinity: json['vicinity'],
+      formatted_address: json['formatted_address'],
     );
   }
 }

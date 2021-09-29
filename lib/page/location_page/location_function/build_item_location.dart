@@ -23,46 +23,58 @@ Widget buildItemLocation(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Icon(
-              Icons.home,
-              color: Theme.of(context).primaryColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 6,
-            ),
-            Text(
-              location['nomLocation'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              Icon(
+                Icons.home,
+                color: Theme.of(context).primaryColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 6,
+              ),
+              Text(
+                location['nomLocation'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              Icon(
+                Icons.location_on,
+                color: Theme.of(context).accentColor,
+                size: 20,
+              ),
+              SizedBox(
+                width: 6,
+              ),
+              Text(
+                location['addressLocation'],
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
         ),
         SizedBox(
           height: 10,
         ),
         Row(
           children: [
-            Icon(
-              Icons.location_on,
-              color: Theme.of(context).accentColor,
-              size: 20,
-            ),
-            SizedBox(
-              width: 6,
-            ),
-            Text(
-              location['addressLocation'],
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w600),
-            ),
-            SizedBox(width: 15),
             Icon(
               Icons.vpn_key,
               color: typeColor,

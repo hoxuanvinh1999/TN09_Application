@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/cle_page/cle_function/create_cle.dart';
 import 'package:tn09_app_demo/page/cle_page/cle_function/view_information_cle.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/view_contact.dart';
+import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/build_item_location.dart';
 import 'package:tn09_app_demo/page/location_page/location_function/get_type_color_location.dart';
 import 'create_location.dart';
@@ -28,23 +29,31 @@ class _ShowLocationState extends State<ShowLocation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('List Location'),
-      ),
-      body: Container(
-        height: double.infinity,
-        child: FirebaseAnimatedList(
-          query: _refLocation,
-          itemBuilder: (BuildContext context, DataSnapshot snapshot,
-              Animation<double> animation, int index) {
-            Map location = snapshot.value;
-            location['key'] = snapshot.key;
-            return buildItemLocation(context: context, location: location);
-          },
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('List Location'),
         ),
-      ),
-      /*
+        body: Container(
+          height: double.infinity,
+          child: FirebaseAnimatedList(
+            query: _refLocation,
+            itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                Animation<double> animation, int index) {
+              Map location = snapshot.value;
+              location['key'] = snapshot.key;
+              return buildItemLocation(context: context, location: location);
+            },
+          ),
+        ),
+        /*
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           /*
@@ -59,6 +68,7 @@ class _ShowLocationState extends State<ShowLocation> {
         child: Icon(Icons.add, color: Colors.white),
       ),
       */
+      ),
     );
   }
 }

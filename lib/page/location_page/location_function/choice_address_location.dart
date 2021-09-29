@@ -17,14 +17,23 @@ import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/testing_page/testing_function/blocs/application_bloc.dart';
 import 'package:tn09_app_demo/page/testing_page/testing_function/models/place.dart';
 
-class TestingSearchPage extends StatefulWidget {
+class ChoideAddressLocation extends StatefulWidget {
+  String contactKey;
+  String reason;
+  ChoideAddressLocation({required this.contactKey, required this.reason});
   @override
   _TestingPageSearchState createState() => _TestingPageSearchState();
 }
 
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: googleAPIKey);
 
-class _TestingPageSearchState extends State<TestingSearchPage> {
+class _TestingPageSearchState extends State<ChoideAddressLocation> {
+  DatabaseReference referenceContact =
+      FirebaseDatabase.instance.reference().child('Contact');
+  DatabaseReference referenceLocation =
+      FirebaseDatabase.instance.reference().child('Location');
+  DatabaseReference referenceTotalInformation =
+      FirebaseDatabase.instance.reference().child('TotalInformation');
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(44.855601489864014, -0.5484378447808893),
     zoom: 15,
@@ -44,6 +53,10 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
   Completer<GoogleMapController> _mapController = Completer();
   StreamSubscription? locationSubscription;
   StreamSubscription? boundsSubscription;
+  String idLocation = '';
+  String addressLocation = '';
+  String latitudeLocation = '';
+  String longitudeLocation = '';
   final _locationController = TextEditingController();
   void initState() {
     final applicationBloc =
@@ -54,7 +67,6 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
         .asBroadcastStream()
         .listen((place) {
       if (place != null) {
-        print('placeeeeee: ${place.name}');
         _locationController.text = place.name;
         _goToPlace(place);
         // _googleMapController!.animateCamera(CameraUpdate.newCameraPosition(
@@ -64,7 +76,6 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
         //       zoom: 14.0),
         // ));
         // _markers.remove('now');
-        String location_name = place.name;
         _markers.add(Marker(
           markerId: MarkerId('${place.placeId}'),
           infoWindow: InfoWindow(title: place.name),
@@ -73,6 +84,7 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
           position:
               LatLng(place.geometry.location.lat, place.geometry.location.lng),
         ));
+        String location_name = place.name;
       } else
         _locationController.text = "";
     });
@@ -99,6 +111,7 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
+            CancleCreateLocation();
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => HomeScreen()));
           },
@@ -111,6 +124,8 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
               child: CircularProgressIndicator(),
             )
           : ListView(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -178,6 +193,28 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
                       ),
                   ],
                 ),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: RaisedButton(
+                    child: Text(
+                      'Créer Location',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onPressed: () {
+                      FinishSaveLocation();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
+                    },
+                    color: Theme.of(context).primaryColor,
+                  ),
+                )
               ],
             ),
       floatingActionButton: FloatingActionButton(
@@ -197,6 +234,10 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
   }
 
   Future<void> _goToPlace(Place place) async {
+    latitudeLocation = (place.geometry.location.lat).toString();
+    longitudeLocation = (place.geometry.location.lng).toString();
+    idLocation = place.placeId;
+    addressLocation = place.formatted_address;
     final GoogleMapController controller = await _mapController.future;
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
@@ -206,5 +247,59 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
             zoom: 14.0),
       ),
     );
+  }
+
+  void FinishSaveLocation() async {
+    String locationKey = '';
+    DataSnapshot snapshotlocation =
+        await referenceContact.child(widget.contactKey).once();
+    Map contact = snapshotlocation.value;
+    String numberofLocation = contact['nombredelocation'];
+    numberofLocation = (int.parse(numberofLocation) + 1).toString();
+    Map<String, String> updateContact = {
+      'nombredelocation': numberofLocation,
+    };
+    referenceContact.child(widget.contactKey).update(updateContact);
+    await referenceLocation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> location = snapshot.value;
+      location.forEach((key, values) {
+        if (values['checked'] == 'creating') {
+          Map<String, String> update_location = {
+            'contact_key': widget.contactKey,
+            'addressLocation': addressLocation,
+            'idLocation': idLocation,
+            'longitudeLocation': longitudeLocation,
+            'latitudeLocation': latitudeLocation,
+            'nombredecle': '0',
+            'showed': 'false',
+            'checked': 'done',
+          };
+          locationKey = key;
+          referenceLocation.child(key).update(update_location);
+        }
+      });
+    });
+
+    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> information = snapshot.value;
+      information.forEach((key, values) {
+        Map<String, String> totalInformation = {
+          'nombredeLocation':
+              (int.parse(values['nombredeLocation']) + 1).toString(),
+        };
+        referenceTotalInformation.child(key).update(totalInformation);
+      });
+    });
+  }
+
+  void CancleCreateLocation() async {
+    await referenceLocation.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> location = snapshot.value;
+      location.forEach((key, values) {
+        if (values['checked'] == 'creating') {
+          referenceLocation.child(key).remove();
+        }
+      });
+    });
   }
 }

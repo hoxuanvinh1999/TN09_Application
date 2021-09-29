@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tn09_app_demo/page/login_page/login_screen.dart';
+import 'package:tn09_app_demo/page/testing_page/testing_function/blocs/application_bloc.dart';
 import '../../widget/navigation_drawer_widget.dart';
 import 'package:flutter/services.dart';
 
 class HomeScreen extends StatelessWidget {
   final auth = FirebaseAuth.instance;
-
   Future<bool?> _onBackPressed(BuildContext context) {
     return showDialog<bool>(
       context: context,
@@ -33,6 +34,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicationBloc>(context);
     return WillPopScope(
       onWillPop: () async {
         final goback = await _onBackPressed(context);

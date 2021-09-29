@@ -7,6 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:tn09_app_demo/math_function/is_numeric_function.dart';
+import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/page/location_page/location_function/choice_address_location.dart';
 
 class CreateLocation extends StatefulWidget {
   String contactKey;
@@ -56,162 +58,163 @@ class _CreateLocationState extends State<CreateLocation> {
     );
   }
 
+  Future<bool?> dialogDecide(BuildContext context) async {
+    return showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Cancel Create New Location?'),
+              actions: [
+                ElevatedButton(
+                  child: Text('No'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ElevatedButton(
+                  child: Text('Yes'),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                  },
+                )
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Créer Location'),
-      ),
-      body: Container(
-          margin: EdgeInsets.all(15),
-          child: Form(
-              key: _LocationKeyForm,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: _nameLocation,
-                      decoration: InputDecoration(
-                        hintText: 'Nom de la Location',
-                        prefixIcon: Icon(
-                          Icons.home,
-                          size: 30,
+    return WillPopScope(
+      onWillPop: () async {
+        final goback = await dialogDecide(context);
+        return goback ?? false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Créer Location'),
+        ),
+        body: Container(
+            margin: EdgeInsets.all(15),
+            child: Form(
+                key: _LocationKeyForm,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        controller: _nameLocation,
+                        decoration: InputDecoration(
+                          hintText: 'Nom de la Location',
+                          prefixIcon: Icon(
+                            Icons.home,
+                            size: 30,
+                          ),
+                          fillColor: Colors.white,
+                          filled: true,
+                          contentPadding: EdgeInsets.all(15),
                         ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        contentPadding: EdgeInsets.all(15),
                       ),
-                    ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      controller: _addressLocation,
-                      decoration: InputDecoration(
-                        hintText: 'Address de la Location',
-                        prefixIcon: Icon(
-                          Icons.location_on,
-                          size: 30,
-                        ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        contentPadding: EdgeInsets.all(15),
+                      SizedBox(
+                        height: 15,
                       ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.restore_from_trash_outlined,
-                          color: Colors.blue,
-                        ),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Text('Number of Bac: ',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w600)),
-                        SizedBox(
-                          width: 6,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      controller: _numberofbac,
-                      decoration: const InputDecoration(
-                        hintText: 'Number of Bac',
-                      ),
-                      validator: (value) {
-                        if (value == null ||
-                            isNumericUsing_tryParse(value) == false ||
-                            value.isEmpty) {
-                          return 'Please enter a real number';
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15),
-                    Container(
-                      height: 40,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
+                      Row(
                         children: [
-                          _buildLocationType('Resto'),
-                          SizedBox(width: 10),
-                          _buildLocationType('Crous'),
-                          SizedBox(width: 10),
-                          _buildLocationType('Cantine'),
-                          SizedBox(width: 10),
-                          _buildLocationType('Autre'),
+                          Icon(
+                            Icons.restore_from_trash_outlined,
+                            color: Colors.blue,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text('Number of Bac: ',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w600)),
+                          SizedBox(
+                            width: 6,
+                          ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: RaisedButton(
-                        child: Text(
-                          'Créer Location',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      SizedBox(height: 15),
+                      TextFormField(
+                        controller: _numberofbac,
+                        decoration: const InputDecoration(
+                          hintText: 'Number of Bac',
                         ),
-                        onPressed: () {
-                          if (_LocationKeyForm.currentState!.validate()) {
-                            SaveLocation();
+                        validator: (value) {
+                          if (value == null ||
+                              isNumericUsing_tryParse(value) == false ||
+                              value.isEmpty) {
+                            return 'Please enter a real number';
                           }
                         },
-                        color: Theme.of(context).primaryColor,
                       ),
-                    )
-                  ],
-                ),
-              ))),
+                      SizedBox(height: 15),
+                      Container(
+                        height: 40,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            _buildLocationType('Resto'),
+                            SizedBox(width: 10),
+                            _buildLocationType('Crous'),
+                            SizedBox(width: 10),
+                            _buildLocationType('Cantine'),
+                            SizedBox(width: 10),
+                            _buildLocationType('Autre'),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: RaisedButton(
+                          child: Text(
+                            'Choice Address',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (_LocationKeyForm.currentState!.validate()) {
+                              SaveLocation();
+                            }
+                          },
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      )
+                    ],
+                  ),
+                ))),
+      ),
     );
   }
 
   void SaveLocation() async {
-    DataSnapshot snapshotlocation =
-        await referenceContact.child(widget.contactKey).once();
-    Map contact = snapshotlocation.value;
-    String numberofLocation = contact['nombredelocation'];
-    numberofLocation = (int.parse(numberofLocation) + 1).toString();
-    Map<String, String> updateContact = {
-      'nombredelocation': numberofLocation,
-    };
-    referenceContact.child(widget.contactKey).update(updateContact);
     String nomLocation = _nameLocation.text;
-    String addressLocation = _addressLocation.text;
     String nombredebac = _numberofbac.text;
     Map<String, String> location = {
       'nombredebac': nombredebac,
       'contact_key': widget.contactKey,
       'nomLocation': nomLocation,
-      'addressLocation': addressLocation,
       'type': _typeSelected,
       'nombredecle': '0',
       'showed': 'false',
+      'checked': 'creating',
     };
-    await referenceTotalInformation.once().then((DataSnapshot snapshot) {
-      Map<dynamic, dynamic> information = snapshot.value;
-      information.forEach((key, values) {
-        Map<String, String> totalInformation = {
-          'nombredeLocation':
-              (int.parse(values['nombredeLocation']) + 1).toString(),
-        };
-        referenceTotalInformation.child(key).update(totalInformation);
-      });
-    });
     referenceLocation.push().set(location).then((value) {
-      Navigator.pop(context);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChoideAddressLocation(
+                    contactKey: widget.contactKey,
+                    reason: 'finishLocation',
+                  )));
     });
   }
 }
