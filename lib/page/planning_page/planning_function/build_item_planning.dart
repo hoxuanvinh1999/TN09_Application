@@ -526,6 +526,44 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                   ],
                 ),
                 SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(
+                      width: 6,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        /*
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ChoiceVehiculePlanning(
+                                      reason: widget.planning['key'],
+                                    )));*/
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.map,
+                            color: Colors.red,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text('View Etape',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
                   height: 15,
                 ),
                 SizedBox(
