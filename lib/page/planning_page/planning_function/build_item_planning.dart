@@ -9,6 +9,7 @@ import 'package:tn09_app_demo/page/planning_page/planning_function/choice_collec
 import 'package:tn09_app_demo/page/planning_page/planning_function/choice_vehicule_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/edit_etape_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/show_delete_dialog_planning.dart';
+import 'package:tn09_app_demo/page/planning_page/planning_function/view_map_etape_planning.dart';
 import 'package:tn09_app_demo/trash/build_collecteur_part_planning.dart';
 import 'package:tn09_app_demo/trash/build_etape_planning.dart';
 import 'package:tn09_app_demo/trash/build_vehicule_part_planning.dart';
@@ -536,13 +537,12 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        /*
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => ChoiceVehiculePlanning(
-                                      reason: widget.planning['key'],
-                                    )));*/
+                                builder: (_) => ViewMapEtapePlanning(
+                                      planning: widget.planning,
+                                    )));
                       },
                       child: Row(
                         children: [
