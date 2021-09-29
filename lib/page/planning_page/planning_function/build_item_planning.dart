@@ -32,6 +32,9 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
   List<Widget> listWidget = [];
   List<String> listKeyLocation = [];
   List<String> listKeyContact = [];
+  List<double> listlongitudeLocation = [];
+  List<double> listlatitudeLocation = [];
+  List<String> listidLocation = [];
   String nomCollecteur = '';
   String prenomCollecteur = '';
   String typeVehicule = '';
@@ -66,6 +69,10 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
         planning.forEach((key, values) {
           if (key == etape_key) {
             listKeyEtape.add(key);
+            listidLocation.add(values['idLocation']);
+            listlongitudeLocation
+                .add(double.parse(values['longitudeLocation']));
+            listlatitudeLocation.add(double.parse(values['latitudeLocation']));
             listNomLocationEtape.add(values['nomLocationEtape']);
             listAddressLocationEtape.add(values['addressLocationEtape']);
             listMaterialEtape.add(values['materialEtape']);
@@ -542,6 +549,13 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                             MaterialPageRoute(
                                 builder: (_) => ViewMapEtapePlanning(
                                       planning: widget.planning,
+                                      listNomLocationEtape:
+                                          listNomLocationEtape,
+                                      listidLocation: listidLocation,
+                                      listlatitudeLocation:
+                                          listlatitudeLocation,
+                                      listlongitudeLocation:
+                                          listlongitudeLocation,
                                     )));
                       },
                       child: Row(

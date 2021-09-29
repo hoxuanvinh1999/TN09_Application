@@ -12,7 +12,16 @@ import 'package:tn09_app_demo/page/home_page/home_page.dart';
 
 class ViewMapEtapePlanning extends StatefulWidget {
   Map planning;
-  ViewMapEtapePlanning({required this.planning});
+  List<double> listlongitudeLocation = [];
+  List<double> listlatitudeLocation = [];
+  List<String> listidLocation = [];
+  List<String> listNomLocationEtape = [];
+  ViewMapEtapePlanning(
+      {required this.planning,
+      required this.listNomLocationEtape,
+      required this.listidLocation,
+      required this.listlatitudeLocation,
+      required this.listlongitudeLocation});
   @override
   _ViewMapEtapePlanningState createState() => _ViewMapEtapePlanningState();
 }

@@ -8,12 +8,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:provider/provider.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/create_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/search_etape.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/cancel_creating_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/choice_vehicule_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/open_list_etape_planning.dart';
+import 'package:tn09_app_demo/page/testing_page/testing_function/blocs/application_bloc.dart';
 
 class NextStepCreatePlanning extends StatefulWidget {
   Map etape;
@@ -58,6 +60,8 @@ class _NextStepCreatePlanningState extends State<NextStepCreatePlanning> {
 
   @override
   Widget build(BuildContext context) {
+    final applicationBloc =
+        Provider.of<ApplicationBloc>(context, listen: false);
     return WillPopScope(
       onWillPop: () async {
         final goback = await dialogDecide(context);
@@ -222,6 +226,9 @@ void nextStep(
                         'dateEtape': '',
                         'beforeEtape_key': beforeEtape_key,
                         'afterEtape_key': afterEtape_key,
+                        'idLocation': etape['idLocation'],
+                        'latitudeLocation': etape['latitudeLocation'],
+                        'longitudeLocation': etape['longitudeLocation'],
                         'showed': 'true',
                       };
 
@@ -326,6 +333,9 @@ void nextStep(
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
         'afterEtape_key': afterEtape_key,
+        'idLocation': etape['idLocation'],
+        'latitudeLocation': etape['latitudeLocation'],
+        'longitudeLocation': etape['longitudeLocation'],
         'showed': 'true',
       };
 
@@ -369,6 +379,9 @@ void nextStep(
       'dateEtape': '',
       'beforeEtape_key': beforeEtape_key,
       'afterEtape_key': afterEtape_key,
+      'idLocation': etape['idLocation'],
+      'latitudeLocation': etape['latitudeLocation'],
+      'longitudeLocation': etape['longitudeLocation'],
       'showed': 'true',
     };
 
@@ -476,6 +489,9 @@ void nextStep(
                         'noteEtape': etape['noteEtape'],
                         'dateEtape': '',
                         'beforeEtape_key': beforeEtape_key,
+                        'idLocation': etape['idLocation'],
+                        'latitudeLocation': etape['latitudeLocation'],
+                        'longitudeLocation': etape['longitudeLocation'],
                         'afterEtape_key': 'waitting'
                       };
 
@@ -621,6 +637,9 @@ void nextStep(
         'noteEtape': etape['noteEtape'],
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
+        'idLocation': etape['idLocation'],
+        'latitudeLocation': etape['latitudeLocation'],
+        'longitudeLocation': etape['longitudeLocation'],
         'afterEtape_key': 'waitting'
       };
 
@@ -707,6 +726,9 @@ void nextStep(
       'dateEtape': '',
       'beforeEtape_key': beforeEtape_key,
       'afterEtape_key': 'waitting',
+      'idLocation': etape['idLocation'],
+      'latitudeLocation': etape['latitudeLocation'],
+      'longitudeLocation': etape['longitudeLocation'],
       'showed': 'true',
     };
 

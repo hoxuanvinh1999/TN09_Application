@@ -316,6 +316,9 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
     String contact_key = widget.location['contact_key'];
     String materialEtape = material_Etape;
     String nombredebac = widget.location['nombredebac'];
+    String idLocation = widget.location['idLocation'];
+    String latitudeLocation = widget.location['latitudeLocation'];
+    String longitudeLocation = widget.location['longitudeLocation'];
     String noteEtape = _noteEtape.text;
     String beforeEtape_key = '';
     String afterEtape_key = '';
@@ -337,6 +340,9 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
         'afterEtape_key': afterEtape_key,
+        'idLocation': idLocation,
+        'latitudeLocation': latitudeLocation,
+        'longitudeLocation': longitudeLocation,
         'planning_key': 'null',
         'showed': 'false',
       };
@@ -432,6 +438,9 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
           'dateEtape': '',
           'beforeEtape_key': beforeEtape_key,
           'afterEtape_key': afterEtape_key,
+          'idLocation': idLocation,
+          'latitudeLocation': latitudeLocation,
+          'longitudeLocation': longitudeLocation,
           'showed': 'true',
         };
 
@@ -473,6 +482,9 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
         'afterEtape_key': afterEtape_key,
+        'idLocation': idLocation,
+        'latitudeLocation': latitudeLocation,
+        'longitudeLocation': longitudeLocation,
         'showed': 'true',
       };
 
@@ -609,6 +621,9 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
           'noteEtape': noteEtape,
           'dateEtape': '',
           'beforeEtape_key': beforeEtape_key,
+          'idLocation': idLocation,
+          'latitudeLocation': latitudeLocation,
+          'longitudeLocation': longitudeLocation,
           'afterEtape_key': 'waitting',
           'showed': 'true',
         };
@@ -693,6 +708,9 @@ class _ConfirmEtapeState extends State<ConfirmEtape> {
         'dateEtape': '',
         'beforeEtape_key': beforeEtape_key,
         'afterEtape_key': 'waitting',
+        'idLocation': idLocation,
+        'latitudeLocation': latitudeLocation,
+        'longitudeLocation': longitudeLocation,
         'planning_key': 'null',
         'showed': 'true',
       };

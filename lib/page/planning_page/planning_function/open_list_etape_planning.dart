@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tn09_app_demo/page/contact_page/contact_function/build_item_contact.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/build_item_etape.dart';
 import 'package:tn09_app_demo/page/etape_page/etape_function/create_etape.dart';
@@ -8,6 +9,7 @@ import 'package:tn09_app_demo/page/etape_page/etape_function/search_etape.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/build_choice_etape_planning.dart';
 import 'package:tn09_app_demo/page/planning_page/planning_function/cancel_creating_planning.dart';
+import 'package:tn09_app_demo/page/testing_page/testing_function/blocs/application_bloc.dart';
 
 class OpenListEtape extends StatefulWidget {
   String reason;
@@ -102,6 +104,8 @@ class _OpenListEtapeState extends State<OpenListEtape> {
 
   @override
   Widget build(BuildContext context) {
+    final applicationBloc =
+        Provider.of<ApplicationBloc>(context, listen: false);
     getNumberofEtape();
     getInformationEtape();
     //print('nombre de Etape $numberofEtape');

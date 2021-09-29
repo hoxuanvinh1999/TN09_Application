@@ -64,24 +64,27 @@ Widget buildChoiceEtape(
           SizedBox(
             height: 15,
           ),
-          Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                color: Theme.of(context).primaryColor,
-                size: 20,
-              ),
-              SizedBox(
-                width: 6,
-              ),
-              Text(
-                'Address de la Location:  ' + etape['addressLocationEtape'],
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.w600),
-              ),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.location_on,
+                  color: Theme.of(context).primaryColor,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  'Address de la Location:  ' + etape['addressLocationEtape'],
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).accentColor,
+                      fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
           ),
           SizedBox(
             height: 15,

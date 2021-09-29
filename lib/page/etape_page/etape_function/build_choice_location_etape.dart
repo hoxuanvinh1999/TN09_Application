@@ -75,6 +75,9 @@ updateLocationEtape({required Map location, required String etapeKey}) async {
     'nombredebac': location['nombredebac'],
     'addressLocationEtape': location['addressLocation'],
     'location_key': location['key'],
+    'idLocation': location['idLocation'],
+    'latitudeLocation': location['latitudeLocation'],
+    'longitudeLocation': location['longitudeLocation'],
   };
   await _refEtape.child(etapeKey).update(etape);
 }
