@@ -84,8 +84,8 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
         });
       });
     }
-    print('$listNomLocationEtape');
-    print('$listKeyContact');
+    // print('$listNomLocationEtape');
+    // print('$listKeyContact');
     // }
   }
 
@@ -118,10 +118,10 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
   }
 
   List<Widget> buildEtapeInformation() {
-    print('$listNomLocationEtape');
+    // print('$listNomLocationEtape');
     int numberofEtape = int.parse(widget.planning['nombredeEtape']);
-    print('$numberofEtape');
-    print('widgetlist = ${listWidget.length}');
+    // print('$numberofEtape');
+    // print('widgetlist = ${listWidget.length}');
     if (listWidget.length == numberofEtape) {
       return listWidget;
     }
@@ -243,7 +243,7 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
     getInformationCollecteur();
     getInformationVehicule();
     getInformationEtape();
-    print('list Nom Location Etape: $listNomLocationEtape');
+    // print('list Nom Location Etape: $listNomLocationEtape');
     return FutureBuilder<List<String>>(
       future: futureWait(),
       builder: (context, snapshot) {
@@ -550,12 +550,14 @@ class _buildItemPlanningState extends State<buildItemPlanning> {
                                 builder: (_) => ViewMapEtapePlanning(
                                       planning: widget.planning,
                                       listNomLocationEtape:
-                                          listNomLocationEtape,
+                                          listNomLocationEtape.toSet().toList(),
                                       listidLocation: listidLocation,
                                       listlatitudeLocation:
-                                          listlatitudeLocation,
+                                          listlatitudeLocation.toSet().toList(),
                                       listlongitudeLocation:
-                                          listlongitudeLocation,
+                                          listlongitudeLocation
+                                              .toSet()
+                                              .toList(),
                                     )));
                       },
                       child: Row(

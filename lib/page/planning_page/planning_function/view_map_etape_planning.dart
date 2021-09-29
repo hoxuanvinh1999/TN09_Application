@@ -12,10 +12,10 @@ import 'package:tn09_app_demo/page/home_page/home_page.dart';
 
 class ViewMapEtapePlanning extends StatefulWidget {
   Map planning;
-  List<double> listlongitudeLocation = [];
-  List<double> listlatitudeLocation = [];
-  List<String> listidLocation = [];
-  List<String> listNomLocationEtape = [];
+  List<double> listlongitudeLocation;
+  List<double> listlatitudeLocation;
+  List<String> listidLocation;
+  List<String> listNomLocationEtape;
   ViewMapEtapePlanning(
       {required this.planning,
       required this.listNomLocationEtape,
@@ -30,14 +30,13 @@ Set<Marker> _markers = {};
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: googleAPIKey);
 
 class _ViewMapEtapePlanningState extends State<ViewMapEtapePlanning> {
-  DatabaseReference referencePlanning =
-      FirebaseDatabase.instance.reference().child('Planning');
-  DatabaseReference referenceLocation =
-      FirebaseDatabase.instance.reference().child('Location');
-  DatabaseReference referenceEtape =
-      FirebaseDatabase.instance.reference().child('Etape');
-  DatabaseReference referenceTotalInformation =
-      FirebaseDatabase.instance.reference().child('TotalInformation');
+  Future<List<String>> futureWait() async {
+    return Future.wait([
+      Future.delayed(const Duration(seconds: 1), () => drawMarkerEtape()),
+      Future.delayed(const Duration(seconds: 1), () => drawPolylineEtape()),
+    ]);
+  }
+
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(44.855601489864014, -0.5484378447808893),
     zoom: 15,
@@ -60,143 +59,152 @@ class _ViewMapEtapePlanningState extends State<ViewMapEtapePlanning> {
     super.dispose();
   }
 
+  late double startLongtitude;
+  late double startLatitude;
+  late double endLatitude;
+  late double endLongtitude;
+  int check_draw_polyline = 0;
+  drawPolylineEtape() async {
+    widget.listNomLocationEtape..toSet().toList();
+    widget.listidLocation.toSet().toList();
+    widget.listlatitudeLocation.toSet().toList();
+    widget.listlongitudeLocation.toSet().toList();
+    if (check_draw_polyline >= int.parse(widget.planning['nombredeEtape'])) {
+      return;
+    } else {
+      for (int i = 0; i < (int.parse(widget.planning['nombredeEtape'])); i++) {
+        if (i == 0 && check_draw_polyline == 0) {
+          print('check draw polyline $check_draw_polyline');
+          PolylineResult result =
+              await polylinePoints.getRouteBetweenCoordinates(
+                  googleAPIKey,
+                  PointLatLng(44.85552543453359, -0.5484378447808893),
+                  PointLatLng(widget.listlatitudeLocation[0],
+                      widget.listlongitudeLocation[0]));
+          // print('Result Status  ${result.status}');
+          if (result.status == 'OK') {
+            result.points.forEach((PointLatLng point) {
+              polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+            });
+            setState(() {
+              _polylines.add(Polyline(
+                polylineId: PolylineId('polyline_0'),
+                width: 5,
+                color: Colors.red,
+                points: polylineCoordinates,
+              ));
+            });
+            check_draw_polyline++;
+          }
+        } else {
+          print('check draw polyline $check_draw_polyline');
+          PolylineResult result =
+              await polylinePoints.getRouteBetweenCoordinates(
+                  googleAPIKey,
+                  PointLatLng(widget.listlatitudeLocation[i - 1],
+                      widget.listlongitudeLocation[i - 1]),
+                  PointLatLng(widget.listlatitudeLocation[i],
+                      widget.listlongitudeLocation[i]));
+          // print('Result Status  ${result.status}');
+          if (result.status == 'OK') {
+            result.points.forEach((PointLatLng point) {
+              polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+            });
+            setState(() {
+              _polylines.add(Polyline(
+                polylineId: PolylineId('polyline_$i'),
+                width: 5,
+                color: Colors.red,
+                points: polylineCoordinates,
+              ));
+            });
+            check_draw_polyline++;
+          }
+        }
+      }
+    }
+    _polylines.toSet().toList();
+  }
+
+  int check_draw_marker = 0;
+  drawMarkerEtape() async {
+    _markers.add(_ourCompany);
+    widget.listNomLocationEtape..toSet().toList();
+    widget.listidLocation.toSet().toList();
+    widget.listlatitudeLocation.toSet().toList();
+    widget.listlongitudeLocation.toSet().toList();
+    print('drawMarkerEtape: ${widget.listNomLocationEtape}');
+    print('widget planning nombredeEtape ${widget.planning['nombredeEtape']}');
+    if (check_draw_marker >= int.parse(widget.planning['nombredeEtape'])) {
+      return;
+    } else {
+      for (int i = 0; i < int.parse(widget.planning['nombredeEtape']); i++) {
+        print('check draw marker $check_draw_marker');
+        check_draw_marker++;
+        setState(() {
+          _markers.add(Marker(
+            markerId: MarkerId(widget.listidLocation[i]),
+            infoWindow: InfoWindow(title: widget.listNomLocationEtape[i]),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueGreen),
+            position: LatLng(widget.listlatitudeLocation[i],
+                widget.listlongitudeLocation[i]),
+          ));
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
-          },
-        ),
-        centerTitle: false,
-        title: const Text('Google Maps'),
-        actions: [
-          if (_origin != null)
-            TextButton(
-              onPressed: () => _googleMapController!.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _origin!.position,
-                    zoom: 14.5,
-                    tilt: 50.0,
-                  ),
+    drawMarkerEtape();
+    drawPolylineEtape();
+    return FutureBuilder<List<String>>(
+        future: futureWait(),
+        builder: (context, snapshot) {
+          //print('$snapshot');
+          if (check_draw_marker >=
+                  int.parse(widget.planning['nombredeEtape']) &&
+              check_draw_polyline >=
+                  int.parse(widget.planning['nombredeEtape'])) {
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                  },
                 ),
+                centerTitle: false,
+                title: const Text('Google Maps'),
               ),
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Text('Origin'),
-            ),
-          if (_destination != null)
-            TextButton(
-              onPressed: () => _googleMapController!.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _destination!.position,
-                    zoom: 14.5,
-                    tilt: 50.0,
+              body: Stack(
+                alignment: Alignment.center,
+                children: [
+                  GoogleMap(
+                    polylines: _polylines,
+                    myLocationButtonEnabled: false,
+                    zoomControlsEnabled: true,
+                    initialCameraPosition: _initialCameraPosition,
+                    onMapCreated: (GoogleMapController controller) {
+                      _googleMapController = controller;
+                    },
+                    markers: _markers,
                   ),
+                ],
+              ),
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.black,
+                onPressed: () => _googleMapController!.animateCamera(
+                  CameraUpdate.newCameraPosition(_initialCameraPosition),
                 ),
+                child: const Icon(Icons.center_focus_strong),
               ),
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Text('Destination'),
-            )
-        ],
-      ),
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          GoogleMap(
-            polylines: _polylines,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: false,
-            initialCameraPosition: _initialCameraPosition,
-            onMapCreated: (GoogleMapController controller) {
-              _googleMapController = controller;
-              //setPolylines();
-            },
-            markers: {
-              _ourCompany,
-              if (_origin != null) _origin!,
-              if (_destination != null) _destination!,
-            },
-            onLongPress: _addMarker,
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.black,
-        onPressed: () => _googleMapController!.animateCamera(
-          CameraUpdate.newCameraPosition(_initialCameraPosition),
-        ),
-        child: const Icon(Icons.center_focus_strong),
-      ),
-    );
-  }
-
-  void _addMarker(LatLng pos) async {
-    if (_origin == null || (_origin != null && _destination != null)) {
-      _polylines.clear();
-      polylineCoordinates.clear();
-      setState(() {
-        _origin = Marker(
-          markerId: const MarkerId('origin'),
-          infoWindow: const InfoWindow(title: 'Origin'),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-          position: pos,
-        );
-        _destination = null;
-        //polylineCoordinates.add(_origin!.position);
-      });
-    } else {
-      setState(() {
-        _destination = Marker(
-          markerId: const MarkerId('destination'),
-          infoWindow: const InfoWindow(title: 'Destination'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          position: pos,
-        );
-        //polylineCoordinates.add(_destination!.position);
-      });
-      setPolylines();
-
-      _polylines.add(Polyline(
-        polylineId: PolylineId('testing'),
-        visible: true,
-        points: polylineCoordinates,
-        color: Colors.blue,
-      ));
-    }
-  }
-
-  void setPolylines() async {
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        googleAPIKey,
-        PointLatLng(_origin!.position.latitude, _origin!.position.longitude),
-        PointLatLng(
-            _destination!.position.latitude, _destination!.position.longitude));
-    print('Result Status  ${result.status}');
-    if (result.status == 'OK') {
-      result.points.forEach((PointLatLng point) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
-      setState(() {
-        _polylines.add(Polyline(
-          polylineId: PolylineId('testing'),
-          width: 5,
-          color: Colors.red,
-          points: polylineCoordinates,
-        ));
-      });
-    }
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        });
   }
 }
