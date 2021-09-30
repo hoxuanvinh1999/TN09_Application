@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:tn09_app_demo/page/location_page/location_page.dart';
 
 class UpdateLocation extends StatefulWidget {
-  String locationKey;
+  Map location;
 
-  UpdateLocation({required this.locationKey});
+  UpdateLocation({required this.location});
 
   @override
   _UpdateLocationState createState() => _UpdateLocationState();
@@ -18,14 +18,10 @@ class UpdateLocation extends StatefulWidget {
 
 class _UpdateLocationState extends State<UpdateLocation> {
   final _updateLocationKey = GlobalKey<FormState>();
-  TextEditingController _nameLocationController = TextEditingController();
-  TextEditingController _addressLocationController = TextEditingController();
   String newnameLocation = '';
-  String newaddressLocation = '';
   String typeSelected = '';
 
   String oldnameLocation = '';
-  String oldaddressLocation = '';
 
   DatabaseReference _refLocation =
       FirebaseDatabase.instance.reference().child('Location');
@@ -72,7 +68,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
-                controller: _nameLocationController,
+                initialValue: widget.location['nomLocation'],
                 decoration: InputDecoration(
                   hintText: 'Enter nom de la location',
                   prefixIcon: Icon(
@@ -83,35 +79,17 @@ class _UpdateLocationState extends State<UpdateLocation> {
                   filled: true,
                   contentPadding: EdgeInsets.all(15),
                 ),
-                /*validator: (value) {
+                validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter some information';
+                    return 'This can not be null';
                   } else {
-                    newnameLocation = value;
+                    setState(() {
+                      print('value $value');
+                      newnameLocation = value;
+                      print('newnameLocation $newnameLocation');
+                    });
                   }
-                  print('$newaddressLocation');
-                },*/
-              ),
-              SizedBox(height: 15),
-              TextFormField(
-                controller: _addressLocationController,
-                decoration: InputDecoration(
-                  hintText: 'Enter address de la location',
-                  prefixIcon: Icon(
-                    Icons.location_on,
-                    size: 30,
-                  ),
-                  fillColor: Colors.white,
-                  filled: true,
-                  contentPadding: EdgeInsets.all(15),
-                ),
-                /*validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some information';
-                  } else {
-                    newaddressLocation = value;
-                  }
-                },*/
+                },
               ),
               SizedBox(
                 height: 15,
@@ -147,7 +125,9 @@ class _UpdateLocationState extends State<UpdateLocation> {
                     ),
                   ),
                   onPressed: () {
-                    updateLocation();
+                    if (_updateLocationKey.currentState!.validate()) {
+                      updateLocation();
+                    }
                   },
                   color: Theme.of(context).primaryColor,
                 ),
@@ -196,14 +176,10 @@ class _UpdateLocationState extends State<UpdateLocation> {
   void updateLocation() async {
     //getLocationDetail();
 
-    print('widget locationKey: ${widget.locationKey}');
+    // print('widget locationKey: ${widget.location['key']}');
     //print('$_addressLocationController.text');
     //String received_key = widget.locationKey;
 
-    DataSnapshot snapshot = await _refLocation.child(widget.locationKey).once();
-    Map oldlocation = snapshot.value;
-    oldnameLocation = oldlocation['nomLocation'];
-    oldaddressLocation = oldlocation['addressLocation'];
     // int nombreofcle = int.parse(numberofcle);
 
     //print('old $oldnameLocation');
@@ -240,14 +216,11 @@ class _UpdateLocationState extends State<UpdateLocation> {
       print('key ${location['key']}');
       print('old $oldnameLocation');
     });*/
-
-    newnameLocation = _nameLocationController.text;
-    newaddressLocation = _addressLocationController.text;
-
+    oldnameLocation = widget.location['nomLocation'];
+    print('newnameLocation $newnameLocation');
     //print('new $newaddressLocation');
 
-    if (newaddressLocation == oldaddressLocation &&
-        newnameLocation == oldnameLocation) {
+    if (newnameLocation == oldnameLocation) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Notthing changed')),
       );
@@ -258,11 +231,10 @@ class _UpdateLocationState extends State<UpdateLocation> {
       await _refEtape.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> etape = snapshot.value;
         etape.forEach((key, values) {
-          if (values['location_key'] == widget.locationKey) {
+          if (values['location_key'] == widget.location['key']) {
             print('Into If right');
             Map<String, String> etape = {
               'nomLocationEtape': newnameLocation,
-              'addressLocationEtape': newaddressLocation,
             };
             _refEtape.child(key).update(etape);
           }
@@ -270,11 +242,13 @@ class _UpdateLocationState extends State<UpdateLocation> {
       });
       Map<String, String> newlocation = {
         'nomLocation': newnameLocation,
-        'addressLocation': newaddressLocation,
         'type': typeSelected,
       };
 
-      _refLocation.child(widget.locationKey).update(newlocation).then((value) {
+      _refLocation
+          .child(widget.location['key'])
+          .update(newlocation)
+          .then((value) {
         Navigator.pop(context);
       });
     }

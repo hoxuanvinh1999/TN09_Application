@@ -172,8 +172,7 @@ Widget buildItemLocation(
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) =>
-                            UpdateLocation(locationKey: location['key'])));
+                        builder: (_) => UpdateLocation(location: location)));
               },
               child: Row(
                 children: [
