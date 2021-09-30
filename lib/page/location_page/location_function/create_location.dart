@@ -90,6 +90,13 @@ class _CreateLocationState extends State<CreateLocation> {
       },
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
+            },
+          ),
           title: const Text('Créer Location'),
         ),
         body: Container(

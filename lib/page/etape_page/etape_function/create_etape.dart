@@ -42,7 +42,7 @@ class _CreateEtapeState extends State<CreateEtape> {
   }
 
   Future<bool?> dialogDecide(BuildContext context) async {
-    if (widget.reason == 'confirmEtape') {
+    if (widget.reason == 'confirmEtape' || widget.reason == 'createEtape') {
       return showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
