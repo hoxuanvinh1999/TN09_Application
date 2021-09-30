@@ -52,6 +52,8 @@ dependencies:
   google_maps_webservice: ^0.0.20-nullsafety.5
   geolocator: ^7.6.2
   flutter_launcher_icons: ^0.9.2
+  firebase_core_web: ^1.1.0
+  dwds: ^11.3.0
 
  
 
