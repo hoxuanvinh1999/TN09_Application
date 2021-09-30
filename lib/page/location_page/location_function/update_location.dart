@@ -125,7 +125,8 @@ class _UpdateLocationState extends State<UpdateLocation> {
                     ),
                   ),
                   onPressed: () {
-                    if (_updateLocationKey.currentState!.validate()) {
+                    if (_updateLocationKey.currentState!.validate() &&
+                        typeSelected != '') {
                       updateLocation();
                     }
                   },
@@ -217,10 +218,16 @@ class _UpdateLocationState extends State<UpdateLocation> {
       print('old $oldnameLocation');
     });*/
     oldnameLocation = widget.location['nomLocation'];
+    Map<String, String> newlocation = {
+      'nomLocation': newnameLocation,
+      'type': typeSelected,
+    };
     print('newnameLocation $newnameLocation');
+    print('typeSelected /// $typeSelected');
     //print('new $newaddressLocation');
 
-    if (newnameLocation == oldnameLocation) {
+    if (newnameLocation == oldnameLocation &&
+        widget.location['type'] == typeSelected) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Notthing changed')),
       );
@@ -240,11 +247,6 @@ class _UpdateLocationState extends State<UpdateLocation> {
           }
         });
       });
-      Map<String, String> newlocation = {
-        'nomLocation': newnameLocation,
-        'type': typeSelected,
-      };
-
       _refLocation
           .child(widget.location['key'])
           .update(newlocation)
