@@ -87,6 +87,14 @@ class _FinishCreatePlanningState extends State<FinishCreatePlanning> {
       },
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              deleteCreatingPlanningProcess();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
+            },
+          ),
           title: const Text('Finish Create Planning'),
         ),
         body: Container(

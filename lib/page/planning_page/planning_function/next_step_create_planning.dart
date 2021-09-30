@@ -69,6 +69,17 @@ class _NextStepCreatePlanningState extends State<NextStepCreatePlanning> {
       },
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              if (widget.reason == 'createPlanning' ||
+                  widget.reason == 'continuePlanning') {
+                deleteCreatingPlanningProcess();
+              }
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
+            },
+          ),
           title: Text('Next Step...'),
         ),
         body: Container(
