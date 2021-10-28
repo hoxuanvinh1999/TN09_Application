@@ -11,30 +11,31 @@ import 'package:tn09_app_demo/math_function/get_duration.dart';
 import 'package:tn09_app_demo/math_function/get_time_text.dart';
 import 'package:tn09_app_demo/math_function/limit_length_string.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
-import 'package:tn09_app_demo/page/working_page/working_doing_etape_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_page.dart';
 import 'package:tn09_app_demo/widget/vehicule_icon.dart';
 
-class WorkingEtapePage extends StatefulWidget {
+class WorkingDoingEtapePage extends StatefulWidget {
   DateTime thisDay;
   Map dataCollecteur;
   Map dataTournee;
+  Map dataEtape;
   int etapeFinish;
   int etapeOK;
   int etapenotOK;
-  WorkingEtapePage({
+  WorkingDoingEtapePage({
     required this.thisDay,
     required this.dataCollecteur,
     required this.dataTournee,
+    required this.dataEtape,
     required this.etapeFinish,
     required this.etapeOK,
     required this.etapenotOK,
   });
   @override
-  _WorkingEtapePageState createState() => _WorkingEtapePageState();
+  _WorkingDoingEtapePageState createState() => _WorkingDoingEtapePageState();
 }
 
-class _WorkingEtapePageState extends State<WorkingEtapePage> {
+class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   //For Collecteur
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -441,51 +442,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                       width: 10,
                                     ),
                                     Text(
-                                      widget.etapeFinish.toString() +
-                                          '/' +
-                                          widget.dataTournee['nombredeEtape'],
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Icon(
-                                      FontAwesomeIcons.check,
-                                      color: Colors.green,
-                                      size: 15,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      widget.etapeOK.toString() +
-                                          '/' +
-                                          widget.dataTournee['nombredeEtape'],
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Icon(
-                                      FontAwesomeIcons.times,
-                                      color: Colors.black,
-                                      size: 15,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      widget.etapenotOK.toString() +
-                                          '/' +
-                                          widget.dataTournee['nombredeEtape'],
+                                      widget.dataTournee['nombredeEtape'],
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 18,
@@ -600,7 +557,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                   width: 10,
                                 ),
                                 Text(
-                                  'Etape',
+                                  'Etape' + widget.dataEtape['orderEtape'],
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
@@ -613,185 +570,88 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.95,
-                        margin: EdgeInsets.only(bottom: 20),
-                        height:
-                            double.parse(widget.dataTournee['nombredeEtape']) *
-                                300,
-                        color: Colors.yellow,
-                        child: StreamBuilder<QuerySnapshot>(
-                          stream: _etape
-                              .where('idTourneeEtape',
-                                  isEqualTo: widget.dataTournee['idTournee'])
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.hasError) {
-                              print('${snapshot.error.toString()}');
-                              return Text('Something went wrong');
-                            }
-
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            }
-                            // print('$snapshot');
-
-                            return SingleChildScrollView(
-                              child: Column(
-                                children: snapshot.data!.docs
-                                    .map((DocumentSnapshot document_etape) {
-                                  Map<String, dynamic> etape = document_etape
-                                      .data()! as Map<String, dynamic>;
-                                  // print('$collecteur');
-
-                                  return Container(
-                                      color: Colors.white,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.8,
-                                      height: 200,
-                                      margin:
-                                          EdgeInsets.symmetric(vertical: 10),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                top: 10, bottom: 10),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.8,
-                                            height: 50,
-                                            color: Colors.grey,
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  FontAwesomeIcons.hashtag,
-                                                  size: 15,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                RichText(
-                                                  text: TextSpan(
-                                                    children: <TextSpan>[
-                                                      TextSpan(
-                                                          text: 'Etape ' +
-                                                              etape[
-                                                                  'orderEtape'],
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                          recognizer:
-                                                              TapGestureRecognizer()
-                                                                ..onTap = () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pushReplacement(MaterialPageRoute(
-                                                                          builder: (context) => WorkingDoingEtapePage(
-                                                                                thisDay: widget.thisDay,
-                                                                                dataCollecteur: widget.dataCollecteur,
-                                                                                dataTournee: widget.dataTournee,
-                                                                                dataEtape: etape,
-                                                                                etapeFinish: widget.etapeFinish,
-                                                                                etapeOK: widget.etapeOK,
-                                                                                etapenotOK: widget.etapenotOK,
-                                                                              )));
-                                                                }),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                left: 10, top: 10, bottom: 10),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  FontAwesomeIcons.flag,
-                                                  size: 15,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  etape['nomAdresseEtape'],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                left: 10, top: 10, bottom: 10),
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    FontAwesomeIcons.mapMarker,
-                                                    size: 15,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    etape['ligne1Adresse'],
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                left: 10, top: 10, bottom: 10),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  FontAwesomeIcons.clock,
-                                                  size: 15,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  etape['startFrequenceEtape'] +
-                                                      ' - ' +
-                                                      etape[
-                                                          'endFrequenceEtape'],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ));
-                                }).toList(),
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          height: 200,
+                          margin: EdgeInsets.only(bottom: 20),
+                          child: Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: 10, top: 10, bottom: 10),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.flag,
+                                      size: 15,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      widget.dataEtape['nomAdresseEtape'],
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: 10, top: 10, bottom: 10),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        FontAwesomeIcons.mapMarker,
+                                        size: 15,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        widget.dataEtape['ligne1Adresse'],
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: 10, top: 10, bottom: 10),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.clock,
+                                      size: 15,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      widget.dataEtape['startFrequenceEtape'] +
+                                          ' - ' +
+                                          widget.dataEtape['endFrequenceEtape'],
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ))
                     ],
                   ),
                 )),
