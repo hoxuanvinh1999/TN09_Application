@@ -54,9 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
             RaisedButton(
                 color: Theme.of(context).accentColor,
                 child: Text('Sign In'),
-                onPressed: () => _signinAnonymous()
-                // _signin(_email, _password)
-                ),
+                onPressed: () =>
+                    // _signinAnonymous()
+                    _signin(_email, _password)),
             RaisedButton(
               color: Theme.of(context).accentColor,
               child: Text('Sign Up'),
@@ -81,12 +81,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _signinAnonymous() async {
     await auth.signInAnonymously();
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => WorkingPage()
-            // PlanningDailyPage(
-            //       thisDay: DateTime.parse("2021-10-18 20:18:04Z"),
-            //     )
-            ));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => WorkingPage(
+              thisDay: DateTime.now(),
+            )));
   }
 
   _signin(String _email, String _password) async {
@@ -97,8 +95,12 @@ class _LoginScreenState extends State<LoginScreen> {
       //Success
       Fluttertoast.showToast(
           msg: 'Sign In Successed', gravity: ToastGravity.TOP);
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => HomeScreen()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => WorkingPage(
+                thisDay: DateTime.now(),
+              )
+          // HomeScreen()
+          ));
     } on FirebaseAuthException catch (error) {
       //String msgerror = 'Error sign in';
       Fluttertoast.showToast(
