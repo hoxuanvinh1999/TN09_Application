@@ -59,12 +59,21 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
   }
 
   void _getDuration() {
+    String result = '';
     TimeOfDay now = TimeOfDay.now();
     int hour = now.hour -
         int.parse(widget.dataTournee['realStartTime'].substring(0, 2));
-    int minute = now.minute -
-        int.parse(widget.dataTournee['realStartTime'].substring(3, 5));
-    String result = '';
+    int minute = 0;
+    if (now.minute -
+            int.parse(widget.dataTournee['realStartTime'].substring(3, 5)) <
+        0) {
+      minute = now.minute -
+          int.parse(widget.dataTournee['realStartTime'].substring(3, 5)) +
+          60;
+    } else {
+      minute = now.minute -
+          int.parse(widget.dataTournee['realStartTime'].substring(3, 5));
+    }
     if (hour < 10) {
       result += '0';
     }
