@@ -54,7 +54,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
   String _timeString = '00:00';
   @override
   void initState() {
-    Timer.periodic(Duration(seconds: 1), (Timer t) => _getDuration());
+    Timer.periodic(Duration(seconds: 60), (Timer t) => _getDuration());
     super.initState();
   }
 
@@ -240,9 +240,10 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                           ],
                         )),
                     Container(
-                        height: 150,
+                        height: 200,
                         width: MediaQuery.of(context).size.width,
-                        color: Colors.grey,
+                        color: Color(
+                            int.parse(widget.dataTournee['colorTournee'])),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -273,7 +274,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                   Text(
                                     '${widget.dataCollecteur['nomCollecteur']} ${widget.dataCollecteur['prenomCollecteur']}',
                                     style: TextStyle(
-                                      color: Colors.red,
+                                      color: Colors.black,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -308,7 +309,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                   Text(
                                     '${widget.dataTournee['realStartTime']}',
                                     style: TextStyle(
-                                      color: Colors.red,
+                                      color: Colors.black,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -343,7 +344,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                   Text(
                                     _timeString,
                                     style: TextStyle(
-                                      color: Colors.red,
+                                      color: Colors.black,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -378,12 +379,92 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                   Text(
                                     widget.dataTournee['nombredeEtape'],
                                     style: TextStyle(
-                                      color: Colors.red,
+                                      color: Colors.black,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ],
+                              ),
+                            ),
+                            Container(
+                              margin:
+                                  EdgeInsets.only(left: 10, top: 5, bottom: 5),
+                              color: Color(int.parse(
+                                  widget.dataTournee['colorTournee'])),
+                              child: StreamBuilder<QuerySnapshot>(
+                                stream: _vehicule
+                                    .where('idVehicule',
+                                        isEqualTo:
+                                            widget.dataTournee['idVehicule'])
+                                    .limit(1)
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.hasError) {
+                                    print('${snapshot.error.toString()}');
+                                    return Text('Something went wrong');
+                                  }
+
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+                                  // print('$snapshot');
+
+                                  return SingleChildScrollView(
+                                    child: Row(
+                                      children: snapshot.data!.docs.map(
+                                          (DocumentSnapshot document_vehicule) {
+                                        Map<String, dynamic> vehicule =
+                                            document_vehicule.data()!
+                                                as Map<String, dynamic>;
+                                        // print('$collecteur');
+
+                                        return Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.8,
+                                            height: 30,
+                                            color: Color(int.parse(widget
+                                                .dataTournee['colorTournee'])),
+                                            alignment: Alignment.topLeft,
+                                            child: Row(
+                                              children: [
+                                                buildVehiculeIcon(
+                                                    icontype: vehicule[
+                                                        'typeVehicule'],
+                                                    iconcolor: '0xff000000',
+                                                    sizeIcon: 15),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  'Vehicule: ',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  '${vehicule['nomVehicule']}  ${vehicule['numeroImmatriculation']}',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ));
+                                      }).toList(),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ],
