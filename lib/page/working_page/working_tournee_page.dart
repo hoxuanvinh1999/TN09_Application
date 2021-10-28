@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tn09_app_demo/math_function/get_date_text.dart';
+import 'package:tn09_app_demo/math_function/get_time_text.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/page/working_page/working_etape_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_page.dart';
 import 'package:tn09_app_demo/widget/vehicule_icon.dart';
 
@@ -280,12 +283,90 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
-                                                'Tournee ${tournee['idTournee']}',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                        text:
+                                                            'Tournee ${tournee['idTournee']}',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                        recognizer:
+                                                            TapGestureRecognizer()
+                                                              ..onTap =
+                                                                  () async {
+                                                                await _tournee
+                                                                    .where(
+                                                                        'idTournee',
+                                                                        isEqualTo:
+                                                                            tournee[
+                                                                                'idTournee'])
+                                                                    .limit(1)
+                                                                    .get()
+                                                                    .then((QuerySnapshot
+                                                                        querySnapshot) {
+                                                                  querySnapshot
+                                                                      .docs
+                                                                      .forEach(
+                                                                          (doc_tournee) {
+                                                                    _tournee
+                                                                        .doc(doc_tournee
+                                                                            .id)
+                                                                        .update({
+                                                                      'status':
+                                                                          'doing',
+                                                                      'realStartTime':
+                                                                          getTimeText(
+                                                                              time: TimeOfDay.now()),
+                                                                      'idCollecteur':
+                                                                          widget
+                                                                              .dataCollecteur['idCollecteur']
+                                                                    }).then((value) async {
+                                                                      await _tournee
+                                                                          .where(
+                                                                              'idTournee',
+                                                                              isEqualTo: tournee[
+                                                                                  'idTournee'])
+                                                                          .limit(
+                                                                              1)
+                                                                          .get()
+                                                                          .then((QuerySnapshot
+                                                                              querySnapshot) {
+                                                                        querySnapshot
+                                                                            .docs
+                                                                            .forEach((doc_tournee) {
+                                                                          Map<String, dynamic>
+                                                                              next_tournee =
+                                                                              doc_tournee.data()! as Map<String, dynamic>;
+                                                                          print(
+                                                                              "Tournee Started");
+                                                                          Fluttertoast.showToast(
+                                                                              msg: "Tournee Started",
+                                                                              gravity: ToastGravity.TOP);
+
+                                                                          Navigator
+                                                                              .push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                                builder: (context) => WorkingEtapePage(
+                                                                                      thisDay: widget.thisDay,
+                                                                                      dataCollecteur: widget.dataCollecteur,
+                                                                                      dataTournee: next_tournee,
+                                                                                    )),
+                                                                          ).then((value) =>
+                                                                              setState(() {}));
+                                                                        });
+                                                                      }).catchError((error) =>
+                                                                              print("Failed to add user: $error"));
+                                                                    });
+                                                                  });
+                                                                });
+                                                              }),
+                                                  ],
                                                 ),
                                               ),
                                             ]),
