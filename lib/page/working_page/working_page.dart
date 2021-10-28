@@ -31,10 +31,6 @@ class _WorkingPageState extends State<WorkingPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference _collecteur =
       FirebaseFirestore.instance.collection("Collecteur");
-  Stream<QuerySnapshot> _collecteurStream = FirebaseFirestore.instance
-      .collection("Collecteur")
-      .orderBy('nomCollecteur')
-      .snapshots();
 
   DateTime date = DateTime.now();
 
@@ -134,8 +130,8 @@ class _WorkingPageState extends State<WorkingPage> {
             //     )),
             // SizedBox(height: 20),
             Container(
-                width: double.infinity,
-                height: 800,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
                 color: Colors.green,
                 child: Column(
                   children: [
@@ -179,6 +175,7 @@ class _WorkingPageState extends State<WorkingPage> {
                       ),
                     ),
                     Container(
+                        width: MediaQuery.of(context).size.width,
                         color: Colors.red,
                         child: Column(
                           children: [
@@ -258,7 +255,99 @@ class _WorkingPageState extends State<WorkingPage> {
                             )
                           ],
                         )),
-                    Container(),
+                    Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.center,
+                        color: Colors.grey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Select Collecteur ',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )),
+                    Container(
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: _collecteur
+                            .where('idCollecteur', isNotEqualTo: 'null')
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            print('${snapshot.error.toString()}');
+                            return Text('Something went wrong');
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
+                          // print('$snapshot');
+
+                          return SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: snapshot.data!.docs
+                                  .map((DocumentSnapshot document_collecteur) {
+                                Map<String, dynamic> collecteur =
+                                    document_collecteur.data()!
+                                        as Map<String, dynamic>;
+                                // print('$collecteur');
+                                if (collecteur['idCollecteur'] == 'null') {
+                                  return SizedBox.shrink();
+                                }
+                                return Container(
+                                  margin: EdgeInsets.symmetric(vertical: 20),
+                                  alignment: Alignment(-0.8, 0),
+                                  color: Colors.white,
+                                  height: 50,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: collecteur['nomCollecteur'] +
+                                                ' ' +
+                                                collecteur['prenomCollecteur'],
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                // Navigator.of(context)
+                                                //     .pushReplacement(
+                                                //         MaterialPageRoute(
+                                                //             builder: (context) =>
+                                                //                 HomeScreen()));
+                                              }),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 )),
           ],
