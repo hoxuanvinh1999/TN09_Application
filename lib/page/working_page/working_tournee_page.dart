@@ -6,20 +6,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tn09_app_demo/math_function/get_date_text.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
-import 'package:tn09_app_demo/page/working_page/working_tournee_page.dart';
+import 'package:tn09_app_demo/page/working_page/working_page.dart';
 
-class WorkingPage extends StatefulWidget {
+class WorkingTourneePage extends StatefulWidget {
   DateTime thisDay;
-  WorkingPage({
+  Map dataCollecteur;
+  WorkingTourneePage({
     required this.thisDay,
+    required this.dataCollecteur,
   });
   @override
-  _WorkingPageState createState() => _WorkingPageState();
+  _WorkingTourneePageState createState() => _WorkingTourneePageState();
 }
 
-class _WorkingPageState extends State<WorkingPage> {
+class _WorkingTourneePageState extends State<WorkingTourneePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  // For Collecteur
+  //For Collecteur
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference _collecteur =
       FirebaseFirestore.instance.collection("Collecteur");
@@ -35,24 +37,9 @@ class _WorkingPageState extends State<WorkingPage> {
   //   }
   // }
 
-  // Pick Date widget
-  Future pickDate(BuildContext context) async {
-    final initialDate = widget.thisDay;
-    final newDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(DateTime.now().year - 25),
-      lastDate: DateTime(DateTime.now().year + 10),
-    );
-
-    if (newDate == null) return;
-
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => WorkingPage(
-              thisDay: newDate,
-            )));
-  }
-
+  // For Tournee
+  CollectionReference _tournee =
+      FirebaseFirestore.instance.collection("Tournee");
   @override
   Widget build(BuildContext context) {
     //For set up date
@@ -176,52 +163,21 @@ class _WorkingPageState extends State<WorkingPage> {
                             ),
                             Row(
                               children: [
-                                Container(
-                                  width: 150,
-                                  height: 40,
-                                  color: Colors.yellow,
-                                  child: Row(
-                                    children: [
-                                      IconButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            WorkingPage(
-                                                              thisDay:
-                                                                  previousDay,
-                                                            )));
-                                          },
-                                          icon: Icon(
-                                            FontAwesomeIcons.stepBackward,
-                                            size: 12,
-                                          )),
-                                      IconButton(
-                                          onPressed: () {
-                                            pickDate(context);
-                                          },
-                                          icon: Icon(
-                                            FontAwesomeIcons.calendar,
-                                            size: 12,
-                                          )),
-                                      IconButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            WorkingPage(
-                                                              thisDay: nextDay,
-                                                            )));
-                                          },
-                                          icon: Icon(
-                                            FontAwesomeIcons.stepForward,
-                                            size: 12,
-                                          ))
-                                    ],
-                                  ),
+                                SizedBox(
+                                  width: 20,
                                 ),
+                                IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
+                                              builder: (context) => WorkingPage(
+                                                    thisDay: widget.thisDay,
+                                                  )));
+                                    },
+                                    icon: Icon(
+                                      FontAwesomeIcons.stepBackward,
+                                      size: 12,
+                                    )),
                                 SizedBox(
                                   width: 20,
                                 ),
@@ -262,7 +218,7 @@ class _WorkingPageState extends State<WorkingPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Select Collecteur ',
+                                  'Select Tournee for ${widget.dataCollecteur['nomCollecteur']} ${widget.dataCollecteur['prenomCollecteur']}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
@@ -275,8 +231,9 @@ class _WorkingPageState extends State<WorkingPage> {
                         )),
                     Container(
                       child: StreamBuilder<QuerySnapshot>(
-                        stream: _collecteur
-                            .where('idCollecteur', isNotEqualTo: 'null')
+                        stream: _tournee
+                            .where('dateTournee',
+                                isEqualTo: getDateText(date: widget.thisDay))
                             .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -296,9 +253,9 @@ class _WorkingPageState extends State<WorkingPage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: snapshot.data!.docs
-                                  .map((DocumentSnapshot document_collecteur) {
+                                  .map((DocumentSnapshot document_tournee) {
                                 Map<String, dynamic> collecteur =
-                                    document_collecteur.data()!
+                                    document_tournee.data()!
                                         as Map<String, dynamic>;
                                 // print('$collecteur');
                                 if (collecteur['idCollecteur'] == 'null') {
@@ -306,38 +263,10 @@ class _WorkingPageState extends State<WorkingPage> {
                                 }
                                 return Container(
                                   margin: EdgeInsets.symmetric(vertical: 20),
-                                  alignment: Alignment(-0.8, 0),
                                   color: Colors.white,
-                                  height: 50,
+                                  height: 80,
                                   width:
                                       MediaQuery.of(context).size.width * 0.9,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: collecteur['nomCollecteur'] +
-                                                ' ' +
-                                                collecteur['prenomCollecteur'],
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () {
-                                                Navigator.of(context)
-                                                    .pushReplacement(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                WorkingTourneePage(
-                                                                  thisDay: widget
-                                                                      .thisDay,
-                                                                  dataCollecteur:
-                                                                      collecteur,
-                                                                )));
-                                              }),
-                                      ],
-                                    ),
-                                  ),
                                 );
                               }).toList(),
                             ),
