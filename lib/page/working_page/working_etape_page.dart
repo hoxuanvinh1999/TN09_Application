@@ -11,6 +11,7 @@ import 'package:tn09_app_demo/math_function/get_duration.dart';
 import 'package:tn09_app_demo/math_function/get_time_text.dart';
 import 'package:tn09_app_demo/math_function/limit_length_string.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/page/working_page/working_doing_etape_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_page.dart';
 import 'package:tn09_app_demo/widget/vehicule_icon.dart';
 
@@ -18,10 +19,16 @@ class WorkingEtapePage extends StatefulWidget {
   DateTime thisDay;
   Map dataCollecteur;
   Map dataTournee;
+  int etapeFinish;
+  int etapeOK;
+  int etapenotOK;
   WorkingEtapePage({
     required this.thisDay,
     required this.dataCollecteur,
     required this.dataTournee,
+    required this.etapeFinish,
+    required this.etapeOK,
+    required this.etapenotOK,
   });
   @override
   _WorkingEtapePageState createState() => _WorkingEtapePageState();
@@ -434,7 +441,51 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                       width: 10,
                                     ),
                                     Text(
-                                      widget.dataTournee['nombredeEtape'],
+                                      widget.etapeFinish.toString() +
+                                          '/' +
+                                          widget.dataTournee['nombredeEtape'],
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Icon(
+                                      FontAwesomeIcons.check,
+                                      color: Colors.green,
+                                      size: 15,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      widget.etapeOK.toString() +
+                                          '/' +
+                                          widget.dataTournee['nombredeEtape'],
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Icon(
+                                      FontAwesomeIcons.times,
+                                      color: Colors.black,
+                                      size: 15,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      widget.etapenotOK.toString() +
+                                          '/' +
+                                          widget.dataTournee['nombredeEtape'],
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 18,
@@ -621,13 +672,34 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(
-                                                  'Etape ' +
-                                                      etape['orderEtape'],
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
+                                                RichText(
+                                                  text: TextSpan(
+                                                    children: <TextSpan>[
+                                                      TextSpan(
+                                                          text: 'Etape ' +
+                                                              etape[
+                                                                  'orderEtape'],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                          recognizer:
+                                                              TapGestureRecognizer()
+                                                                ..onTap = () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pushReplacement(MaterialPageRoute(
+                                                                          builder: (context) => WorkingDoingEtapePage(
+                                                                                thisDay: widget.thisDay,
+                                                                                dataCollecteur: widget.dataCollecteur,
+                                                                                dataTournee: widget.dataTournee,
+                                                                                dataEtape: etape,
+                                                                              )));
+                                                                }),
+                                                    ],
                                                   ),
                                                 ),
                                               ],

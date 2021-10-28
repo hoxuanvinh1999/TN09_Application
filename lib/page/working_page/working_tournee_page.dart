@@ -356,6 +356,9 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
                                                                                       thisDay: widget.thisDay,
                                                                                       dataCollecteur: widget.dataCollecteur,
                                                                                       dataTournee: next_tournee,
+                                                                                      etapeFinish: 0,
+                                                                                      etapeOK: 0,
+                                                                                      etapenotOK: 0,
                                                                                     )),
                                                                           ).then((value) =>
                                                                               setState(() {}));
