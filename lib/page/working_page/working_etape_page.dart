@@ -50,6 +50,8 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
   // For Vehicule
   CollectionReference _vehicule =
       FirebaseFirestore.instance.collection("Vehicule");
+  // For Etape
+  CollectionReference _etape = FirebaseFirestore.instance.collection("Etape");
   // For Time and Duration
   String _timeString = '00:00';
   @override
@@ -160,78 +162,31 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 color: Colors.green,
-                child: Column(
-                  children: [
-                    Container(
-                      color: Colors.blue,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 20),
-                              Icon(
-                                FontAwesomeIcons.truck,
-                                color: Colors.black,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Working',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          const Divider(
-                            thickness: 5,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.red,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        color: Colors.blue,
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 5,
+                              height: 20,
                             ),
                             Row(
                               children: [
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pushReplacement(MaterialPageRoute(
-                                              builder: (context) => WorkingPage(
-                                                    thisDay: widget.thisDay,
-                                                  )));
-                                    },
-                                    icon: Icon(
-                                      FontAwesomeIcons.stepBackward,
-                                      size: 12,
-                                    )),
+                                SizedBox(width: 20),
+                                Icon(
+                                  FontAwesomeIcons.truck,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 Text(
-                                  getDateText(date: widget.thisDay) +
-                                      ' tournee ' +
-                                      limitString(
-                                          text: widget.dataTournee['idTournee'],
-                                          limit_long: 15),
+                                  'Working',
                                   style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -244,242 +199,371 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                               thickness: 5,
                             ),
                             SizedBox(
-                              height: 15,
+                              height: 10,
                             )
                           ],
-                        )),
-                    Container(
-                        height: 200,
-                        width: MediaQuery.of(context).size.width,
-                        color: Color(
-                            int.parse(widget.dataTournee['colorTournee'])),
+                        ),
+                      ),
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.red,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    WorkingPage(
+                                                      thisDay: widget.thisDay,
+                                                    )));
+                                      },
+                                      icon: Icon(
+                                        FontAwesomeIcons.stepBackward,
+                                        size: 12,
+                                      )),
+                                  Text(
+                                    getDateText(date: widget.thisDay) +
+                                        ' tournee ' +
+                                        limitString(
+                                            text:
+                                                widget.dataTournee['idTournee'],
+                                            limit_long: 15),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              const Divider(
+                                thickness: 5,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              )
+                            ],
+                          )),
+                      Container(
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                          color: Color(
+                              int.parse(widget.dataTournee['colorTournee'])),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: 10, top: 5, bottom: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.user,
+                                      size: 15,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Collecteur: ',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      '${widget.dataCollecteur['nomCollecteur']} ${widget.dataCollecteur['prenomCollecteur']}',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: 10, top: 5, bottom: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.clock,
+                                      size: 15,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'StartTime: ',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      '${widget.dataTournee['realStartTime']}',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: 10, top: 5, bottom: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.hourglassStart,
+                                      size: 15,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Duree: ',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      _timeString,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: 10, top: 5, bottom: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.building,
+                                      size: 15,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Etape: ',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      widget.dataTournee['nombredeEtape'],
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    left: 10, top: 5, bottom: 5),
+                                color: Color(int.parse(
+                                    widget.dataTournee['colorTournee'])),
+                                child: StreamBuilder<QuerySnapshot>(
+                                  stream: _vehicule
+                                      .where('idVehicule',
+                                          isEqualTo:
+                                              widget.dataTournee['idVehicule'])
+                                      .limit(1)
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.hasError) {
+                                      print('${snapshot.error.toString()}');
+                                      return Text('Something went wrong');
+                                    }
+
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    }
+                                    // print('$snapshot');
+
+                                    return SingleChildScrollView(
+                                      child: Row(
+                                        children: snapshot.data!.docs.map(
+                                            (DocumentSnapshot
+                                                document_vehicule) {
+                                          Map<String, dynamic> vehicule =
+                                              document_vehicule.data()!
+                                                  as Map<String, dynamic>;
+                                          // print('$collecteur');
+
+                                          return Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.8,
+                                              height: 30,
+                                              color: Color(int.parse(
+                                                  widget.dataTournee[
+                                                      'colorTournee'])),
+                                              alignment: Alignment.topLeft,
+                                              child: Row(
+                                                children: [
+                                                  buildVehiculeIcon(
+                                                      icontype: vehicule[
+                                                          'typeVehicule'],
+                                                      iconcolor: '0xff000000',
+                                                      sizeIcon: 15),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    'Vehicule: ',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    '${vehicule['nomVehicule']}  ${vehicule['numeroImmatriculation']}',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ));
+                                        }).toList(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          )),
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 50,
+                        color: Colors.blue,
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 10, top: 5, bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    FontAwesomeIcons.user,
-                                    size: 15,
+                            Row(
+                              children: [
+                                SizedBox(width: 20),
+                                Icon(
+                                  FontAwesomeIcons.building,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  'Etape',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'Collecteur: ',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    '${widget.dataCollecteur['nomCollecteur']} ${widget.dataCollecteur['prenomCollecteur']}',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 10, top: 5, bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    FontAwesomeIcons.clock,
-                                    size: 15,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'StartTime: ',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    '${widget.dataTournee['realStartTime']}',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 10, top: 5, bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    FontAwesomeIcons.hourglassStart,
-                                    size: 15,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'Duree: ',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    _timeString,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 10, top: 5, bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    FontAwesomeIcons.building,
-                                    size: 15,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'Etape: ',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    widget.dataTournee['nombredeEtape'],
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 10, top: 5, bottom: 5),
-                              color: Color(int.parse(
-                                  widget.dataTournee['colorTournee'])),
-                              child: StreamBuilder<QuerySnapshot>(
-                                stream: _vehicule
-                                    .where('idVehicule',
-                                        isEqualTo:
-                                            widget.dataTournee['idVehicule'])
-                                    .limit(1)
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (snapshot.hasError) {
-                                    print('${snapshot.error.toString()}');
-                                    return Text('Something went wrong');
-                                  }
-
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
-                                  }
-                                  // print('$snapshot');
-
-                                  return SingleChildScrollView(
-                                    child: Row(
-                                      children: snapshot.data!.docs.map(
-                                          (DocumentSnapshot document_vehicule) {
-                                        Map<String, dynamic> vehicule =
-                                            document_vehicule.data()!
-                                                as Map<String, dynamic>;
-                                        // print('$collecteur');
-
-                                        return Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.8,
-                                            height: 30,
-                                            color: Color(int.parse(widget
-                                                .dataTournee['colorTournee'])),
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                buildVehiculeIcon(
-                                                    icontype: vehicule[
-                                                        'typeVehicule'],
-                                                    iconcolor: '0xff000000',
-                                                    sizeIcon: 15),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  'Vehicule: ',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  '${vehicule['nomVehicule']}  ${vehicule['numeroImmatriculation']}',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ));
-                                      }).toList(),
-                                    ),
-                                  );
-                                },
-                              ),
+                                ),
+                              ],
                             ),
                           ],
-                        )),
-                    Container(),
-                  ],
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        margin: EdgeInsets.only(bottom: 20),
+                        height: 200 +
+                            double.parse(widget.dataTournee['nombredeEtape']) *
+                                200,
+                        color: Colors.yellow,
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: _etape
+                              .where('idTourneeEtape',
+                                  isEqualTo: widget.dataTournee['idTournee'])
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              print('${snapshot.error.toString()}');
+                              return Text('Something went wrong');
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            }
+                            // print('$snapshot');
+
+                            return SingleChildScrollView(
+                              child: Column(
+                                children: snapshot.data!.docs
+                                    .map((DocumentSnapshot document_etape) {
+                                  Map<String, dynamic> etape = document_etape
+                                      .data()! as Map<String, dynamic>;
+                                  // print('$collecteur');
+
+                                  return Container(
+                                      color: Colors.white,
+                                      child: Column(
+                                        children: [],
+                                      ));
+                                }).toList(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 )),
           ],
         ),
