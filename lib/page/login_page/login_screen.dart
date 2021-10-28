@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/page/working_page/working_page.dart';
 
 import 'reset.dart';
 import 'verify.dart';
@@ -53,7 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
             RaisedButton(
                 color: Theme.of(context).accentColor,
                 child: Text('Sign In'),
-                onPressed: () => _signin(_email, _password)),
+                onPressed: () => _signinAnonymous()
+                // _signin(_email, _password)
+                ),
             RaisedButton(
               color: Theme.of(context).accentColor,
               child: Text('Sign Up'),
@@ -74,6 +77,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  _signinAnonymous() async {
+    await auth.signInAnonymously();
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => WorkingPage()
+            // PlanningDailyPage(
+            //       thisDay: DateTime.parse("2021-10-18 20:18:04Z"),
+            //     )
+            ));
   }
 
   _signin(String _email, String _password) async {
