@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tn09_app_demo/math_function/get_date_text.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_page.dart';
+import 'package:tn09_app_demo/widget/vehicule_icon.dart';
 
 class WorkingTourneePage extends StatefulWidget {
   DateTime thisDay;
@@ -40,6 +41,9 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
   // For Tournee
   CollectionReference _tournee =
       FirebaseFirestore.instance.collection("Tournee");
+  // For Vehicule
+  CollectionReference _vehicule =
+      FirebaseFirestore.instance.collection("Vehicule");
   @override
   Widget build(BuildContext context) {
     //For set up date
@@ -246,7 +250,6 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
                               ConnectionState.waiting) {
                             return CircularProgressIndicator();
                           }
-                          // print('$snapshot');
 
                           return SingleChildScrollView(
                             child: Column(
@@ -254,19 +257,165 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: snapshot.data!.docs
                                   .map((DocumentSnapshot document_tournee) {
-                                Map<String, dynamic> collecteur =
-                                    document_tournee.data()!
-                                        as Map<String, dynamic>;
-                                // print('$collecteur');
-                                if (collecteur['idCollecteur'] == 'null') {
-                                  return SizedBox.shrink();
-                                }
+                                Map<String, dynamic> tournee = document_tournee
+                                    .data()! as Map<String, dynamic>;
                                 return Container(
                                   margin: EdgeInsets.symmetric(vertical: 20),
                                   color: Colors.white,
-                                  height: 80,
+                                  height: 150,
                                   width:
                                       MediaQuery.of(context).size.width * 0.9,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10),
+                                        height: 30,
+                                        color: Color(
+                                            int.parse(tournee['colorTournee'])),
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                'Tournee ${tournee['idTournee']}',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ]),
+                                      ),
+                                      Container(
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Icon(
+                                                FontAwesomeIcons.building,
+                                                size: 12,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                'Etape: ${tournee['nombredeEtape']}',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 20,
+                                              ),
+                                              Icon(
+                                                FontAwesomeIcons.clock,
+                                                size: 12,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                'Start: ${tournee['startTime']}',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ]),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10),
+                                        child: StreamBuilder<QuerySnapshot>(
+                                          stream: _vehicule
+                                              .where('idVehicule',
+                                                  isEqualTo:
+                                                      tournee['idVehicule'])
+                                              .limit(1)
+                                              .snapshots(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<QuerySnapshot>
+                                                  snapshot) {
+                                            if (snapshot.hasError) {
+                                              print(
+                                                  '${snapshot.error.toString()}');
+                                              return Text(
+                                                  'Something went wrong');
+                                            }
+
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return CircularProgressIndicator();
+                                            }
+                                            // print('$snapshot');
+
+                                            return SingleChildScrollView(
+                                              child: Row(
+                                                children: snapshot.data!.docs
+                                                    .map((DocumentSnapshot
+                                                        document_vehicule) {
+                                                  Map<String, dynamic>
+                                                      vehicule =
+                                                      document_vehicule.data()!
+                                                          as Map<String,
+                                                              dynamic>;
+                                                  // print('$collecteur');
+
+                                                  return Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 10),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.8,
+                                                      height: 30,
+                                                      color: Colors.white,
+                                                      alignment:
+                                                          Alignment.topLeft,
+                                                      child: Row(
+                                                        children: [
+                                                          buildVehiculeIcon(
+                                                              icontype: vehicule[
+                                                                  'typeVehicule'],
+                                                              iconcolor: vehicule[
+                                                                      'colorIconVehicule']
+                                                                  .toUpperCase(),
+                                                              sizeIcon: 15),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Text(
+                                                            '${vehicule['nomVehicule']}  ${vehicule['numeroImmatriculation']}',
+                                                            style: TextStyle(
+                                                              color: Colors.red,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ));
+                                                }).toList(),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               }).toList(),
                             ),
