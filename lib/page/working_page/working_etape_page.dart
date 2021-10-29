@@ -126,16 +126,6 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                     querySnapshot.docs.forEach((doc_etape) {
                       _etape.doc(doc_etape.id).update({
                         'status': 'cancel',
-                      }).then((value) async {
-                        Fluttertoast.showToast(
-                            msg: "Tournee Stopped", gravity: ToastGravity.TOP);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WorkingPage(
-                                    thisDay: widget.thisDay,
-                                  )),
-                        ).then((value) => setState(() {}));
                       });
                     });
                   });
@@ -147,9 +137,14 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                       .then((QuerySnapshot querySnapshot) {
                     querySnapshot.docs.forEach((doc_tournee) {
                       _tournee.doc(doc_tournee.id).update({
-                        'status': 'stop',
+                        'status': 'cancel',
                         'nombreEtapefinished': widget.etapeOK.toString(),
                         'nombreEtapenotfinished': widget.etapenotOK.toString(),
+                        'nombreEtapeCancel':
+                            (int.parse(widget.dataTournee['nombredeEtape']) -
+                                    widget.etapeOK -
+                                    widget.etapenotOK)
+                                .toString(),
                         'realEndTime': getTimeText(time: TimeOfDay.now()),
                         'dureeMinute': getMinuteDuration(
                             time: widget.dataTournee['realStartTime']),
@@ -912,6 +907,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                 'nombreEtapenotfinished': widget
                                                     .etapenotOK
                                                     .toString(),
+                                                'nombreEtapeCancel': '0',
                                                 'realEndTime': getTimeText(
                                                     time: TimeOfDay.now()),
                                                 'dureeMinute':
