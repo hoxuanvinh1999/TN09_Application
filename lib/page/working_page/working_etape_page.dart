@@ -14,6 +14,7 @@ import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_doing_etape_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_page.dart';
 import 'package:tn09_app_demo/widget/vehicule_icon.dart';
+import 'package:location/location.dart';
 
 class WorkingEtapePage extends StatefulWidget {
   DateTime thisDay;
@@ -98,6 +99,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
     });
   }
 
+  // Cancel Tournee Dialog
   stopDoingDialog() {
     return showDialog(
         context: context,

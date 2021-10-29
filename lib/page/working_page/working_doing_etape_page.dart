@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,6 +16,7 @@ import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_etape_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_page.dart';
 import 'package:tn09_app_demo/widget/vehicule_icon.dart';
+import 'package:location/location.dart';
 
 class WorkingDoingEtapePage extends StatefulWidget {
   DateTime thisDay;
@@ -100,6 +103,45 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
     });
   }
 
+  //For Google Map
+  GoogleMapController? mapController;
+  GoogleMapController? _controller;
+  GoogleMapController? _googleMapController;
+  Set<Marker> _markers = {};
+  Set<Polyline> _polylines = Set<Polyline>();
+  late LatLng _initialcameraposition;
+
+  static const _initialCameraPosition = CameraPosition(
+    target: LatLng(44.855601489864014, -0.5484378447808893),
+    zoom: 15,
+  );
+
+  Marker _ourCompany = Marker(
+      markerId: MarkerId('les_detritivores'),
+      position: LatLng(44.85552543453359, -0.5484378447808893),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      infoWindow:
+          InfoWindow(title: 'Les detritivores', snippet: 'Our Company'));
+  Location location = Location();
+
+  LocationData? _currentPosition;
+  late String _address, _dateTime;
+
+  void _onMapCreated(GoogleMapController _cntlr) {
+    _controller = _controller;
+    location.onLocationChanged.listen((l) {
+      _controller!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(double.parse((l.latitude).toString()),
+                  double.parse((l.longitude).toString())),
+              zoom: 15),
+        ),
+      );
+    });
+  }
+
+  //Cancel Etape Dialog
   stopDoingDialog() {
     return showDialog(
         context: context,
@@ -656,7 +698,136 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                 ),
                               ),
                             ],
-                          ))
+                          )),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 600,
+                        color: Colors.yellow,
+                        child: FutureBuilder<String>(
+                          future: Future<String>.delayed(
+                            const Duration(seconds: 2),
+                            () async {
+                              List<LatLng> polylineCoordinates = [];
+                              PolylinePoints polylinePoints = PolylinePoints();
+                              _markers.add(_ourCompany);
+
+                              //Find current position
+                              bool _serviceEnabled;
+                              PermissionStatus _permissionGranted;
+
+                              _serviceEnabled = await location.serviceEnabled();
+                              if (!_serviceEnabled) {
+                                _serviceEnabled =
+                                    await location.requestService();
+                                if (!_serviceEnabled) {
+                                  return 'Done';
+                                }
+                              }
+
+                              _permissionGranted =
+                                  await location.hasPermission();
+                              if (_permissionGranted ==
+                                  PermissionStatus.denied) {
+                                _permissionGranted =
+                                    await location.requestPermission();
+                                if (_permissionGranted !=
+                                    PermissionStatus.granted) {
+                                  return 'Done';
+                                }
+                              }
+
+                              _currentPosition = await location.getLocation();
+                              _initialcameraposition = LatLng(
+                                  double.parse(
+                                      (_currentPosition?.latitude).toString()),
+                                  double.parse((_currentPosition?.longitude)
+                                      .toString()));
+                              location.onLocationChanged
+                                  .listen((LocationData currentLocation) {
+                                Marker _yourPosition = Marker(
+                                    markerId: MarkerId('Your_position'),
+                                    position: LatLng(
+                                        double.parse(
+                                            (_currentPosition?.latitude)
+                                                .toString()),
+                                        double.parse(
+                                            (_currentPosition?.longitude)
+                                                .toString())),
+                                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                                        BitmapDescriptor.hueCyan),
+                                    infoWindow:
+                                        InfoWindow(title: 'Your Position'));
+                                setState(() {
+                                  _currentPosition = currentLocation;
+                                  _initialcameraposition = LatLng(
+                                      double.parse((_currentPosition?.latitude)
+                                          .toString()),
+                                      double.parse((_currentPosition?.longitude)
+                                          .toString()));
+                                  _markers.add(_ourCompany);
+                                  _markers.add(_yourPosition);
+                                  DateTime now = DateTime.now();
+                                  _dateTime = DateFormat('EEE d MMM kk:mm:ss ')
+                                      .format(now);
+                                });
+                              });
+                              return 'Done';
+                            },
+                          ), // a previously-obtained Future<String> or null
+                          builder: (BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            List<Widget> children;
+                            if (snapshot.hasData) {
+                              children = <Widget>[
+                                Stack(children: [
+                                  Container(
+                                    height: 500,
+                                    width: 380,
+                                    color: Colors.red,
+                                    child: GoogleMap(
+                                        polylines: _polylines,
+                                        myLocationButtonEnabled: true,
+                                        zoomControlsEnabled: true,
+                                        initialCameraPosition: CameraPosition(
+                                            target: _initialcameraposition,
+                                            zoom: 15),
+                                        markers: _markers,
+                                        onMapCreated: _onMapCreated),
+                                  )
+                                ]),
+                              ];
+                            } else if (snapshot.hasError) {
+                              children = <Widget>[
+                                const Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 60,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16),
+                                  child: Text('Error: ${snapshot.error}'),
+                                )
+                              ];
+                            } else {
+                              children = const <Widget>[
+                                SizedBox(
+                                  child: CircularProgressIndicator(),
+                                  width: 60,
+                                  height: 60,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16),
+                                  child: Text('Awaiting result...'),
+                                )
+                              ];
+                            }
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: children,
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 )),
