@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tn09_app_demo/math_function/get_date_text.dart';
 import 'package:tn09_app_demo/math_function/get_duration.dart';
+import 'package:tn09_app_demo/math_function/get_minute_duration.dart';
 import 'package:tn09_app_demo/math_function/get_time_text.dart';
 import 'package:tn09_app_demo/math_function/limit_length_string.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
@@ -116,7 +117,28 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
               ElevatedButton(
                 child: Text('Yes'),
                 onPressed: () async {
-                  //not finish yes, have to update later
+                  await _etape
+                      .where('idTourneeEtape',
+                          isEqualTo: widget.dataTournee['idTournee'])
+                      .where('status', isEqualTo: 'wait')
+                      .get()
+                      .then((QuerySnapshot querySnapshot) {
+                    querySnapshot.docs.forEach((doc_etape) {
+                      _etape.doc(doc_etape.id).update({
+                        'status': 'cancel',
+                      }).then((value) async {
+                        Fluttertoast.showToast(
+                            msg: "Tournee Stopped", gravity: ToastGravity.TOP);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WorkingPage(
+                                    thisDay: widget.thisDay,
+                                  )),
+                        ).then((value) => setState(() {}));
+                      });
+                    });
+                  });
                   await _tournee
                       .where('idTournee',
                           isEqualTo: widget.dataTournee['idTournee'])
@@ -126,7 +148,13 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                     querySnapshot.docs.forEach((doc_tournee) {
                       _tournee.doc(doc_tournee.id).update({
                         'status': 'stop',
-                        'realStartTime': '00:00',
+                        'nombreEtapefinished': widget.etapeOK.toString(),
+                        'nombreEtapenotfinished': widget.etapenotOK.toString(),
+                        'realEndTime': getTimeText(time: TimeOfDay.now()),
+                        'dureeMinute': getMinuteDuration(
+                            time: widget.dataTournee['realStartTime']),
+                        'duree': getDuration(
+                            time: widget.dataTournee['realStartTime']),
                       }).then((value) async {
                         Fluttertoast.showToast(
                             msg: "Tournee Stopped", gravity: ToastGravity.TOP);
@@ -667,7 +695,8 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                             height: 50,
                                             color: etape['status'] == 'finished'
                                                 ? Colors.green
-                                                : etape['status'] == 'cancel'
+                                                : etape['status'] ==
+                                                        'notfinished'
                                                     ? Colors.red
                                                     : Colors.grey,
                                             child: Row(
@@ -744,6 +773,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                                                         etapeFinish: widget.etapeFinish,
                                                                                         etapeOK: widget.etapeOK,
                                                                                         etapenotOK: widget.etapenotOK,
+                                                                                        realStartTime: getTimeText(time: TimeOfDay.now()),
                                                                                       )));
                                                                             });
                                                                           }).catchError((error) => print("Failed to add user: $error"));
@@ -842,6 +872,95 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                           },
                         ),
                       ),
+                      Visibility(
+                        visible: widget.etapeFinish ==
+                            int.parse(widget.dataTournee['nombredeEtape']),
+                        child: Container(
+                            width: MediaQuery.of(context).size.width * 0.95,
+                            margin: EdgeInsets.only(bottom: 20),
+                            height: 80,
+                            color: Colors.yellow,
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          color: Colors.yellow,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      margin: const EdgeInsets.only(
+                                          right: 10, top: 20, bottom: 20),
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          await _tournee
+                                              .where('idTournee',
+                                                  isEqualTo: widget
+                                                      .dataTournee['idTournee'])
+                                              .limit(1)
+                                              .get()
+                                              .then((QuerySnapshot
+                                                  querySnapshot) {
+                                            querySnapshot.docs
+                                                .forEach((doc_tournee) {
+                                              _tournee
+                                                  .doc(doc_tournee.id)
+                                                  .update({
+                                                'status': 'finished',
+                                                'nombreEtapefinished':
+                                                    widget.etapeOK.toString(),
+                                                'nombreEtapenotfinished': widget
+                                                    .etapenotOK
+                                                    .toString(),
+                                                'realEndTime': getTimeText(
+                                                    time: TimeOfDay.now()),
+                                                'dureeMinute':
+                                                    getMinuteDuration(
+                                                        time: widget
+                                                                .dataTournee[
+                                                            'realStartTime']),
+                                                'duree': getDuration(
+                                                    time: widget.dataTournee[
+                                                        'realStartTime']),
+                                              }).then((value) async {
+                                                Fluttertoast.showToast(
+                                                    msg: "Tournee Finished",
+                                                    gravity: ToastGravity.TOP);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          WorkingPage(
+                                                              thisDay: widget
+                                                                  .thisDay)),
+                                                ).then(
+                                                    (value) => setState(() {}));
+                                              });
+                                            });
+                                          });
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              FontAwesomeIcons.check,
+                                              color: Colors.green,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              'Finish',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                ])),
+                      )
                     ],
                   ),
                 )),
