@@ -79,7 +79,6 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   @override
   void initState() {
     Timer.periodic(Duration(seconds: 60), (Timer t) => _getDuration());
-    done = false;
     super.initState();
   }
 
@@ -120,7 +119,6 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   GoogleMapController? _googleMapController;
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = Set<Polyline>();
-  bool done = false;
   late LatLng _initialcameraposition;
 
   static const _initialCameraPosition = CameraPosition(
@@ -751,21 +749,19 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
 
                               //Draw Polyline
                               //Have to draw from current position, but in the app it's in America so impossible
-                              if (!done) {
-                                PolylineResult result = await polylinePoints
-                                    .getRouteBetweenCoordinates(
-                                        googleAPIKey,
-                                        PointLatLng(44.85552543453359,
-                                            -0.5484378447808893),
-                                        PointLatLng(
-                                            latitudeetape, longitudeetape));
-                                print('Result Status  ${result.status}');
-                                if (result.status == 'OK') {
-                                  result.points.forEach((PointLatLng point) {
-                                    polylineCoordinates.add(LatLng(
-                                        point.latitude, point.longitude));
-                                  });
-                                }
+                              PolylineResult result = await polylinePoints
+                                  .getRouteBetweenCoordinates(
+                                      googleAPIKey,
+                                      PointLatLng(44.85552543453359,
+                                          -0.5484378447808893),
+                                      PointLatLng(
+                                          latitudeetape, longitudeetape));
+                              print('Result Status  ${result.status}');
+                              if (result.status == 'OK') {
+                                result.points.forEach((PointLatLng point) {
+                                  polylineCoordinates.add(
+                                      LatLng(point.latitude, point.longitude));
+                                });
                               }
                               //Find current position
                               bool _serviceEnabled;
@@ -823,7 +819,6 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                           .toString()));
                                   _markers.add(company.companyMarker);
                                   _markers.add(_yourPosition);
-                                  done = true;
                                   DateTime now = DateTime.now();
                                   _dateTime = DateFormat('EEE d MMM kk:mm:ss ')
                                       .format(now);
