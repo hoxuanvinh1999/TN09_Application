@@ -241,6 +241,7 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
                         stream: _tournee
                             .where('dateTournee',
                                 isEqualTo: getDateText(date: widget.thisDay))
+                            .where('status', isNotEqualTo: 'finished')
                             .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot> snapshot) {

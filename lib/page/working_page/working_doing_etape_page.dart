@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -75,6 +76,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   @override
   void initState() {
     Timer.periodic(Duration(seconds: 60), (Timer t) => _getDuration());
+    done = false;
     super.initState();
   }
 
@@ -109,11 +111,13 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   }
 
   //For Google Map
+  Completer<GoogleMapController> _mapController = Completer();
   GoogleMapController? mapController;
   GoogleMapController? _controller;
   GoogleMapController? _googleMapController;
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = Set<Polyline>();
+  bool done = false;
   late LatLng _initialcameraposition;
 
   static const _initialCameraPosition = CameraPosition(
@@ -699,6 +703,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                             ],
                           )),
                       Container(
+                        margin: EdgeInsets.symmetric(vertical: 20),
                         width: MediaQuery.of(context).size.width * 0.95,
                         height: 600,
                         color: Colors.yellow,
@@ -744,19 +749,21 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
 
                               //Draw Polyline
                               //Have to draw from current position, but in the app it's in America so impossible
-                              PolylineResult result = await polylinePoints
-                                  .getRouteBetweenCoordinates(
-                                      googleAPIKey,
-                                      PointLatLng(44.85552543453359,
-                                          -0.5484378447808893),
-                                      PointLatLng(
-                                          latitudeetape, longitudeetape));
-                              print('Result Status  ${result.status}');
-                              if (result.status == 'OK') {
-                                result.points.forEach((PointLatLng point) {
-                                  polylineCoordinates.add(
-                                      LatLng(point.latitude, point.longitude));
-                                });
+                              if (!done) {
+                                PolylineResult result = await polylinePoints
+                                    .getRouteBetweenCoordinates(
+                                        googleAPIKey,
+                                        PointLatLng(44.85552543453359,
+                                            -0.5484378447808893),
+                                        PointLatLng(
+                                            latitudeetape, longitudeetape));
+                                print('Result Status  ${result.status}');
+                                if (result.status == 'OK') {
+                                  result.points.forEach((PointLatLng point) {
+                                    polylineCoordinates.add(LatLng(
+                                        point.latitude, point.longitude));
+                                  });
+                                }
                               }
                               //Find current position
                               bool _serviceEnabled;
@@ -814,6 +821,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                           .toString()));
                                   _markers.add(company.companyMarker);
                                   _markers.add(_yourPosition);
+                                  done = true;
                                   DateTime now = DateTime.now();
                                   _dateTime = DateFormat('EEE d MMM kk:mm:ss ')
                                       .format(now);
@@ -872,17 +880,26 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                       MediaQuery.of(context).size.width * 0.95,
                                   color: Colors.red,
                                   child: GoogleMap(
-                                      polylines: _polylines,
-                                      myLocationButtonEnabled: false,
-                                      zoomControlsEnabled: true,
-                                      initialCameraPosition:
-                                          _initialCameraPosition
-                                      // CameraPosition(
-                                      //     target: _initialcameraposition,
-                                      //     zoom: 15)
-                                      ,
-                                      markers: _markers,
-                                      onMapCreated: _onMapCreated),
+                                    polylines: _polylines,
+                                    myLocationButtonEnabled: false,
+                                    zoomControlsEnabled: true,
+                                    initialCameraPosition:
+                                        _initialCameraPosition
+                                    // CameraPosition(
+                                    //     target: _initialcameraposition,
+                                    //     zoom: 15)
+                                    ,
+                                    markers: _markers,
+                                    onMapCreated:
+                                        (GoogleMapController controller) {
+                                      _mapController.complete(controller);
+                                      //setPolylines();
+                                    },
+                                    //_onMapCreated
+                                    gestureRecognizers: Set()
+                                      ..add(Factory<EagerGestureRecognizer>(
+                                          () => EagerGestureRecognizer())),
+                                  ),
                                 )
                               ];
                             } else if (snapshot.hasError) {
@@ -915,6 +932,106 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                               children: children,
                             );
                           },
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 20),
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 80,
+                        color: Colors.red,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    color: Colors.yellow,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin: const EdgeInsets.only(
+                                    right: 10, top: 20, bottom: 20),
+                                child: GestureDetector(
+                                  onTap: () async {},
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        FontAwesomeIcons.check,
+                                        color: Colors.green,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'Finish',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Container(
+                                width: 120,
+                                decoration: BoxDecoration(
+                                    color: Colors.yellow,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin: const EdgeInsets.only(
+                                    right: 10, top: 20, bottom: 20),
+                                child: GestureDetector(
+                                  onTap: () async {},
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        FontAwesomeIcons.times,
+                                        color: Colors.red,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'Not Finish',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Container(
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    color: Colors.yellow,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin: const EdgeInsets.only(
+                                    right: 10, top: 20, bottom: 20),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    stopDoingDialog();
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        FontAwesomeIcons.ban,
+                                        color: Colors.red,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                          ],
                         ),
                       ),
                     ],

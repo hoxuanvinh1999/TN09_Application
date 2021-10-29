@@ -625,6 +625,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                           stream: _etape
                               .where('idTourneeEtape',
                                   isEqualTo: widget.dataTournee['idTournee'])
+                              .orderBy('orderEtape')
                               .snapshots(),
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -664,7 +665,9 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                     .width *
                                                 0.8,
                                             height: 50,
-                                            color: Colors.grey,
+                                            color: etape['status'] != 'finished'
+                                                ? Colors.grey
+                                                : Colors.green,
                                             child: Row(
                                               children: [
                                                 Icon(
@@ -692,60 +695,59 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                               TapGestureRecognizer()
                                                                 ..onTap =
                                                                     () async {
-                                                                  await _etape
-                                                                      .where(
-                                                                          'idEtape',
-                                                                          isEqualTo: etape[
-                                                                              'idEtape'])
-                                                                      .limit(1)
-                                                                      .get()
-                                                                      .then((QuerySnapshot
-                                                                          querySnapshot) {
-                                                                    querySnapshot
-                                                                        .docs
-                                                                        .forEach(
-                                                                            (doc_etape) {
-                                                                      _etape
-                                                                          .doc(doc_etape
-                                                                              .id)
-                                                                          .update({
-                                                                        'status':
-                                                                            'doing',
-                                                                        'realStartTime':
-                                                                            getTimeText(time: TimeOfDay.now()),
-                                                                      }).then((value) async {
-                                                                        await _etape
-                                                                            .where('idEtape',
-                                                                                isEqualTo: etape['idEtape'])
-                                                                            .limit(1)
-                                                                            .get()
-                                                                            .then((QuerySnapshot querySnapshot) {
-                                                                          querySnapshot
-                                                                              .docs
-                                                                              .forEach((doc_etape) {
-                                                                            Map<String, dynamic>
-                                                                                next_etape =
-                                                                                doc_etape.data()! as Map<String, dynamic>;
-                                                                            print("Etape Started");
-                                                                            Fluttertoast.showToast(
-                                                                                msg: "Tournee Started",
-                                                                                gravity: ToastGravity.TOP);
+                                                                  if (etape[
+                                                                          'status'] ==
+                                                                      'finished') {
+                                                                    null;
+                                                                  } else {
+                                                                    await _etape
+                                                                        .where(
+                                                                            'idEtape',
+                                                                            isEqualTo: etape[
+                                                                                'idEtape'])
+                                                                        .limit(
+                                                                            1)
+                                                                        .get()
+                                                                        .then((QuerySnapshot
+                                                                            querySnapshot) {
+                                                                      querySnapshot
+                                                                          .docs
+                                                                          .forEach(
+                                                                              (doc_etape) {
+                                                                        _etape
+                                                                            .doc(doc_etape.id)
+                                                                            .update({
+                                                                          'status':
+                                                                              'doing',
+                                                                          'realStartTime':
+                                                                              getTimeText(time: TimeOfDay.now()),
+                                                                        }).then((value) async {
+                                                                          await _etape
+                                                                              .where('idEtape', isEqualTo: etape['idEtape'])
+                                                                              .limit(1)
+                                                                              .get()
+                                                                              .then((QuerySnapshot querySnapshot) {
+                                                                            querySnapshot.docs.forEach((doc_etape) {
+                                                                              Map<String, dynamic> next_etape = doc_etape.data()! as Map<String, dynamic>;
+                                                                              print("Etape Started");
+                                                                              Fluttertoast.showToast(msg: "Tournee Started", gravity: ToastGravity.TOP);
 
-                                                                            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                                                                builder: (context) => WorkingDoingEtapePage(
-                                                                                      thisDay: widget.thisDay,
-                                                                                      dataCollecteur: widget.dataCollecteur,
-                                                                                      dataTournee: widget.dataTournee,
-                                                                                      dataEtape: next_etape,
-                                                                                      etapeFinish: widget.etapeFinish,
-                                                                                      etapeOK: widget.etapeOK,
-                                                                                      etapenotOK: widget.etapenotOK,
-                                                                                    )));
-                                                                          });
-                                                                        }).catchError((error) => print("Failed to add user: $error"));
+                                                                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                                                  builder: (context) => WorkingDoingEtapePage(
+                                                                                        thisDay: widget.thisDay,
+                                                                                        dataCollecteur: widget.dataCollecteur,
+                                                                                        dataTournee: widget.dataTournee,
+                                                                                        dataEtape: next_etape,
+                                                                                        etapeFinish: widget.etapeFinish,
+                                                                                        etapeOK: widget.etapeOK,
+                                                                                        etapenotOK: widget.etapenotOK,
+                                                                                      )));
+                                                                            });
+                                                                          }).catchError((error) => print("Failed to add user: $error"));
+                                                                        });
                                                                       });
                                                                     });
-                                                                  });
+                                                                  }
                                                                 }),
                                                     ],
                                                   ),
