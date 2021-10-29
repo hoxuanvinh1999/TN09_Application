@@ -30,6 +30,7 @@ class WorkingDoingEtapePage extends StatefulWidget {
   int etapeFinish;
   int etapeOK;
   int etapenotOK;
+  String realStartTime;
   WorkingDoingEtapePage({
     required this.thisDay,
     required this.dataCollecteur,
@@ -38,6 +39,7 @@ class WorkingDoingEtapePage extends StatefulWidget {
     required this.etapeFinish,
     required this.etapeOK,
     required this.etapenotOK,
+    required this.realStartTime,
   });
   @override
   _WorkingDoingEtapePageState createState() => _WorkingDoingEtapePageState();
@@ -169,8 +171,8 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                       .then((QuerySnapshot querySnapshot) {
                     querySnapshot.docs.forEach((doc_etape) {
                       _etape.doc(doc_etape.id).update({
-                        'status': 'stop',
-                        'realStartTime': '00:00',
+                        'status': 'cancel',
+                        'realStartTime': widget.realStartTime,
                       }).then((value) async {
                         Fluttertoast.showToast(
                             msg: "Etape Stopped", gravity: ToastGravity.TOP);
@@ -961,6 +963,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                       querySnapshot.docs.forEach((doc_etape) {
                                         _etape.doc(doc_etape.id).update({
                                           'status': 'finished',
+                                          'realStartTime': widget.realStartTime,
                                           'realEndTime': getTimeText(
                                               time: TimeOfDay.now()),
                                           'dureeMinute': getMinuteDuration(
@@ -1034,7 +1037,8 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                         .then((QuerySnapshot querySnapshot) {
                                       querySnapshot.docs.forEach((doc_etape) {
                                         _etape.doc(doc_etape.id).update({
-                                          'status': 'cancel',
+                                          'status': 'notfinished',
+                                          'realStartTime': widget.realStartTime,
                                           'realEndTime': getTimeText(
                                               time: TimeOfDay.now()),
                                           'dureeMinute': getMinuteDuration(
