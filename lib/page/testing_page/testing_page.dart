@@ -8,6 +8,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:tn09_app_demo/.env.dart';
+import 'package:tn09_app_demo/widget/company_position.dart' as company;
 
 class TestingPage extends StatefulWidget {
   @override
@@ -29,11 +30,7 @@ class _TestingPageState extends State<TestingPage> {
   GoogleMapController? _googleMapController;
   Marker? _origin;
   Marker? _destination;
-  Marker _ourCompany = Marker(
-      markerId: MarkerId('les_detritivores'),
-      position: LatLng(44.85552543453359, -0.5484378447808893),
-      infoWindow:
-          InfoWindow(title: 'Les detritivores', snippet: 'Our Company'));
+
   @override
   void dispose() {
     _googleMapController!.dispose();
@@ -96,7 +93,7 @@ class _TestingPageState extends State<TestingPage> {
               //setPolylines();
             },
             markers: {
-              _ourCompany,
+              company.companyMarker,
               if (_origin != null) _origin!,
               if (_destination != null) _destination!,
             },

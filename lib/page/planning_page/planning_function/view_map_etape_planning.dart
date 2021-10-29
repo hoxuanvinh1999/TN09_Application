@@ -9,6 +9,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:tn09_app_demo/.env.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/widget/company_position.dart' as company;
 
 class ViewMapEtapePlanning extends StatefulWidget {
   Map planning;
@@ -48,11 +49,6 @@ class _ViewMapEtapePlanningState extends State<ViewMapEtapePlanning> {
   GoogleMapController? _googleMapController;
   Marker? _origin;
   Marker? _destination;
-  Marker _ourCompany = Marker(
-      markerId: MarkerId('les_detritivores'),
-      position: LatLng(44.85552543453359, -0.5484378447808893),
-      infoWindow:
-          InfoWindow(title: 'Les detritivores', snippet: 'Our Company'));
   @override
   void dispose() {
     _googleMapController!.dispose();
@@ -128,7 +124,7 @@ class _ViewMapEtapePlanningState extends State<ViewMapEtapePlanning> {
 
   int check_draw_marker = 0;
   drawMarkerEtape() async {
-    _markers.add(_ourCompany);
+    _markers.add(company.companyMarker);
     widget.listNomLocationEtape..toSet().toList();
     widget.listidLocation.toSet().toList();
     widget.listlatitudeLocation.toSet().toList();

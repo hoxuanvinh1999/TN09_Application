@@ -16,6 +16,7 @@ import 'package:tn09_app_demo/.env.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/testing_page/testing_function/blocs/application_bloc.dart';
 import 'package:tn09_app_demo/page/testing_page/testing_function/models/place.dart';
+import 'package:tn09_app_demo/widget/company_position.dart' as company;
 
 class TestingSearchPage extends StatefulWidget {
   @override
@@ -32,13 +33,6 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
 
   Set<Marker> _markers = {};
   GoogleMapController? _googleMapController;
-
-  Marker _ourCompany = Marker(
-      markerId: MarkerId('les_detritivores'),
-      position: LatLng(44.85552543453359, -0.5484378447808893),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      infoWindow:
-          InfoWindow(title: 'Les detritivores', snippet: 'Our Company'));
 
   @override
   Completer<GoogleMapController> _mapController = Completer();
@@ -93,7 +87,7 @@ class _TestingPageSearchState extends State<TestingSearchPage> {
   @override
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicationBloc>(context);
-    _markers.add(_ourCompany);
+    _markers.add(company.companyMarker);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

@@ -18,6 +18,7 @@ import 'package:tn09_app_demo/page/working_page/working_page.dart';
 import 'package:tn09_app_demo/widget/vehicule_icon.dart';
 import 'package:location/location.dart';
 import 'package:tn09_app_demo/.env.dart';
+import 'package:tn09_app_demo/widget/company_position.dart' as company;
 
 class WorkingDoingEtapePage extends StatefulWidget {
   DateTime thisDay;
@@ -120,12 +121,6 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
     zoom: 15,
   );
 
-  Marker _ourCompany = Marker(
-      markerId: MarkerId('les_detritivores'),
-      position: LatLng(44.85552543453359, -0.5484378447808893),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      infoWindow:
-          InfoWindow(title: 'Les detritivores', snippet: 'Our Company'));
   Location location = Location();
 
   LocationData? _currentPosition;
@@ -744,7 +739,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                           '${widget.dataEtape['nomAdresseEtape']}'));
 
                               //Add markers
-                              _markers.add(_ourCompany);
+                              _markers.add(company.companyMarker);
                               _markers.add(etapemarker);
 
                               //Draw Polyline
@@ -817,7 +812,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                           .toString()),
                                       double.parse((_currentPosition?.longitude)
                                           .toString()));
-                                  _markers.add(_ourCompany);
+                                  _markers.add(company.companyMarker);
                                   _markers.add(_yourPosition);
                                   DateTime now = DateTime.now();
                                   _dateTime = DateFormat('EEE d MMM kk:mm:ss ')
