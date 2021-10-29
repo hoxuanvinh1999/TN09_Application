@@ -17,6 +17,7 @@ import 'package:tn09_app_demo/page/working_page/working_etape_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_page.dart';
 import 'package:tn09_app_demo/widget/vehicule_icon.dart';
 import 'package:location/location.dart';
+import 'package:tn09_app_demo/.env.dart';
 
 class WorkingDoingEtapePage extends StatefulWidget {
   DateTime thisDay;
@@ -46,8 +47,6 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   CollectionReference _collecteur =
       FirebaseFirestore.instance.collection("Collecteur");
 
-  DateTime date = DateTime.now();
-
   // String getText() {
   //   if (date == null) {
   //     return 'Select Date';
@@ -65,8 +64,13 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
       FirebaseFirestore.instance.collection("Vehicule");
   // For Etape
   CollectionReference _etape = FirebaseFirestore.instance.collection("Etape");
+  // For Adresse
+  CollectionReference _adresse =
+      FirebaseFirestore.instance.collection("Adresse");
   // For Time and Duration
   String _timeString = '00:00';
+
+  DateTime date = DateTime.now();
   @override
   void initState() {
     Timer.periodic(Duration(seconds: 60), (Timer t) => _getDuration());
@@ -125,7 +129,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   Location location = Location();
 
   LocationData? _currentPosition;
-  late String _address, _dateTime;
+  late String _dateTime;
 
   void _onMapCreated(GoogleMapController _cntlr) {
     _controller = _controller;
@@ -709,8 +713,56 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                             () async {
                               List<LatLng> polylineCoordinates = [];
                               PolylinePoints polylinePoints = PolylinePoints();
-                              _markers.add(_ourCompany);
+                              double latitudeetape = 0;
+                              double longitudeetape = 0;
+                              String titleMarker = '';
+                              await _adresse
+                                  .where('idAdresse',
+                                      isEqualTo:
+                                          widget.dataEtape['idAdresseEtape'])
+                                  .limit(1)
+                                  .get()
+                                  .then((QuerySnapshot querySnapshot) {
+                                querySnapshot.docs.forEach((doc_adresse) {
+                                  longitudeetape = double.parse(
+                                      doc_adresse['longitudeAdresse']);
+                                  latitudeetape = double.parse(
+                                      doc_adresse['latitudeAdresse']);
+                                  titleMarker = doc_adresse['ligne1Adresse'];
+                                });
+                              });
+                              Marker etapemarker = Marker(
+                                  markerId: MarkerId(
+                                      '${widget.dataEtape['Partenaire Ex1 Adresse 2']}'),
+                                  position:
+                                      LatLng(latitudeetape, longitudeetape),
+                                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                                      BitmapDescriptor.hueRed),
+                                  infoWindow: InfoWindow(
+                                      title: titleMarker,
+                                      snippet:
+                                          '${widget.dataEtape['nomAdresseEtape']}'));
 
+                              //Add markers
+                              _markers.add(_ourCompany);
+                              _markers.add(etapemarker);
+
+                              //Draw Polyline
+                              //Have to draw from current position, but in the app it's in America so impossible
+                              PolylineResult result = await polylinePoints
+                                  .getRouteBetweenCoordinates(
+                                      googleAPIKey,
+                                      PointLatLng(44.85552543453359,
+                                          -0.5484378447808893),
+                                      PointLatLng(
+                                          latitudeetape, longitudeetape));
+                              print('Result Status  ${result.status}');
+                              if (result.status == 'OK') {
+                                result.points.forEach((PointLatLng point) {
+                                  polylineCoordinates.add(
+                                      LatLng(point.latitude, point.longitude));
+                                });
+                              }
                               //Find current position
                               bool _serviceEnabled;
                               PermissionStatus _permissionGranted;
@@ -758,6 +810,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                     infoWindow:
                                         InfoWindow(title: 'Your Position'));
                                 setState(() {
+                                  //set up camera and position
                                   _currentPosition = currentLocation;
                                   _initialcameraposition = LatLng(
                                       double.parse((_currentPosition?.latitude)
@@ -769,6 +822,13 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                   DateTime now = DateTime.now();
                                   _dateTime = DateFormat('EEE d MMM kk:mm:ss ')
                                       .format(now);
+                                  //add polylines
+                                  _polylines.add(Polyline(
+                                    polylineId: PolylineId('Polyline_Etape_1'),
+                                    width: 5,
+                                    color: Colors.blue,
+                                    points: polylineCoordinates,
+                                  ));
                                 });
                               });
                               return 'Done';
@@ -779,22 +839,56 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                             List<Widget> children;
                             if (snapshot.hasData) {
                               children = <Widget>[
-                                Stack(children: [
-                                  Container(
-                                    height: 500,
-                                    width: 380,
-                                    color: Colors.red,
-                                    child: GoogleMap(
-                                        polylines: _polylines,
-                                        myLocationButtonEnabled: true,
-                                        zoomControlsEnabled: true,
-                                        initialCameraPosition: CameraPosition(
-                                            target: _initialcameraposition,
-                                            zoom: 15),
-                                        markers: _markers,
-                                        onMapCreated: _onMapCreated),
-                                  )
-                                ]),
+                                Container(
+                                  margin: EdgeInsets.only(top: 20),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.95,
+                                  height: 50,
+                                  color: Colors.blue,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(width: 20),
+                                          Icon(
+                                            FontAwesomeIcons.map,
+                                            color: Colors.black,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            'Map',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 500,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.95,
+                                  color: Colors.red,
+                                  child: GoogleMap(
+                                      polylines: _polylines,
+                                      myLocationButtonEnabled: false,
+                                      zoomControlsEnabled: true,
+                                      initialCameraPosition:
+                                          _initialCameraPosition
+                                      // CameraPosition(
+                                      //     target: _initialcameraposition,
+                                      //     zoom: 15)
+                                      ,
+                                      markers: _markers,
+                                      onMapCreated: _onMapCreated),
+                                )
                               ];
                             } else if (snapshot.hasError) {
                               children = <Widget>[
