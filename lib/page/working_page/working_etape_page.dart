@@ -665,9 +665,11 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                     .width *
                                                 0.8,
                                             height: 50,
-                                            color: etape['status'] != 'finished'
-                                                ? Colors.grey
-                                                : Colors.green,
+                                            color: etape['status'] == 'finished'
+                                                ? Colors.green
+                                                : etape['status'] == 'cancel'
+                                                    ? Colors.red
+                                                    : Colors.grey,
                                             child: Row(
                                               children: [
                                                 Icon(
@@ -695,9 +697,10 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                               TapGestureRecognizer()
                                                                 ..onTap =
                                                                     () async {
-                                                                  if (etape[
-                                                                          'status'] ==
-                                                                      'finished') {
+                                                                  if (etape['status'] ==
+                                                                          'finished' ||
+                                                                      etape['status'] ==
+                                                                          'cancel') {
                                                                     null;
                                                                   } else {
                                                                     await _etape
