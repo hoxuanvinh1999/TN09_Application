@@ -11,6 +11,7 @@ import 'package:tn09_app_demo/math_function/get_duration.dart';
 import 'package:tn09_app_demo/math_function/get_time_text.dart';
 import 'package:tn09_app_demo/math_function/limit_length_string.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/page/working_page/working_etape_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_page.dart';
 import 'package:tn09_app_demo/widget/vehicule_icon.dart';
 
@@ -104,7 +105,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Stop doing this Tournee?'),
+            title: Text('Stop doing this Etape?'),
             actions: [
               ElevatedButton(
                 child: Text('No'),
@@ -116,24 +117,28 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                 child: Text('Yes'),
                 onPressed: () async {
                   //not finish yes, have to update later
-                  await _tournee
-                      .where('idTournee',
-                          isEqualTo: widget.dataTournee['idTournee'])
+                  await _etape
+                      .where('idEtape', isEqualTo: widget.dataEtape['idEtape'])
                       .limit(1)
                       .get()
                       .then((QuerySnapshot querySnapshot) {
-                    querySnapshot.docs.forEach((doc_tournee) {
-                      _tournee.doc(doc_tournee.id).update({
+                    querySnapshot.docs.forEach((doc_etape) {
+                      _etape.doc(doc_etape.id).update({
                         'status': 'stop',
                         'realStartTime': '00:00',
                       }).then((value) async {
                         Fluttertoast.showToast(
-                            msg: "Tournee Stopped", gravity: ToastGravity.TOP);
+                            msg: "Etape Stopped", gravity: ToastGravity.TOP);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => WorkingPage(
+                              builder: (context) => WorkingEtapePage(
                                     thisDay: widget.thisDay,
+                                    dataTournee: widget.dataTournee,
+                                    dataCollecteur: widget.dataCollecteur,
+                                    etapeFinish: widget.etapeFinish,
+                                    etapeOK: widget.etapeOK,
+                                    etapenotOK: widget.etapenotOK,
                                   )),
                         ).then((value) => setState(() {}));
                       });

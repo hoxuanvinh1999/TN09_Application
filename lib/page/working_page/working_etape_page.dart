@@ -688,19 +688,62 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                                       .bold),
                                                           recognizer:
                                                               TapGestureRecognizer()
-                                                                ..onTap = () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pushReplacement(MaterialPageRoute(
-                                                                          builder: (context) => WorkingDoingEtapePage(
-                                                                                thisDay: widget.thisDay,
-                                                                                dataCollecteur: widget.dataCollecteur,
-                                                                                dataTournee: widget.dataTournee,
-                                                                                dataEtape: etape,
-                                                                                etapeFinish: widget.etapeFinish,
-                                                                                etapeOK: widget.etapeOK,
-                                                                                etapenotOK: widget.etapenotOK,
-                                                                              )));
+                                                                ..onTap =
+                                                                    () async {
+                                                                  await _etape
+                                                                      .where(
+                                                                          'idEtape',
+                                                                          isEqualTo: etape[
+                                                                              'idEtape'])
+                                                                      .limit(1)
+                                                                      .get()
+                                                                      .then((QuerySnapshot
+                                                                          querySnapshot) {
+                                                                    querySnapshot
+                                                                        .docs
+                                                                        .forEach(
+                                                                            (doc_etape) {
+                                                                      _etape
+                                                                          .doc(doc_etape
+                                                                              .id)
+                                                                          .update({
+                                                                        'status':
+                                                                            'doing',
+                                                                        'realStartTime':
+                                                                            getTimeText(time: TimeOfDay.now()),
+                                                                      }).then((value) async {
+                                                                        await _etape
+                                                                            .where('idEtape',
+                                                                                isEqualTo: etape['idEtape'])
+                                                                            .limit(1)
+                                                                            .get()
+                                                                            .then((QuerySnapshot querySnapshot) {
+                                                                          querySnapshot
+                                                                              .docs
+                                                                              .forEach((doc_etape) {
+                                                                            Map<String, dynamic>
+                                                                                next_etape =
+                                                                                doc_etape.data()! as Map<String, dynamic>;
+                                                                            print("Etape Started");
+                                                                            Fluttertoast.showToast(
+                                                                                msg: "Tournee Started",
+                                                                                gravity: ToastGravity.TOP);
+
+                                                                            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                                                builder: (context) => WorkingDoingEtapePage(
+                                                                                      thisDay: widget.thisDay,
+                                                                                      dataCollecteur: widget.dataCollecteur,
+                                                                                      dataTournee: widget.dataTournee,
+                                                                                      dataEtape: next_etape,
+                                                                                      etapeFinish: widget.etapeFinish,
+                                                                                      etapeOK: widget.etapeOK,
+                                                                                      etapenotOK: widget.etapenotOK,
+                                                                                    )));
+                                                                          });
+                                                                        }).catchError((error) => print("Failed to add user: $error"));
+                                                                      });
+                                                                    });
+                                                                  });
                                                                 }),
                                                     ],
                                                   ),
