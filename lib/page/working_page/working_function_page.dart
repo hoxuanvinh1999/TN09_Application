@@ -8,6 +8,7 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:tn09_app_demo/page/working_page/display_picture.dart';
+import 'package:tn09_app_demo/page/working_page/take_signature.dart';
 
 class WorkingFunctionEtapePage extends StatefulWidget {
   DateTime thisDay;
@@ -230,7 +231,41 @@ class _WorkingFunctionEtapePageState extends State<WorkingFunctionEtapePage> {
                           ],
                         )),
                     Container(
-                        margin: EdgeInsets.symmetric(vertical: 20),
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        height: 50,
+                        color: Colors.blue,
+                        alignment: Alignment(0, 0),
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        child: GestureDetector(
+                          onTap: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => TakeSignatureScreen(),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.signature,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Take Signature',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                    Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
                         height: 50,
                         color: Colors.blue,
                         alignment: Alignment(0, 0),
@@ -296,7 +331,7 @@ class _WorkingFunctionEtapePageState extends State<WorkingFunctionEtapePage> {
                           ),
                         )),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 20),
+                      margin: EdgeInsets.symmetric(vertical: 10),
                       width: MediaQuery.of(context).size.width * 0.95,
                       child: FutureBuilder<void>(
                         future: _initializeControllerFuture,
