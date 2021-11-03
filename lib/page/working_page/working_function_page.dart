@@ -248,6 +248,7 @@ class _WorkingFunctionEtapePageState extends State<WorkingFunctionEtapePage> {
                               // where it was saved.
                               final image = await _controller.takePicture();
                               print('${image.path}');
+                              //Save Image to Galery
                               GallerySaver.saveImage(image.path);
                               // If the picture was taken, display it on a new screen.
                               await Navigator.of(context).push(
