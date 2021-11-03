@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:tn09_app_demo/math_function/get_date_text.dart';
+import 'package:tn09_app_demo/page/working_page/display_picture.dart';
 import 'package:tn09_app_demo/page/working_page/working_tournee_page.dart';
 import 'package:tn09_app_demo/widget/button_widget.dart';
 
@@ -74,6 +78,7 @@ class _WorkingFunctionEtapePageState extends State<WorkingFunctionEtapePage> {
       widget.camera,
       // Define the resolution to use.
       ResolutionPreset.medium,
+      imageFormatGroup: ImageFormatGroup.yuv420,
     );
 
     // Next, initialize the controller. This returns a Future.
@@ -228,13 +233,57 @@ class _WorkingFunctionEtapePageState extends State<WorkingFunctionEtapePage> {
                           ],
                         )),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 20),
-                      child: ButtonWidget(
-                        icon: FontAwesomeIcons.camera,
-                        text: 'Take Photo',
-                        onClicked: () {},
-                      ),
-                    ),
+                        margin: EdgeInsets.symmetric(vertical: 20),
+                        height: 50,
+                        color: Colors.blue,
+                        alignment: Alignment(0, 0),
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        child: GestureDetector(
+                          onTap: () async {
+                            try {
+                              // Ensure that the camera is initialized.
+                              await _initializeControllerFuture;
+
+                              // Attempt to take a picture and get the file `image`
+                              // where it was saved.
+                              final image = await _controller.takePicture();
+                              print('${image.path}');
+                              GallerySaver.saveImage(image.path);
+                              // If the picture was taken, display it on a new screen.
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                    // Pass the automatically generated path to
+                                    // the DisplayPictureScreen widget.
+                                    imagePath: image.path,
+                                  ),
+                                ),
+                              );
+                            } catch (e) {
+                              // If an error occurs, log the error to the console.
+                              print('error $e');
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.camera,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Take Photo',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 20),
                       width: MediaQuery.of(context).size.width * 0.95,
