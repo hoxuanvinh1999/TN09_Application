@@ -63,9 +63,10 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      auth.signOut();
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => LoginScreen()));
+                      //update later
+                      // auth.signOut();
+                      // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      //     builder: (context) => LoginScreen()));
                     },
                     color: Theme.of(context).primaryColor,
                   ),
