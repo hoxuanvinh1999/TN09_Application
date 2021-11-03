@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -16,23 +17,42 @@ Future main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  //For Camera
+  // Obtain a list of the available cameras on the device.
+  final cameras = await availableCameras();
+  // Get a specific camera from the list of available cameras.
+  final firstCamera = cameras.first;
 
-  runApp(MyApp());
+  runApp(
+    MaterialApp(
+      theme: ThemeData.dark(),
+      home: MainPage(
+        // Pass the appropriate camera to the TakePictureScreen widget.
+        camera: firstCamera,
+      ),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  static final String title = 'TN09 App Demo';
+// class MyApp extends StatelessWidget {
+//   static final String title = 'TN09 App Demo';
 
-  @override
-  Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: title,
-        theme: ThemeData(primarySwatch: Colors.blue),
-        home: MainPage(),
-      );
-}
+//   @override
+//   Widget build(BuildContext context) => MaterialApp(
+//         debugShowCheckedModeBanner: false,
+//         title: title,
+//         theme: ThemeData(primarySwatch: Colors.blue),
+//         home: MainPage(),
+//       );
+// }
 
 class MainPage extends StatefulWidget {
+  final CameraDescription camera;
+  const MainPage({
+    Key? key,
+    required this.camera,
+  }) : super(key: key);
+
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -45,7 +65,9 @@ class _MainPageState extends State<MainPage> {
       child: MaterialApp(
         title: 'Login Page',
         theme: ThemeData(accentColor: Colors.green, primarySwatch: Colors.blue),
-        home: LoginScreen(),
+        home: LoginScreen(
+          camera: widget.camera,
+        ),
       ),
     );
   }
