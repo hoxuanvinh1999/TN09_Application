@@ -1,14 +1,21 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
+import 'package:tn09_app_demo/page/working_page/working_function_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_page.dart';
 
 import 'reset.dart';
 import 'verify.dart';
 
 class LoginScreen extends StatefulWidget {
+  final CameraDescription camera;
+  LoginScreen({
+    Key? key,
+    required this.camera,
+  }) : super(key: key);
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -96,7 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(
           msg: 'Sign In Successed', gravity: ToastGravity.TOP);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => WorkingPage(
+          builder: (context) => WorkingFunctionEtapePage(
+                camera: widget.camera,
                 thisDay: DateTime.now(),
               )
           // HomeScreen()
