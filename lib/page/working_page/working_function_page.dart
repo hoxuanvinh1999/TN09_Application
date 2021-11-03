@@ -1,16 +1,13 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:tn09_app_demo/math_function/get_date_text.dart';
+import 'package:path/path.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:tn09_app_demo/page/working_page/display_picture.dart';
-import 'package:tn09_app_demo/page/working_page/working_tournee_page.dart';
-import 'package:tn09_app_demo/widget/button_widget.dart';
 
 class WorkingFunctionEtapePage extends StatefulWidget {
   DateTime thisDay;
@@ -251,6 +248,19 @@ class _WorkingFunctionEtapePageState extends State<WorkingFunctionEtapePage> {
                               //Save Image to Galery
                               GallerySaver.saveImage(image.path);
                               // If the picture was taken, display it on a new screen.
+
+                              //Save to firestore
+                              String fileName = basename(image.path);
+                              File imagefile = File(image.path);
+                              await FirebaseStorage.instance
+                                  .ref(fileName)
+                                  .putFile(
+                                      imagefile,
+                                      SettableMetadata(customMetadata: {
+                                        'uploaded_by': 'Tester',
+                                        'description': 'Testing firestorage'
+                                      }));
+
                               await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => DisplayPictureScreen(
