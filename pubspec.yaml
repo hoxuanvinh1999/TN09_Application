@@ -63,6 +63,7 @@ dependencies:
   camera: ^0.9.4+3
   path_provider: ^2.0.6
   path: ^1.8.0
+  gallery_saver: ^2.3.2
 
  
 
