@@ -1,7 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tn09_app_demo/page/home_page/home_page.dart';
 import 'package:tn09_app_demo/page/working_page/working_function_page.dart';
@@ -87,11 +86,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _signinAnonymous() async {
-    await auth.signInAnonymously();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => WorkingPage(
-              thisDay: DateTime.now(),
-            )));
+    // await auth.signInAnonymously();
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //     builder: (context) => WorkingPage(
+    //           thisDay: DateTime.now(),
+    //         )));
   }
 
   _signin(String _email, String _password) async {
@@ -103,10 +102,11 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(
           msg: 'Sign In Successed', gravity: ToastGravity.TOP);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => WorkingFunctionEtapePage(
-                camera: widget.camera,
-                thisDay: DateTime.now(),
-              )
+          builder: (context) => WorkingPage(thisDay: DateTime.now())
+          // WorkingFunctionEtapePage(
+          //       camera: widget.camera,
+          //       thisDay: DateTime.now(),
+          //     )
           // HomeScreen()
           ));
     } on FirebaseAuthException catch (error) {
