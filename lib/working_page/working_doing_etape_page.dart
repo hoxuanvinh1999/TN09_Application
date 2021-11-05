@@ -21,6 +21,7 @@ import 'package:location/location.dart';
 import 'package:tn09_working_demo/.env.dart';
 import 'package:tn09_working_demo/widget/company_position.dart' as company;
 import 'package:tn09_working_demo/working_page/take_photo_widget.dart';
+import 'package:tn09_working_demo/working_page/take_signature_widget.dart';
 import 'package:tn09_working_demo/working_page/working_etape_page.dart';
 
 class WorkingDoingEtapePage extends StatefulWidget {
@@ -203,8 +204,32 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
 
   //load url
   String _imageUrl = '';
+  //loat Signature
+  String _signatureUrl = '';
+  //For load photo(image and signature)
+  void loadPhotodata() async {
+    if (widget.dataEtape['image'] != null) {
+      final image_ref =
+          FirebaseStorage.instance.ref().child(widget.dataEtape['image']);
+      var image_url = await image_ref.getDownloadURL();
+      setState(() {
+        _imageUrl = image_url;
+      });
+    }
+    if (widget.dataEtape['signature'] != null) {
+      final signature_ref =
+          FirebaseStorage.instance.ref().child(widget.dataEtape['signature']);
+      var signature_url = await signature_ref.getDownloadURL();
+      setState(() {
+        _signatureUrl = signature_url;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    //Load PhotoData
+    loadPhotodata();
     //For set up date
     DateTime nextDay = widget.thisDay.add(new Duration(days: 1));
     DateTime previousDay = widget.thisDay.subtract(Duration(days: 1));
@@ -939,106 +964,55 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: 20),
-                        width: MediaQuery.of(context).size.width * 0.95,
-                        height: 600,
-                        color: Colors.yellow,
-                        child: FutureBuilder<String>(
-                          future: Future<String>.delayed(
-                            const Duration(seconds: 2),
-                            () async {
-                              if (widget.dataEtape['image'] != null) {
-                                final ref = FirebaseStorage.instance
-                                    .ref()
-                                    .child(widget.dataEtape['image']);
-                                var url = await ref.getDownloadURL();
-                                setState(() {
-                                  _imageUrl = url;
-                                });
-                              }
-                              return 'Done';
-                            },
-                          ),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> snapshot) {
-                            List<Widget> children;
-                            if (snapshot.hasData) {
-                              children = <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(top: 20),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.95,
-                                  height: 50,
-                                  color: Colors.blue,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SizedBox(width: 20),
-                                          Icon(
-                                            FontAwesomeIcons.image,
+                          margin: EdgeInsets.symmetric(vertical: 20),
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          height: 600,
+                          color: Colors.yellow,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(top: 20),
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                height: 50,
+                                color: Colors.blue,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 20),
+                                        Icon(
+                                          FontAwesomeIcons.image,
+                                          color: Colors.black,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          'Photo',
+                                          style: TextStyle(
                                             color: Colors.black,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            'Photo',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                Container(
-                                  height: 500,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.95,
-                                  color: Colors.red,
-                                  child: _imageUrl == ''
-                                      ? Image.asset('assets/logo_1.jpg')
-                                      : Image.network(_imageUrl,
-                                          fit: BoxFit.cover),
-                                )
-                              ];
-                            } else if (snapshot.hasError) {
-                              children = <Widget>[
-                                const Icon(
-                                  Icons.error_outline,
-                                  color: Colors.red,
-                                  size: 60,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 16),
-                                  child: Text('Error: ${snapshot.error}'),
-                                )
-                              ];
-                            } else {
-                              children = const <Widget>[
-                                SizedBox(
-                                  child: CircularProgressIndicator(),
-                                  width: 60,
-                                  height: 60,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 16),
-                                  child: Text('Awaiting result...'),
-                                )
-                              ];
-                            }
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: children,
-                            );
-                          },
-                        ),
-                      ),
+                              ),
+                              Container(
+                                height: 500,
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                color: Colors.red,
+                                child: _imageUrl == ''
+                                    ? Image.asset('assets/logo_1.jpg')
+                                    : Image.network(_imageUrl,
+                                        fit: BoxFit.cover),
+                              )
+                            ],
+                          )),
                       Container(
                           margin: EdgeInsets.symmetric(vertical: 10),
                           height: 50,
@@ -1074,6 +1048,100 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                 ),
                                 Text(
                                   'Take Photo',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      Container(
+                          margin: EdgeInsets.symmetric(vertical: 20),
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          height: 600,
+                          color: Colors.yellow,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(top: 20),
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                height: 50,
+                                color: Colors.blue,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 20),
+                                        Icon(
+                                          FontAwesomeIcons.signature,
+                                          color: Colors.black,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          'Signature',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 500,
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                color: Colors.red,
+                                child: _signatureUrl == ''
+                                    ? Image.asset('assets/logo_1.jpg')
+                                    : Image.network(_signatureUrl,
+                                        fit: BoxFit.cover),
+                              )
+                            ],
+                          )),
+                      Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          height: 50,
+                          color: Colors.blue,
+                          alignment: Alignment(0, 0),
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          child: GestureDetector(
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TakeSignatureWidget(
+                                          camera: widget.camera,
+                                          thisDay: widget.thisDay,
+                                          dataCollecteur: widget.dataCollecteur,
+                                          dataTournee: widget.dataTournee,
+                                          dataEtape: widget.dataEtape,
+                                          etapeFinish: widget.etapeFinish,
+                                          etapeOK: widget.etapeOK,
+                                          etapenotOK: widget.etapenotOK,
+                                          realStartTime: widget.realStartTime,
+                                        )),
+                              ).then((value) => setState(() {}));
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  FontAwesomeIcons.signature,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  'Take Signature',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 15,
