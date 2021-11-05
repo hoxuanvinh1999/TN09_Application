@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +10,13 @@ import 'package:tn09_working_demo/working_page/working_tournee_page.dart';
 
 class WorkingPage extends StatefulWidget {
   DateTime thisDay;
+  final CameraDescription camera;
+
   WorkingPage({
+    Key? key,
+    required this.camera,
     required this.thisDay,
-  });
+  }) : super(key: key);
   @override
   _WorkingPageState createState() => _WorkingPageState();
 }
@@ -49,6 +54,7 @@ class _WorkingPageState extends State<WorkingPage> {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => WorkingPage(
               thisDay: newDate,
+              camera: widget.camera,
             )));
   }
 
@@ -190,6 +196,8 @@ class _WorkingPageState extends State<WorkingPage> {
                                                             WorkingPage(
                                                               thisDay:
                                                                   previousDay,
+                                                              camera:
+                                                                  widget.camera,
                                                             )));
                                           },
                                           icon: Icon(
@@ -212,6 +220,8 @@ class _WorkingPageState extends State<WorkingPage> {
                                                         builder: (context) =>
                                                             WorkingPage(
                                                               thisDay: nextDay,
+                                                              camera:
+                                                                  widget.camera,
                                                             )));
                                           },
                                           icon: Icon(
@@ -328,6 +338,8 @@ class _WorkingPageState extends State<WorkingPage> {
                                                         MaterialPageRoute(
                                                             builder: (context) =>
                                                                 WorkingTourneePage(
+                                                                  camera: widget
+                                                                      .camera,
                                                                   thisDay: widget
                                                                       .thisDay,
                                                                   dataCollecteur:

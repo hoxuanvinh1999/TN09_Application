@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,14 @@ import 'package:tn09_working_demo/working_page/working_page.dart';
 class WorkingTourneePage extends StatefulWidget {
   DateTime thisDay;
   Map dataCollecteur;
+  final CameraDescription camera;
+
   WorkingTourneePage({
-    required this.thisDay,
+    Key? key,
+    required this.camera,
     required this.dataCollecteur,
-  });
+    required this.thisDay,
+  }) : super(key: key);
   @override
   _WorkingTourneePageState createState() => _WorkingTourneePageState();
 }
@@ -177,6 +182,7 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
                                           .pushReplacement(MaterialPageRoute(
                                               builder: (context) => WorkingPage(
                                                     thisDay: widget.thisDay,
+                                                    camera: widget.camera,
                                                   )));
                                     },
                                     icon: Icon(
@@ -352,6 +358,7 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
                                                                             context,
                                                                             MaterialPageRoute(
                                                                                 builder: (context) => WorkingEtapePage(
+                                                                                      camera: widget.camera,
                                                                                       thisDay: widget.thisDay,
                                                                                       dataCollecteur: widget.dataCollecteur,
                                                                                       dataTournee: next_tournee,

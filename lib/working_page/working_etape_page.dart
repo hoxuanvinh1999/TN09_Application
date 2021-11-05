@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -24,14 +25,18 @@ class WorkingEtapePage extends StatefulWidget {
   int etapeFinish;
   int etapeOK;
   int etapenotOK;
+  final CameraDescription camera;
+
   WorkingEtapePage({
+    Key? key,
+    required this.camera,
     required this.thisDay,
     required this.dataCollecteur,
     required this.dataTournee,
     required this.etapeFinish,
     required this.etapeOK,
     required this.etapenotOK,
-  });
+  }) : super(key: key);
   @override
   _WorkingEtapePageState createState() => _WorkingEtapePageState();
 }
@@ -158,6 +163,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                           MaterialPageRoute(
                               builder: (context) => WorkingPage(
                                     thisDay: widget.thisDay,
+                                    camera: widget.camera,
                                   )),
                         ).then((value) => setState(() {}));
                       });
@@ -761,6 +767,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
 
                                                                               Navigator.of(context).pushReplacement(MaterialPageRoute(
                                                                                   builder: (context) => WorkingDoingEtapePage(
+                                                                                        camera: widget.camera,
                                                                                         thisDay: widget.thisDay,
                                                                                         dataCollecteur: widget.dataCollecteur,
                                                                                         dataTournee: widget.dataTournee,
@@ -927,6 +934,8 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           WorkingPage(
+                                                              camera:
+                                                                  widget.camera,
                                                               thisDay: widget
                                                                   .thisDay)),
                                                 ).then(
