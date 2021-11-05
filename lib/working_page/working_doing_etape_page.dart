@@ -206,8 +206,10 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   String _imageUrl = '';
   //loat Signature
   String _signatureUrl = '';
-  //For load photo(image and signature)
-  void loadPhotodata() async {
+  //for vehicule information
+  late Widget vehicule_information;
+  //For loading data
+  void loadData() async {
     if (widget.dataEtape['image'] != null) {
       final image_ref =
           FirebaseStorage.instance.ref().child(widget.dataEtape['image']);
@@ -224,12 +226,59 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
         _signatureUrl = signature_url;
       });
     }
+    await _vehicule
+        .where('idVehicule', isEqualTo: widget.dataTournee['idVehicule'])
+        .limit(1)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc_vehicule) {
+        Map<String, dynamic> vehicule =
+            doc_vehicule.data()! as Map<String, dynamic>;
+        setState(() {
+          vehicule_information = Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: 30,
+              color: Color(int.parse(widget.dataTournee['colorTournee'])),
+              alignment: Alignment.topLeft,
+              child: Row(
+                children: [
+                  buildVehiculeIcon(
+                      icontype: vehicule['typeVehicule'],
+                      iconcolor: '0xff000000',
+                      sizeIcon: 15),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Vehicule: ',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    '${vehicule['nomVehicule']}  ${vehicule['numeroImmatriculation']}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ));
+        });
+      });
+    }).catchError((error) => print("Failed to add user: $error"));
   }
 
   @override
   Widget build(BuildContext context) {
     //Load PhotoData
-    loadPhotodata();
+    loadData();
     //For set up date
     DateTime nextDay = widget.thisDay.add(new Duration(days: 1));
     DateTime previousDay = widget.thisDay.subtract(Duration(days: 1));
@@ -535,89 +584,96 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.only(
-                                    left: 10, top: 5, bottom: 5),
-                                color: Color(int.parse(
-                                    widget.dataTournee['colorTournee'])),
-                                child: StreamBuilder<QuerySnapshot>(
-                                  stream: _vehicule
-                                      .where('idVehicule',
-                                          isEqualTo:
-                                              widget.dataTournee['idVehicule'])
-                                      .limit(1)
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (snapshot.hasError) {
-                                      print('${snapshot.error.toString()}');
-                                      return Text('Something went wrong');
-                                    }
+                                  margin: EdgeInsets.only(
+                                      left: 10, top: 5, bottom: 5),
+                                  color: Color(int.parse(
+                                      widget.dataTournee['colorTournee'])),
+                                  child: Row(
+                                    children: [
+                                      vehicule_information == null
+                                          ? SizedBox.shrink()
+                                          : vehicule_information
+                                    ],
+                                  )
+                                  // StreamBuilder<QuerySnapshot>(
+                                  //   stream: _vehicule
+                                  //       .where('idVehicule',
+                                  //           isEqualTo:
+                                  //               widget.dataTournee['idVehicule'])
+                                  //       .limit(1)
+                                  //       .snapshots(),
+                                  //   builder: (BuildContext context,
+                                  //       AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  //     if (snapshot.hasError) {
+                                  //       print('${snapshot.error.toString()}');
+                                  //       return Text('Something went wrong');
+                                  //     }
 
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return CircularProgressIndicator();
-                                    }
-                                    // print('$snapshot');
+                                  //     if (snapshot.connectionState ==
+                                  //         ConnectionState.waiting) {
+                                  //       return CircularProgressIndicator();
+                                  //     }
+                                  //     // print('$snapshot');
 
-                                    return SingleChildScrollView(
-                                      child: Row(
-                                        children: snapshot.data!.docs.map(
-                                            (DocumentSnapshot
-                                                document_vehicule) {
-                                          Map<String, dynamic> vehicule =
-                                              document_vehicule.data()!
-                                                  as Map<String, dynamic>;
-                                          // print('$collecteur');
+                                  //     return SingleChildScrollView(
+                                  //       child: Row(
+                                  //         children: snapshot.data!.docs.map(
+                                  //             (DocumentSnapshot
+                                  //                 document_vehicule) {
+                                  //           Map<String, dynamic> vehicule =
+                                  //               document_vehicule.data()!
+                                  //                   as Map<String, dynamic>;
+                                  //           // print('$collecteur');
 
-                                          return Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.8,
-                                              height: 30,
-                                              color: Color(int.parse(
-                                                  widget.dataTournee[
-                                                      'colorTournee'])),
-                                              alignment: Alignment.topLeft,
-                                              child: Row(
-                                                children: [
-                                                  buildVehiculeIcon(
-                                                      icontype: vehicule[
-                                                          'typeVehicule'],
-                                                      iconcolor: '0xff000000',
-                                                      sizeIcon: 15),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    'Vehicule: ',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    '${vehicule['nomVehicule']}  ${vehicule['numeroImmatriculation']}',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ));
-                                        }).toList(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
+                                  //           return Container(
+                                  //               width: MediaQuery.of(context)
+                                  //                       .size
+                                  //                       .width *
+                                  //                   0.8,
+                                  //               height: 30,
+                                  //               color: Color(int.parse(
+                                  //                   widget.dataTournee[
+                                  //                       'colorTournee'])),
+                                  //               alignment: Alignment.topLeft,
+                                  //               child: Row(
+                                  //                 children: [
+                                  //                   buildVehiculeIcon(
+                                  //                       icontype: vehicule[
+                                  //                           'typeVehicule'],
+                                  //                       iconcolor: '0xff000000',
+                                  //                       sizeIcon: 15),
+                                  //                   SizedBox(
+                                  //                     width: 10,
+                                  //                   ),
+                                  //                   Text(
+                                  //                     'Vehicule: ',
+                                  //                     style: TextStyle(
+                                  //                       color: Colors.black,
+                                  //                       fontSize: 18,
+                                  //                       fontWeight:
+                                  //                           FontWeight.bold,
+                                  //                     ),
+                                  //                   ),
+                                  //                   SizedBox(
+                                  //                     width: 10,
+                                  //                   ),
+                                  //                   Text(
+                                  //                     '${vehicule['nomVehicule']}  ${vehicule['numeroImmatriculation']}',
+                                  //                     style: TextStyle(
+                                  //                       color: Colors.black,
+                                  //                       fontSize: 18,
+                                  //                       fontWeight:
+                                  //                           FontWeight.bold,
+                                  //                     ),
+                                  //                   ),
+                                  //                 ],
+                                  //               ));
+                                  //         }).toList(),
+                                  //       ),
+                                  //     );
+                                  //   },
+                                  // ),
+                                  ),
                             ],
                           )),
                       Container(
