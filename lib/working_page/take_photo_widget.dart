@@ -112,6 +112,7 @@ class _TakePhotoWidgetState extends State<TakePhotoWidget> {
                   String fileName =
                       getDateText(date: DateTime.now()).replaceAll('/', '_') +
                           '/' +
+                          'image/' +
                           widget.dataEtape['idEtape'];
                   File imagefile = File(image.path);
                   await FirebaseStorage.instance.ref(fileName).putFile(
