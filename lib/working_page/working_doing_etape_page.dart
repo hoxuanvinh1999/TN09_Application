@@ -167,34 +167,42 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
               ElevatedButton(
                 child: Text('Yes'),
                 onPressed: () async {
-                  await _etape
-                      .where('idEtape', isEqualTo: widget.dataEtape['idEtape'])
-                      .limit(1)
-                      .get()
-                      .then((QuerySnapshot querySnapshot) {
-                    querySnapshot.docs.forEach((doc_etape) {
-                      _etape.doc(doc_etape.id).update({
-                        'status': 'cancel',
-                        'realStartTime': widget.realStartTime,
-                      }).then((value) async {
-                        Fluttertoast.showToast(
-                            msg: "Etape Stopped", gravity: ToastGravity.TOP);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WorkingEtapePage(
-                                    camera: widget.camera,
-                                    thisDay: widget.thisDay,
-                                    dataTournee: widget.dataTournee,
-                                    dataCollecteur: widget.dataCollecteur,
-                                    etapeFinish: widget.etapeFinish,
-                                    etapeOK: widget.etapeOK,
-                                    etapenotOK: widget.etapenotOK,
-                                  )),
-                        ).then((value) => setState(() {}));
+                  if (widget.dataEtape['signature'] != null) {
+                    await _etape
+                        .where('idEtape',
+                            isEqualTo: widget.dataEtape['idEtape'])
+                        .limit(1)
+                        .get()
+                        .then((QuerySnapshot querySnapshot) {
+                      querySnapshot.docs.forEach((doc_etape) {
+                        _etape.doc(doc_etape.id).update({
+                          'status': 'cancel',
+                          'realStartTime': widget.realStartTime,
+                        }).then((value) async {
+                          Fluttertoast.showToast(
+                              msg: "Etape Stopped", gravity: ToastGravity.TOP);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WorkingEtapePage(
+                                      camera: widget.camera,
+                                      thisDay: widget.thisDay,
+                                      dataTournee: widget.dataTournee,
+                                      dataCollecteur: widget.dataCollecteur,
+                                      etapeFinish: widget.etapeFinish,
+                                      etapeOK: widget.etapeOK,
+                                      etapenotOK: widget.etapenotOK,
+                                    )),
+                          ).then((value) => setState(() {}));
+                        });
                       });
                     });
-                  });
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: "Please Take a Signature",
+                        gravity: ToastGravity.TOP);
+                    Navigator.pop(context);
+                  }
                 },
               )
             ],
@@ -1224,52 +1232,59 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                     right: 10, top: 20, bottom: 20),
                                 child: GestureDetector(
                                   onTap: () async {
-                                    await _etape
-                                        .where('idEtape',
-                                            isEqualTo:
-                                                widget.dataEtape['idEtape'])
-                                        .limit(1)
-                                        .get()
-                                        .then((QuerySnapshot querySnapshot) {
-                                      querySnapshot.docs.forEach((doc_etape) {
-                                        _etape.doc(doc_etape.id).update({
-                                          'status': 'finished',
-                                          'realStartTime': widget.realStartTime,
-                                          'realEndTime': getTimeText(
-                                              time: TimeOfDay.now()),
-                                          'dureeMinute': getMinuteDuration(
-                                              time: widget
-                                                  .dataEtape['realStartTime']),
-                                          'duree': getDuration(
-                                              time: widget
-                                                  .dataEtape['realStartTime']),
-                                        }).then((value) async {
-                                          Fluttertoast.showToast(
-                                              msg: "Etape Finished",
-                                              gravity: ToastGravity.TOP);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    WorkingEtapePage(
-                                                      camera: widget.camera,
-                                                      thisDay: widget.thisDay,
-                                                      dataTournee:
-                                                          widget.dataTournee,
-                                                      dataCollecteur:
-                                                          widget.dataCollecteur,
-                                                      etapeFinish:
-                                                          widget.etapeFinish +
-                                                              1,
-                                                      etapeOK:
-                                                          widget.etapeOK + 1,
-                                                      etapenotOK:
-                                                          widget.etapenotOK,
-                                                    )),
-                                          ).then((value) => setState(() {}));
+                                    if (widget.dataEtape['signature'] != null) {
+                                      await _etape
+                                          .where('idEtape',
+                                              isEqualTo:
+                                                  widget.dataEtape['idEtape'])
+                                          .limit(1)
+                                          .get()
+                                          .then((QuerySnapshot querySnapshot) {
+                                        querySnapshot.docs.forEach((doc_etape) {
+                                          _etape.doc(doc_etape.id).update({
+                                            'status': 'finished',
+                                            'realStartTime':
+                                                widget.realStartTime,
+                                            'realEndTime': getTimeText(
+                                                time: TimeOfDay.now()),
+                                            'dureeMinute': getMinuteDuration(
+                                                time: widget.dataEtape[
+                                                    'realStartTime']),
+                                            'duree': getDuration(
+                                                time: widget.dataEtape[
+                                                    'realStartTime']),
+                                          }).then((value) async {
+                                            Fluttertoast.showToast(
+                                                msg: "Etape Finished",
+                                                gravity: ToastGravity.TOP);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      WorkingEtapePage(
+                                                        camera: widget.camera,
+                                                        thisDay: widget.thisDay,
+                                                        dataTournee:
+                                                            widget.dataTournee,
+                                                        dataCollecteur: widget
+                                                            .dataCollecteur,
+                                                        etapeFinish:
+                                                            widget.etapeFinish +
+                                                                1,
+                                                        etapeOK:
+                                                            widget.etapeOK + 1,
+                                                        etapenotOK:
+                                                            widget.etapenotOK,
+                                                      )),
+                                            ).then((value) => setState(() {}));
+                                          });
                                         });
                                       });
-                                    });
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: "Please Take a Signature",
+                                          gravity: ToastGravity.TOP);
+                                    }
                                   },
                                   child: Row(
                                     children: [
@@ -1300,51 +1315,59 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                     right: 10, top: 20, bottom: 20),
                                 child: GestureDetector(
                                   onTap: () async {
-                                    await _etape
-                                        .where('idEtape',
-                                            isEqualTo:
-                                                widget.dataEtape['idEtape'])
-                                        .limit(1)
-                                        .get()
-                                        .then((QuerySnapshot querySnapshot) {
-                                      querySnapshot.docs.forEach((doc_etape) {
-                                        _etape.doc(doc_etape.id).update({
-                                          'status': 'notfinished',
-                                          'realStartTime': widget.realStartTime,
-                                          'realEndTime': getTimeText(
-                                              time: TimeOfDay.now()),
-                                          'dureeMinute': getMinuteDuration(
-                                              time: widget
-                                                  .dataEtape['realStartTime']),
-                                          'duree': getDuration(
-                                              time: widget
-                                                  .dataEtape['realStartTime']),
-                                        }).then((value) async {
-                                          Fluttertoast.showToast(
-                                              msg: "Etape Not Finished",
-                                              gravity: ToastGravity.TOP);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    WorkingEtapePage(
-                                                      camera: widget.camera,
-                                                      thisDay: widget.thisDay,
-                                                      dataTournee:
-                                                          widget.dataTournee,
-                                                      dataCollecteur:
-                                                          widget.dataCollecteur,
-                                                      etapeFinish:
-                                                          widget.etapeFinish +
-                                                              1,
-                                                      etapeOK: widget.etapeOK,
-                                                      etapenotOK:
-                                                          widget.etapenotOK + 1,
-                                                    )),
-                                          ).then((value) => setState(() {}));
+                                    if (widget.dataEtape['signature'] != null) {
+                                      await _etape
+                                          .where('idEtape',
+                                              isEqualTo:
+                                                  widget.dataEtape['idEtape'])
+                                          .limit(1)
+                                          .get()
+                                          .then((QuerySnapshot querySnapshot) {
+                                        querySnapshot.docs.forEach((doc_etape) {
+                                          _etape.doc(doc_etape.id).update({
+                                            'status': 'notfinished',
+                                            'realStartTime':
+                                                widget.realStartTime,
+                                            'realEndTime': getTimeText(
+                                                time: TimeOfDay.now()),
+                                            'dureeMinute': getMinuteDuration(
+                                                time: widget.dataEtape[
+                                                    'realStartTime']),
+                                            'duree': getDuration(
+                                                time: widget.dataEtape[
+                                                    'realStartTime']),
+                                          }).then((value) async {
+                                            Fluttertoast.showToast(
+                                                msg: "Etape Not Finished",
+                                                gravity: ToastGravity.TOP);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      WorkingEtapePage(
+                                                        camera: widget.camera,
+                                                        thisDay: widget.thisDay,
+                                                        dataTournee:
+                                                            widget.dataTournee,
+                                                        dataCollecteur: widget
+                                                            .dataCollecteur,
+                                                        etapeFinish:
+                                                            widget.etapeFinish +
+                                                                1,
+                                                        etapeOK: widget.etapeOK,
+                                                        etapenotOK:
+                                                            widget.etapenotOK +
+                                                                1,
+                                                      )),
+                                            ).then((value) => setState(() {}));
+                                          });
                                         });
                                       });
-                                    });
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: "Please Take a Signature",
+                                          gravity: ToastGravity.TOP);
+                                    }
                                   },
                                   child: Row(
                                     children: [
