@@ -2,7 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:tn09_working_demo/working_page/working_function_page.dart';
 import 'package:tn09_working_demo/working_page/working_page.dart';
 import 'reset.dart';
 import 'verify.dart';

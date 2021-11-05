@@ -7,8 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:tn09_working_demo/working_page/display_picture.dart';
-import 'package:tn09_working_demo/working_page/take_signature.dart';
+import 'package:tn09_working_demo/working_page/function_testing/display_picture.dart';
+import 'package:tn09_working_demo/working_page/function_testing/take_signature.dart';
 
 class WorkingFunctionEtapePage extends StatefulWidget {
   DateTime thisDay;

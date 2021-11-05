@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:signature/signature.dart';
-import 'package:tn09_working_demo/working_page/signature_preview_page.dart';
+import 'package:tn09_working_demo/working_page/function_testing/signature_preview_page.dart';
 
 class TakeSignatureScreen extends StatefulWidget {
   @override
