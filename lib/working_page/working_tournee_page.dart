@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tn09_working_demo/math_function/get_date_text.dart';
@@ -49,8 +48,8 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
   @override
   Widget build(BuildContext context) {
     //For set up date
-    DateTime nextDay = widget.thisDay.add(new Duration(days: 1));
-    DateTime previousDay = widget.thisDay.subtract(Duration(days: 1));
+    // DateTime nextDay = widget.thisDay.add(new Duration(days: 1));
+    // DateTime previousDay = widget.thisDay.subtract(Duration(days: 1));
     // inputData();
     return Scaffold(
       body: SingleChildScrollView(

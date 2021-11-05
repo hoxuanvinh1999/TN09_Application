@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.lesdetritivores.tn09_working_demo">
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
    <application
         android:label="tn09_working_demo"
         android:name="${applicationName}"

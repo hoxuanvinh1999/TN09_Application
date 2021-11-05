@@ -100,12 +100,11 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(
           msg: 'Sign In Successed', gravity: ToastGravity.TOP);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) =>
-              //WorkingPage(thisDay: DateTime.now())
-              WorkingFunctionEtapePage(
-                camera: widget.camera,
-                thisDay: DateTime.now(),
-              )
+          builder: (context) => WorkingPage(thisDay: DateTime.now())
+          // WorkingFunctionEtapePage(
+          //   camera: widget.camera,
+          //   thisDay: DateTime.now(),
+          // )
           // HomeScreen()
           ));
     } on FirebaseAuthException catch (error) {
