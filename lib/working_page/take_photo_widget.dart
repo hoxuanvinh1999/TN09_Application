@@ -20,6 +20,7 @@ class TakePhotoWidget extends StatefulWidget {
   int etapeOK;
   int etapenotOK;
   String realStartTime;
+  List<String> typeContenant;
   final CameraDescription camera;
   TakePhotoWidget({
     Key? key,
@@ -32,6 +33,7 @@ class TakePhotoWidget extends StatefulWidget {
     required this.etapeOK,
     required this.etapenotOK,
     required this.realStartTime,
+    required this.typeContenant,
   }) : super(key: key);
   @override
   _TakePhotoWidgetState createState() => _TakePhotoWidgetState();
@@ -145,16 +147,16 @@ class _TakePhotoWidgetState extends State<TakePhotoWidget> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => WorkingDoingEtapePage(
-                            camera: widget.camera,
-                            thisDay: widget.thisDay,
-                            dataCollecteur: widget.dataCollecteur,
-                            dataTournee: widget.dataTournee,
-                            dataEtape: next_etape,
-                            etapeFinish: widget.etapeFinish,
-                            etapeOK: widget.etapeOK,
-                            etapenotOK: widget.etapenotOK,
-                            realStartTime: widget.realStartTime,
-                          ),
+                              camera: widget.camera,
+                              thisDay: widget.thisDay,
+                              dataCollecteur: widget.dataCollecteur,
+                              dataTournee: widget.dataTournee,
+                              dataEtape: next_etape,
+                              etapeFinish: widget.etapeFinish,
+                              etapeOK: widget.etapeOK,
+                              etapenotOK: widget.etapenotOK,
+                              realStartTime: widget.realStartTime,
+                              typeContenant: widget.typeContenant),
                         ),
                       );
                     });

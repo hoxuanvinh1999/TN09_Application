@@ -65,6 +65,8 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
   // For Vehicule
   CollectionReference _vehicule =
       FirebaseFirestore.instance.collection("Vehicule");
+  CollectionReference _typeContenant =
+      FirebaseFirestore.instance.collection("TypeContenant");
   // For Etape
   CollectionReference _etape = FirebaseFirestore.instance.collection("Etape");
   // For Time and Duration
@@ -731,8 +733,30 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                                           'finished' ||
                                                                       etape['status'] ==
                                                                           'cancel') {
-                                                                    null;
+                                                                    print(
+                                                                        '${etape['status']}');
                                                                   } else {
+                                                                    List<String>
+                                                                        typeContenant =
+                                                                        [];
+                                                                    await _typeContenant.get().then(
+                                                                        (QuerySnapshot
+                                                                            querySnapshot) {
+                                                                      querySnapshot
+                                                                          .docs
+                                                                          .forEach(
+                                                                              (doc_typecontenant) {
+                                                                        Map<String,
+                                                                                dynamic>
+                                                                            typecontenant =
+                                                                            doc_typecontenant.data()!
+                                                                                as Map<String, dynamic>;
+                                                                        typeContenant
+                                                                            .add(typecontenant['idTypeContenant']);
+                                                                      });
+                                                                    }).catchError(
+                                                                        (error) =>
+                                                                            print("Failed to add user: $error"));
                                                                     await _etape
                                                                         .where(
                                                                             'idEtape',
@@ -776,6 +800,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                                                                         etapeOK: widget.etapeOK,
                                                                                         etapenotOK: widget.etapenotOK,
                                                                                         realStartTime: getTimeText(time: TimeOfDay.now()),
+                                                                                        typeContenant: typeContenant,
                                                                                       )));
                                                                             });
                                                                           }).catchError((error) => print("Failed to add user: $error"));

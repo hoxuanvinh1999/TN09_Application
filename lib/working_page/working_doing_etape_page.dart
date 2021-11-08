@@ -23,6 +23,7 @@ import 'package:tn09_working_demo/widget/company_position.dart' as company;
 import 'package:tn09_working_demo/working_page/take_photo_widget.dart';
 import 'package:tn09_working_demo/working_page/take_signature_widget.dart';
 import 'package:tn09_working_demo/working_page/working_etape_page.dart';
+import 'package:collection/collection.dart';
 
 class WorkingDoingEtapePage extends StatefulWidget {
   DateTime thisDay;
@@ -33,6 +34,7 @@ class WorkingDoingEtapePage extends StatefulWidget {
   int etapeOK;
   int etapenotOK;
   String realStartTime;
+  List<String> typeContenant;
   final CameraDescription camera;
   WorkingDoingEtapePage({
     Key? key,
@@ -45,6 +47,7 @@ class WorkingDoingEtapePage extends StatefulWidget {
     required this.etapeOK,
     required this.etapenotOK,
     required this.realStartTime,
+    required this.typeContenant,
   }) : super(key: key);
   @override
   _WorkingDoingEtapePageState createState() => _WorkingDoingEtapePageState();
@@ -72,6 +75,8 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   // For Vehicule
   CollectionReference _vehicule =
       FirebaseFirestore.instance.collection("Vehicule");
+  //for vehicule information
+  late Widget vehicule_information;
   // For Etape
   CollectionReference _etape = FirebaseFirestore.instance.collection("Etape");
   // For Adresse
@@ -79,11 +84,63 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
       FirebaseFirestore.instance.collection("Adresse");
   // For Time and Duration
   String _timeString = '00:00';
-
   DateTime date = DateTime.now();
+  // For DropDownMenu Data
+  CollectionReference _typeContenant =
+      FirebaseFirestore.instance.collection("TypeContenant");
+  List<String> typeContenantCollect = [];
+  List<int> numberOfContenant = [];
+  var listnumber = [for (var i = 0; i <= 100; i++) i];
   @override
   void initState() {
     Timer.periodic(Duration(seconds: 60), (Timer t) => _getDuration());
+    _vehicule
+        .where('idVehicule', isEqualTo: widget.dataTournee['idVehicule'])
+        .limit(1)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc_vehicule) {
+        Map<String, dynamic> vehicule =
+            doc_vehicule.data()! as Map<String, dynamic>;
+        setState(() {
+          vehicule_information = Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: 30,
+              color: Color(int.parse(widget.dataTournee['colorTournee'])),
+              alignment: Alignment.topLeft,
+              child: Row(
+                children: [
+                  buildVehiculeIcon(
+                      icontype: vehicule['typeVehicule'],
+                      iconcolor: '0xff000000',
+                      sizeIcon: 15),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Vehicule: ',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    '${vehicule['nomVehicule']}  ${vehicule['numeroImmatriculation']}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ));
+        });
+      });
+    }).catchError((error) => print("Failed to add user: $error"));
     super.initState();
   }
 
@@ -214,8 +271,6 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   String _imageUrl = '';
   //loat Signature
   String _signatureUrl = '';
-  //for vehicule information
-  late Widget vehicule_information;
   //For loading data
   void loadData() async {
     if (widget.dataEtape['image'] != null) {
@@ -234,63 +289,24 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
         _signatureUrl = signature_url;
       });
     }
-    await _vehicule
-        .where('idVehicule', isEqualTo: widget.dataTournee['idVehicule'])
-        .limit(1)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc_vehicule) {
-        Map<String, dynamic> vehicule =
-            doc_vehicule.data()! as Map<String, dynamic>;
-        setState(() {
-          vehicule_information = Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: 30,
-              color: Color(int.parse(widget.dataTournee['colorTournee'])),
-              alignment: Alignment.topLeft,
-              child: Row(
-                children: [
-                  buildVehiculeIcon(
-                      icontype: vehicule['typeVehicule'],
-                      iconcolor: '0xff000000',
-                      sizeIcon: 15),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Vehicule: ',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    '${vehicule['nomVehicule']}  ${vehicule['numeroImmatriculation']}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ));
-        });
-      });
-    }).catchError((error) => print("Failed to add user: $error"));
   }
+
+  //For Save Contenant information
+  int _count = 0;
 
   @override
   Widget build(BuildContext context) {
-    //Load PhotoData
+    // Debug information
+    print('type contenant: ${widget.typeContenant}');
+    //Load Data
     loadData();
     //For set up date
     DateTime nextDay = widget.thisDay.add(new Duration(days: 1));
     DateTime previousDay = widget.thisDay.subtract(Duration(days: 1));
     // inputData();
+    //For list of Contenant
+    List<Widget> list_contenant =
+        List.generate(_count, (int i) => addContenant(element: i));
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -1028,6 +1044,79 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                         ),
                       ),
                       Container(
+                        margin: EdgeInsets.symmetric(vertical: 20),
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 600,
+                        color: Colors.yellow,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 20),
+                              width: MediaQuery.of(context).size.width * 0.95,
+                              height: 50,
+                              color: Colors.blue,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(width: 20),
+                                      Icon(
+                                        FontAwesomeIcons.boxOpen,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'Contenant',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              height: 50,
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              color: Colors.blue,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _count++;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        FontAwesomeIcons.plus,
+                                        size: 15,
+                                        color: Colors.red,
+                                      ))
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              width: MediaQuery.of(context).size.width * 0.95,
+                              height: 400,
+                              color: Colors.red,
+                              child: SingleChildScrollView(
+                                child: Column(children: list_contenant),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
                           margin: EdgeInsets.symmetric(vertical: 20),
                           width: MediaQuery.of(context).size.width * 0.95,
                           height: 600,
@@ -1089,16 +1178,16 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => TakePhotoWidget(
-                                          camera: widget.camera,
-                                          thisDay: widget.thisDay,
-                                          dataCollecteur: widget.dataCollecteur,
-                                          dataTournee: widget.dataTournee,
-                                          dataEtape: widget.dataEtape,
-                                          etapeFinish: widget.etapeFinish,
-                                          etapeOK: widget.etapeOK,
-                                          etapenotOK: widget.etapenotOK,
-                                          realStartTime: widget.realStartTime,
-                                        )),
+                                        camera: widget.camera,
+                                        thisDay: widget.thisDay,
+                                        dataCollecteur: widget.dataCollecteur,
+                                        dataTournee: widget.dataTournee,
+                                        dataEtape: widget.dataEtape,
+                                        etapeFinish: widget.etapeFinish,
+                                        etapeOK: widget.etapeOK,
+                                        etapenotOK: widget.etapenotOK,
+                                        realStartTime: widget.realStartTime,
+                                        typeContenant: widget.typeContenant)),
                               ).then((value) => setState(() {}));
                             },
                             child: Row(
@@ -1163,11 +1252,13 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                               Container(
                                 height: 500,
                                 width: MediaQuery.of(context).size.width * 0.95,
-                                color: Colors.red,
+                                color: Colors.white,
                                 child: _signatureUrl == ''
                                     ? Image.asset('assets/logo_1.jpg')
-                                    : Image.network(_signatureUrl,
-                                        fit: BoxFit.cover),
+                                    : Image.network(
+                                        _signatureUrl,
+                                        // fit: BoxFit.cover
+                                      ),
                               )
                             ],
                           )),
@@ -1183,16 +1274,16 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => TakeSignatureWidget(
-                                          camera: widget.camera,
-                                          thisDay: widget.thisDay,
-                                          dataCollecteur: widget.dataCollecteur,
-                                          dataTournee: widget.dataTournee,
-                                          dataEtape: widget.dataEtape,
-                                          etapeFinish: widget.etapeFinish,
-                                          etapeOK: widget.etapeOK,
-                                          etapenotOK: widget.etapenotOK,
-                                          realStartTime: widget.realStartTime,
-                                        )),
+                                        camera: widget.camera,
+                                        thisDay: widget.thisDay,
+                                        dataCollecteur: widget.dataCollecteur,
+                                        dataTournee: widget.dataTournee,
+                                        dataEtape: widget.dataEtape,
+                                        etapeFinish: widget.etapeFinish,
+                                        etapeOK: widget.etapeOK,
+                                        etapenotOK: widget.etapenotOK,
+                                        realStartTime: widget.realStartTime,
+                                        typeContenant: widget.typeContenant)),
                               ).then((value) => setState(() {}));
                             },
                             child: Row(
@@ -1232,6 +1323,36 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                     right: 10, top: 20, bottom: 20),
                                 child: GestureDetector(
                                   onTap: () async {
+                                    Map<String, dynamic> result = {};
+                                    for (int i = 0; i < _count; i++) {
+                                      result.putIfAbsent(
+                                          typeContenantCollect[i]
+                                              .toLowerCase()
+                                              .replaceAll(' ', ''),
+                                          () => numberOfContenant[i]);
+                                    }
+                                    result.putIfAbsent('idEtape',
+                                        () => widget.dataEtape['idEtape']);
+                                    result.putIfAbsent('idTournee',
+                                        () => widget.dataTournee['idTournee']);
+                                    result.putIfAbsent(
+                                        'idCollecteur',
+                                        () => widget
+                                            .dataCollecteur['idCollecteur']);
+                                    result.putIfAbsent(
+                                        'numberOfTypeContenant', () => _count);
+                                    result.putIfAbsent('numberOfContenant',
+                                        () => numberOfContenant.sum);
+                                    String newidResult = FirebaseFirestore
+                                        .instance
+                                        .collection("Result")
+                                        .doc()
+                                        .id
+                                        .toString();
+                                    FirebaseFirestore.instance
+                                        .collection("Result")
+                                        .doc(newidResult)
+                                        .set(result);
                                     if (widget.dataEtape['signature'] != null) {
                                       await _etape
                                           .where('idEtape',
@@ -1428,6 +1549,93 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                 )),
           ],
         ),
+      ),
+    );
+  }
+
+  addContenant({required int element}) {
+    typeContenantCollect.add('None');
+    numberOfContenant.add(0);
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: 50,
+      color: Colors.white,
+      child: Row(
+        children: [
+          DropdownButton<String>(
+            value: typeContenantCollect[element],
+            icon: const Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 8,
+            style: const TextStyle(color: Colors.deepPurple),
+            underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
+            ),
+            onChanged: (String? newValue) {
+              setState(() {
+                typeContenantCollect[element] = newValue!;
+              });
+              if (newValue == 'None') {
+                Fluttertoast.showToast(
+                    msg: "It's None", gravity: ToastGravity.TOP);
+              }
+              if (typeContenantCollect.contains(newValue)) {
+                Fluttertoast.showToast(
+                    msg: "You've added it", gravity: ToastGravity.TOP);
+              }
+            },
+            items: widget.typeContenant
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          DropdownButton<int>(
+            value: numberOfContenant[element],
+            icon: const Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 8,
+            style: const TextStyle(color: Colors.deepPurple),
+            underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
+            ),
+            onChanged: (int? newValue) {
+              setState(() {
+                numberOfContenant[element] = newValue!;
+              });
+            },
+            items: listnumber.map<DropdownMenuItem<int>>((int value) {
+              return DropdownMenuItem<int>(
+                value: value,
+                child: Text(value.toString()),
+              );
+            }).toList(),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          IconButton(
+              onPressed: () {
+                numberOfContenant.removeAt(element);
+                typeContenantCollect.removeAt(element);
+                setState(() {
+                  _count--;
+                });
+              },
+              icon: Icon(
+                FontAwesomeIcons.minus,
+                size: 15,
+                color: Colors.black,
+              ))
+        ],
       ),
     );
   }

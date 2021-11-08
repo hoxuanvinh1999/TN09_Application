@@ -16,6 +16,7 @@ class TakeSignatureWidget extends StatefulWidget {
   int etapeOK;
   int etapenotOK;
   String realStartTime;
+  List<String> typeContenant;
   final CameraDescription camera;
   TakeSignatureWidget({
     Key? key,
@@ -28,6 +29,7 @@ class TakeSignatureWidget extends StatefulWidget {
     required this.etapeOK,
     required this.etapenotOK,
     required this.realStartTime,
+    required this.typeContenant,
   }) : super(key: key);
   @override
   _TakeSignatureWidgetState createState() => _TakeSignatureWidgetState();
@@ -90,6 +92,7 @@ class _TakeSignatureWidgetState extends State<TakeSignatureWidget> {
                                 etapenotOK: widget.etapenotOK,
                                 realStartTime: widget.realStartTime,
                                 signature: signature,
+                                typeContenant: widget.typeContenant,
                               ),
                             ),
                           );

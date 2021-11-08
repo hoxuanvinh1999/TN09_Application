@@ -22,6 +22,7 @@ class SignaturePreviewWidget extends StatelessWidget {
   int etapeOK;
   int etapenotOK;
   String realStartTime;
+  List<String> typeContenant;
   final CameraDescription camera;
   SignaturePreviewWidget({
     Key? key,
@@ -35,6 +36,7 @@ class SignaturePreviewWidget extends StatelessWidget {
     required this.etapeOK,
     required this.etapenotOK,
     required this.realStartTime,
+    required this.typeContenant,
   }) : super(key: key);
 
   @override
@@ -102,16 +104,16 @@ class SignaturePreviewWidget extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => WorkingDoingEtapePage(
-                          camera: camera,
-                          thisDay: thisDay,
-                          dataCollecteur: dataCollecteur,
-                          dataTournee: dataTournee,
-                          dataEtape: next_etape,
-                          etapeFinish: etapeFinish,
-                          etapeOK: etapeOK,
-                          etapenotOK: etapenotOK,
-                          realStartTime: realStartTime,
-                        ),
+                            camera: camera,
+                            thisDay: thisDay,
+                            dataCollecteur: dataCollecteur,
+                            dataTournee: dataTournee,
+                            dataEtape: next_etape,
+                            etapeFinish: etapeFinish,
+                            etapeOK: etapeOK,
+                            etapenotOK: etapenotOK,
+                            realStartTime: realStartTime,
+                            typeContenant: typeContenant),
                       ),
                     );
                   });
