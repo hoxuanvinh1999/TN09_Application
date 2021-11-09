@@ -297,7 +297,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
   @override
   Widget build(BuildContext context) {
     // Debug information
-    print('type contenant: ${widget.typeContenant}');
+    // print('type contenant: ${widget.typeContenant}');
     //Load Data
     loadData();
     //For set up date
@@ -1363,6 +1363,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                           .then((QuerySnapshot querySnapshot) {
                                         querySnapshot.docs.forEach((doc_etape) {
                                           _etape.doc(doc_etape.id).update({
+                                            'resultCollecte': result,
                                             'status': 'finished',
                                             'realStartTime':
                                                 widget.realStartTime,

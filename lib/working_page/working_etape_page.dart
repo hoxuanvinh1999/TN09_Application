@@ -316,7 +316,7 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
                                         limitString(
                                             text:
                                                 widget.dataTournee['idTournee'],
-                                            limit_long: 15),
+                                            limit_long: 10),
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
