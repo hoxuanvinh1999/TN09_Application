@@ -1323,26 +1323,29 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                     right: 10, top: 20, bottom: 20),
                                 child: GestureDetector(
                                   onTap: () async {
-                                    Map<String, dynamic> result = {};
+                                    Map<String, dynamic> resultCollecte = {};
                                     for (int i = 0; i < _count; i++) {
-                                      result.putIfAbsent(
+                                      resultCollecte.putIfAbsent(
                                           typeContenantCollect[i]
                                               .toLowerCase()
                                               .replaceAll(' ', ''),
-                                          () => numberOfContenant[i]);
+                                          () =>
+                                              numberOfContenant[i].toString());
                                     }
-                                    result.putIfAbsent('idEtape',
+                                    resultCollecte.putIfAbsent('idEtape',
                                         () => widget.dataEtape['idEtape']);
-                                    result.putIfAbsent('idTournee',
+                                    resultCollecte.putIfAbsent('idTournee',
                                         () => widget.dataTournee['idTournee']);
-                                    result.putIfAbsent(
+                                    resultCollecte.putIfAbsent(
                                         'idCollecteur',
                                         () => widget
                                             .dataCollecteur['idCollecteur']);
-                                    result.putIfAbsent(
-                                        'numberOfTypeContenant', () => _count);
-                                    result.putIfAbsent('numberOfContenant',
-                                        () => numberOfContenant.sum);
+                                    resultCollecte.putIfAbsent(
+                                        'numberOfTypeContenant',
+                                        () => _count.toString());
+                                    resultCollecte.putIfAbsent(
+                                        'numberOfContenant',
+                                        () => numberOfContenant.sum.toString());
                                     String newidResult = FirebaseFirestore
                                         .instance
                                         .collection("Result")
@@ -1352,7 +1355,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                     FirebaseFirestore.instance
                                         .collection("Result")
                                         .doc(newidResult)
-                                        .set(result);
+                                        .set(resultCollecte);
                                     if (widget.dataEtape['signature'] != null) {
                                       await _etape
                                           .where('idEtape',
@@ -1363,7 +1366,7 @@ class _WorkingDoingEtapePageState extends State<WorkingDoingEtapePage> {
                                           .then((QuerySnapshot querySnapshot) {
                                         querySnapshot.docs.forEach((doc_etape) {
                                           _etape.doc(doc_etape.id).update({
-                                            'resultCollecte': result,
+                                            'resultCollecte': resultCollecte,
                                             'status': 'finished',
                                             'realStartTime':
                                                 widget.realStartTime,
