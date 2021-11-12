@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'login_page/login_screen.dart';
+import 'package:tn09_working_demo/login_page/login_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,7 +60,7 @@ class _MainPageState extends State<MainPage> {
     return MaterialApp(
       title: 'Login Page',
       theme: ThemeData(accentColor: Colors.green, primarySwatch: Colors.blue),
-      home: LoginScreen(
+      home: LoginPage(
         camera: widget.camera,
       ),
     );
