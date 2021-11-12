@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tn09_working_demo/working_page/working_page.dart';
 import 'reset.dart';
-import 'verify.dart';
 
 class LoginScreen extends StatefulWidget {
   final CameraDescription camera;
