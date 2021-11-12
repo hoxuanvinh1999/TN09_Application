@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-class VerifyScreen extends StatefulWidget {
+class VerifyPage extends StatefulWidget {
   @override
-  _VerifyScreenState createState() => _VerifyScreenState();
+  _VerifyPageState createState() => _VerifyPageState();
 }
 
-class _VerifyScreenState extends State<VerifyScreen> {
+class _VerifyPageState extends State<VerifyPage> {
   final auth = FirebaseAuth.instance;
   User? user;
   late Timer timer;
