@@ -1,6 +1,6 @@
-# TN09_Application
+# tn09_working_demo
 
-A new Flutter project.
+Testing function for working page
 
 ## Getting Started
 
@@ -14,8 +14,3 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
-
-
-## 
-  
-  ![alt text](assets/photo_rm1.png)   |   ![alt text](assets/photo_rm2.png)  

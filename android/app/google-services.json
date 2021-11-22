@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1006764537866:android:7231b066e8524f3f8a47f3",
+        "android_client_info": {
+          "package_name": "org.lesdetritivores.tn09_working_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006764537866-38dr6kibhhsohekk2cb1u7r9fq31rc8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgjjk30hIFpbNEk5_8Z1UNIfhToFlrOoU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006764537866-38dr6kibhhsohekk2cb1u7r9fq31rc8a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1006764537866-5l0lio8frvmv5g68e01hi1jif91f000l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.lesdetritivores.tn09appdemo"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1006764537866:android:d377ad58143562318a47f3",
         "android_client_info": {
           "package_name": "org.lesdetritivores.tn09appdemo"

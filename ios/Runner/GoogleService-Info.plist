@@ -3,19 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1006764537866-5l0lio8frvmv5g68e01hi1jif91f000l.apps.googleusercontent.com</string>
+	<string>1006764537866-g5qchlhepv030tbfp816h9qkrijiv3d2.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1006764537866-5l0lio8frvmv5g68e01hi1jif91f000l</string>
+	<string>com.googleusercontent.apps.1006764537866-g5qchlhepv030tbfp816h9qkrijiv3d2</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>1006764537866-gkrc4l604f32ndh4ut241fo74q9lm6gl.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDBisIIXSZWOju0C9lxInVoFzrjb7V6SiU</string>
+	<string>AIzaSyDMQJHRfmXNThcKC_UDinQF8aWuBpcr5yk</string>
 	<key>GCM_SENDER_ID</key>
 	<string>1006764537866</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.lesdetritivores.tn09appdemo</string>
+	<string>org.lesdetritivores.tn09WorkingDemo</string>
 	<key>PROJECT_ID</key>
 	<string>tn09-demo</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1006764537866:ios:f0f6d2acc079ccc48a47f3</string>
+	<string>1:1006764537866:ios:bd538c096901a2af8a47f3</string>
 	<key>DATABASE_URL</key>
 	<string>https://tn09-demo-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>

@@ -2,10 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:tn09_app_demo/page/login_page/login_screen.dart';
-import 'package:tn09_app_demo/page/testing_page/testing_function/blocs/application_bloc.dart';
-//import 'widget/button_widget.dart';
-import 'widget/navigation_drawer_widget.dart';
+import 'package:tn09_working_demo/login_page/login_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,14 +57,11 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ApplicationBloc(),
-      child: MaterialApp(
-        title: 'Login Page',
-        theme: ThemeData(accentColor: Colors.green, primarySwatch: Colors.blue),
-        home: LoginScreen(
-          camera: widget.camera,
-        ),
+    return MaterialApp(
+      title: 'Login Page',
+      theme: ThemeData(accentColor: Colors.green, primarySwatch: Colors.blue),
+      home: LoginPage(
+        camera: widget.camera,
       ),
     );
   }

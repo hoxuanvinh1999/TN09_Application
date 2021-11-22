@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
   <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
@@ -12,51 +10,29 @@
 
     For more details:
     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
   -->
-  <base href="/">
+  <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Testing function for working page">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="tn09_app_demo">
+  <meta name="apple-mobile-web-app-title" content="tn09_working_demo">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <title>tn09_app_demo</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>tn09_working_demo</title>
   <link rel="manifest" href="manifest.json">
 </head>
-
 <body>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
-  <script>
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-var firebaseConfig = {
-  apiKey: "AIzaSyBqNzX40GJTvsG0URtdgILO40eymPfkSTg",
-  authDomain: "tn09-demo.firebaseapp.com",
-  databaseURL: "https://tn09-demo-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "tn09-demo",
-  storageBucket: "tn09-demo.appspot.com",
-  messagingSenderId: "1006764537866",
-  appId: "1:1006764537866:web:e4f652ef9655f3218a47f3",
-  measurementId: "G-SBDWTM8DVR"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-  </script>
- 
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
@@ -94,7 +70,7 @@ firebase.initializeApp(firebaseConfig);
             if (!reg.active && (reg.installing || reg.waiting)) {
               // No active web worker and we have installed or are installing
               // one for the first time. Simply wait for it to activate.
-              waitForActivation(reg.installing ?? reg.waiting);
+              waitForActivation(reg.installing || reg.waiting);
             } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
               // When the app updates the serviceWorkerVersion changes, so we
               // need to ask the service worker to update.
@@ -125,5 +101,4 @@ firebase.initializeApp(firebaseConfig);
     }
   </script>
 </body>
-
 </html>
