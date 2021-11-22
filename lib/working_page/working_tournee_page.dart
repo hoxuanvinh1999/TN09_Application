@@ -10,6 +10,7 @@ import 'package:tn09_working_demo/math_function/get_time_text.dart';
 import 'package:tn09_working_demo/widget/vehicule_icon.dart';
 import 'package:tn09_working_demo/working_page/working_etape_page.dart';
 import 'package:tn09_working_demo/working_page/working_page.dart';
+import 'package:tn09_working_demo/decoration/graphique.dart' as graphique;
 
 class WorkingTourneePage extends StatefulWidget {
   DateTime thisDay;
@@ -121,99 +122,86 @@ class _WorkingTourneePageState extends State<WorkingTourneePage> {
             Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                color: Colors.green,
+                decoration: BoxDecoration(
+                  color: Color(graphique.color['special_bureautique_2']),
+                  border: Border.all(
+                      width: 1.0,
+                      color: Color(graphique.color['default_black'])),
+                ),
                 child: Column(
                   children: [
                     Container(
-                      color: Colors.blue,
-                      child: Column(
+                      height: 50,
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: Color(graphique.color['main_color_1']),
+                        border: Border.all(
+                            width: 1.0,
+                            color: Color(graphique.color['default_black'])),
+                      ),
+                      child: Row(
                         children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 20),
-                              Icon(
-                                FontAwesomeIcons.truck,
-                                color: Colors.black,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Working',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                          SizedBox(width: 20),
+                          Icon(
+                            FontAwesomeIcons.truck,
+                            color: Color(graphique.color['main_color_2']),
                           ),
                           SizedBox(
-                            height: 5,
+                            width: 10,
                           ),
-                          const Divider(
-                            thickness: 5,
+                          Text(
+                            'Working',
+                            style: TextStyle(
+                              color: Color(graphique.color['main_color_2']),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          SizedBox(
-                            height: 10,
-                          )
                         ],
                       ),
                     ),
                     Container(
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.red,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 5,
+                      width: MediaQuery.of(context).size.width,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Color(graphique.color['main_color_1']),
+                        border: Border.all(
+                            width: 1.0,
+                            color: Color(graphique.color['default_black'])),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 20,
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                        builder: (context) => WorkingPage(
+                                              thisDay: widget.thisDay,
+                                              camera: widget.camera,
+                                            )));
+                              },
+                              icon: Icon(
+                                FontAwesomeIcons.stepBackward,
+                                size: 12,
+                                color: Color(graphique.color['main_color_2']),
+                              )),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            'Working ' + getDateText(date: widget.thisDay),
+                            style: TextStyle(
+                              color: Color(graphique.color['main_color_2']),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pushReplacement(MaterialPageRoute(
-                                              builder: (context) => WorkingPage(
-                                                    thisDay: widget.thisDay,
-                                                    camera: widget.camera,
-                                                  )));
-                                    },
-                                    icon: Icon(
-                                      FontAwesomeIcons.stepBackward,
-                                      size: 12,
-                                    )),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text(
-                                  'Working ' +
-                                      getDateText(date: widget.thisDay),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            const Divider(
-                              thickness: 5,
-                            ),
-                            SizedBox(
-                              height: 15,
-                            )
-                          ],
-                        )),
+                          ),
+                        ],
+                      ),
+                    ),
                     Container(
                         height: 40,
                         width: MediaQuery.of(context).size.width,

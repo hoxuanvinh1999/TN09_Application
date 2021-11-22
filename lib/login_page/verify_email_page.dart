@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tn09_working_demo/login_page/login_page.dart';
 import 'package:tn09_working_demo/working_page/working_page.dart';
+import 'package:tn09_working_demo/decoration/graphique.dart' as graphique;
 
 class VerifyScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -60,12 +61,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                          begin: Alignment.center,
+                          end: Alignment.centerRight,
                           colors: [
-                        Color(0xFFBFAC97),
-                        Color(0xFF74B424),
-                        Color(0xFF94C21E),
+                        Color(graphique.color['main_color_1']),
+                        Color(graphique.color['main_color_2']),
+                        // Color(graphique.color['secondary_color_1']),
                       ])),
                   child: SingleChildScrollView(
                       child: Column(

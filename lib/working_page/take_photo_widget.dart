@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart';
 import 'package:tn09_working_demo/math_function/get_date_text.dart';
 import 'package:tn09_working_demo/working_page/working_doing_etape_page.dart';
+import 'package:tn09_working_demo/decoration/graphique.dart' as graphique;
 
 class TakePhotoWidget extends StatefulWidget {
   DateTime thisDay;

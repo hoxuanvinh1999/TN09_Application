@@ -17,6 +17,7 @@ import 'package:tn09_working_demo/math_function/limit_length_string.dart';
 import 'package:tn09_working_demo/widget/vehicule_icon.dart';
 import 'package:tn09_working_demo/working_page/working_doing_etape_page.dart';
 import 'package:tn09_working_demo/working_page/working_page.dart';
+import 'package:tn09_working_demo/decoration/graphique.dart' as graphique;
 
 class WorkingEtapePage extends StatefulWidget {
   DateTime thisDay;
@@ -249,93 +250,80 @@ class _WorkingEtapePageState extends State<WorkingEtapePage> {
             Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                color: Colors.green,
+                decoration: BoxDecoration(
+                  color: Color(graphique.color['special_bureautique_2']),
+                  border: Border.all(
+                      width: 1.0,
+                      color: Color(graphique.color['default_black'])),
+                ),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       Container(
-                        color: Colors.blue,
-                        child: Column(
+                        height: 50,
+                        margin: const EdgeInsets.only(bottom: 10),
+                        decoration: BoxDecoration(
+                          color: Color(graphique.color['main_color_1']),
+                          border: Border.all(
+                              width: 1.0,
+                              color: Color(graphique.color['default_black'])),
+                        ),
+                        child: Row(
                           children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(width: 20),
-                                Icon(
-                                  FontAwesomeIcons.truck,
-                                  color: Colors.black,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  'Working',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            SizedBox(width: 20),
+                            Icon(
+                              FontAwesomeIcons.truck,
+                              color: Color(graphique.color['main_color_2']),
                             ),
                             SizedBox(
-                              height: 5,
+                              width: 10,
                             ),
-                            const Divider(
-                              thickness: 5,
+                            Text(
+                              'Working',
+                              style: TextStyle(
+                                color: Color(graphique.color['main_color_2']),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            SizedBox(
-                              height: 10,
-                            )
                           ],
                         ),
                       ),
                       Container(
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.red,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 5,
+                        width: MediaQuery.of(context).size.width,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Color(graphique.color['main_color_1']),
+                          border: Border.all(
+                              width: 1.0,
+                              color: Color(graphique.color['default_black'])),
+                        ),
+                        child: Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  stopDoingDialog();
+                                },
+                                icon: Icon(
+                                  FontAwesomeIcons.arrowAltCircleLeft,
+                                  size: 15,
+                                  color: Color(graphique.color['main_color_2']),
+                                )),
+                            Text(
+                              getDateText(date: widget.thisDay) +
+                                  ' Tournee ' +
+                                  limitString(
+                                      text: widget.dataTournee['idTournee'],
+                                      limit_long: 10),
+                              style: TextStyle(
+                                color: Color(graphique.color['main_color_2']),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        stopDoingDialog();
-                                      },
-                                      icon: Icon(
-                                        FontAwesomeIcons.arrowAltCircleLeft,
-                                        size: 15,
-                                      )),
-                                  Text(
-                                    getDateText(date: widget.thisDay) +
-                                        ' tournee ' +
-                                        limitString(
-                                            text:
-                                                widget.dataTournee['idTournee'],
-                                            limit_long: 10),
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              const Divider(
-                                thickness: 5,
-                              ),
-                              SizedBox(
-                                height: 15,
-                              )
-                            ],
-                          )),
+                            ),
+                          ],
+                        ),
+                      ),
                       Container(
                           height: 200,
                           width: MediaQuery.of(context).size.width,

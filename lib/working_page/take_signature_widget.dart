@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:signature/signature.dart';
 import 'package:tn09_working_demo/working_page/signature_preview_widget.dart';
+import 'package:tn09_working_demo/decoration/graphique.dart' as graphique;
 
 class TakeSignatureWidget extends StatefulWidget {
   DateTime thisDay;

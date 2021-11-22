@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tn09_working_demo/login_page/login_page.dart';
 import 'package:tn09_working_demo/math_function/check_email.dart';
+import 'package:tn09_working_demo/decoration/graphique.dart' as graphique;
 
 class ForgetPasswordPage extends StatefulWidget {
   final CameraDescription camera;
@@ -41,12 +42,12 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                          begin: Alignment.center,
+                          end: Alignment.centerRight,
                           colors: [
-                        Color(0xFFBFAC97),
-                        Color(0xFF74B424),
-                        Color(0xFF94C21E),
+                        Color(graphique.color['main_color_1']),
+                        Color(graphique.color['main_color_2']),
+                        // Color(graphique.color['secondary_color_1']),
                       ])),
                   child: SingleChildScrollView(
                       child: Column(
@@ -144,12 +145,14 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(50),
                                       gradient: LinearGradient(
-                                          begin: Alignment.centerLeft,
-                                          end: Alignment.bottomRight,
+                                          begin: Alignment.center,
+                                          end: Alignment.centerRight,
                                           colors: [
-                                            Color(0xFFBFAC97),
-                                            Color(0xFF74B424),
-                                            Color(0xFF94C21E),
+                                            Color(graphique
+                                                .color['main_color_1']),
+                                            Color(graphique
+                                                .color['main_color_2']),
+                                            // Color(graphique.color['secondary_color_1']),
                                           ])),
                                   child: Padding(
                                     padding: EdgeInsets.all(12.0),

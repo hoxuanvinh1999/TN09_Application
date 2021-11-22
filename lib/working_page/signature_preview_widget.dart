@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tn09_working_demo/math_function/generate_password.dart';
 import 'package:tn09_working_demo/math_function/get_date_text.dart';
 import 'package:tn09_working_demo/working_page/working_doing_etape_page.dart';
+import 'package:tn09_working_demo/decoration/graphique.dart' as graphique;
 
 class SignaturePreviewWidget extends StatelessWidget {
   final Uint8List signature;
